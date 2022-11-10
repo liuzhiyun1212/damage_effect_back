@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.QualityProblemMapper">
+    
+    <resultMap type="QualityProblem" id="QualityProblemResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="devCode"    column="dev_code"    />
+        <result property="devUnit"    column="dev_unit"    />
+        <result property="devManufacture"    column="dev_manufacture"    />
+        <result property="devFactoryTime"    column="dev_factory_time"    />
+        <result property="devUseTime"    column="dev_use_time"    />
+        <result property="devHappenTime"    column="dev_happen_time"    />
+        <result property="partsType"    column="parts_type"    />
+        <result property="partsName"    column="parts_name"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsCode"    column="parts_code"    />
+        <result property="partsUnit"    column="parts_unit"    />
+        <result property="partsManufacture"    column="parts_manufacture"    />
+        <result property="partsFactoryTime"    column="parts_factory_time"    />
+        <result property="partsUseTime"    column="parts_use_time"    />
+        <result property="faultPhenomenon"    column="fault_phenomenon"    />
+        <result property="faultModel"    column="fault_model"    />
+        <result property="environment"    column="environment"    />
+        <result property="devRepaired"    column="dev_repaired"    />
+        <result property="repairedTime"    column="repaired_time"    />
+        <result property="repairedFactory"    column="repaired_factory"    />
+        <result property="repairedStaff"    column="repaired_staff"    />
+    </resultMap>
+
+    <sql id="selectQualityProblemVo">
+        select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
+    </sql>
+
+    <select id="selectQualityProblemList" parameterType="QualityProblem" resultMap="QualityProblemResult">
+        <include refid="selectQualityProblemVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
+            <if test="devCode != null  and devCode != ''"> and dev_code = #{devCode}</if>
+            <if test="devUnit != null  and devUnit != ''"> and dev_unit = #{devUnit}</if>
+            <if test="devManufacture != null  and devManufacture != ''"> and dev_manufacture = #{devManufacture}</if>
+            <if test="devFactoryTime != null "> and dev_factory_time = #{devFactoryTime}</if>
+            <if test="devUseTime != null  and devUseTime != ''"> and dev_use_time = #{devUseTime}</if>
+            <if test="devHappenTime != null "> and dev_happen_time = #{devHappenTime}</if>
+            <if test="partsType != null  and partsType != ''"> and parts_type = #{partsType}</if>
+            <if test="partsName != null  and partsName != ''"> and parts_name like concat('%', #{partsName}, '%')</if>
+            <if test="partsModel != null  and partsModel != ''"> and parts_model = #{partsModel}</if>
+            <if test="partsCode != null  and partsCode != ''"> and parts_code = #{partsCode}</if>
+            <if test="partsUnit != null  and partsUnit != ''"> and parts_unit = #{partsUnit}</if>
+            <if test="partsManufacture != null  and partsManufacture != ''"> and parts_manufacture = #{partsManufacture}</if>
+            <if test="partsFactoryTime != null "> and parts_factory_time = #{partsFactoryTime}</if>
+            <if test="partsUseTime != null  and partsUseTime != ''"> and parts_use_time = #{partsUseTime}</if>
+            <if test="faultPhenomenon != null  and faultPhenomenon != ''"> and fault_phenomenon = #{faultPhenomenon}</if>
+            <if test="faultModel != null  and faultModel != ''"> and fault_model = #{faultModel}</if>
+            <if test="environment != null  and environment != ''"> and environment = #{environment}</if>
+            <if test="devRepaired != null  and devRepaired != ''"> and dev_repaired = #{devRepaired}</if>
+            <if test="repairedTime != null "> and repaired_time = #{repairedTime}</if>
+            <if test="repairedFactory != null  and repairedFactory != ''"> and repaired_factory = #{repairedFactory}</if>
+            <if test="repairedStaff != null  and repairedStaff != ''"> and repaired_staff = #{repairedStaff}</if>
+        </where>
+    </select>
+    
+    <select id="selectQualityProblemById" parameterType="Long" resultMap="QualityProblemResult">
+        <include refid="selectQualityProblemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertQualityProblem" parameterType="QualityProblem" useGeneratedKeys="true" keyProperty="id">
+        insert into quality_problem_1
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="planeType != null">plane_type,</if>
+            <if test="devCode != null">dev_code,</if>
+            <if test="devUnit != null">dev_unit,</if>
+            <if test="devManufacture != null">dev_manufacture,</if>
+            <if test="devFactoryTime != null">dev_factory_time,</if>
+            <if test="devUseTime != null">dev_use_time,</if>
+            <if test="devHappenTime != null">dev_happen_time,</if>
+            <if test="partsType != null">parts_type,</if>
+            <if test="partsName != null">parts_name,</if>
+            <if test="partsModel != null">parts_model,</if>
+            <if test="partsCode != null">parts_code,</if>
+            <if test="partsUnit != null">parts_unit,</if>
+            <if test="partsManufacture != null">parts_manufacture,</if>
+            <if test="partsFactoryTime != null">parts_factory_time,</if>
+            <if test="partsUseTime != null">parts_use_time,</if>
+            <if test="faultPhenomenon != null">fault_phenomenon,</if>
+            <if test="faultModel != null">fault_model,</if>
+            <if test="environment != null">environment,</if>
+            <if test="devRepaired != null">dev_repaired,</if>
+            <if test="repairedTime != null">repaired_time,</if>
+            <if test="repairedFactory != null">repaired_factory,</if>
+            <if test="repairedStaff != null">repaired_staff,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="planeType != null">#{planeType},</if>
+            <if test="devCode != null">#{devCode},</if>
+            <if test="devUnit != null">#{devUnit},</if>
+            <if test="devManufacture != null">#{devManufacture},</if>
+            <if test="devFactoryTime != null">#{devFactoryTime},</if>
+            <if test="devUseTime != null">#{devUseTime},</if>
+            <if test="devHappenTime != null">#{devHappenTime},</if>
+            <if test="partsType != null">#{partsType},</if>
+            <if test="partsName != null">#{partsName},</if>
+            <if test="partsModel != null">#{partsModel},</if>
+            <if test="partsCode != null">#{partsCode},</if>
+            <if test="partsUnit != null">#{partsUnit},</if>
+            <if test="partsManufacture != null">#{partsManufacture},</if>
+            <if test="partsFactoryTime != null">#{partsFactoryTime},</if>
+            <if test="partsUseTime != null">#{partsUseTime},</if>
+            <if test="faultPhenomenon != null">#{faultPhenomenon},</if>
+            <if test="faultModel != null">#{faultModel},</if>
+            <if test="environment != null">#{environment},</if>
+            <if test="devRepaired != null">#{devRepaired},</if>
+            <if test="repairedTime != null">#{repairedTime},</if>
+            <if test="repairedFactory != null">#{repairedFactory},</if>
+            <if test="repairedStaff != null">#{repairedStaff},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQualityProblem" parameterType="QualityProblem">
+        update quality_problem_1
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="planeType != null">plane_type = #{planeType},</if>
+            <if test="devCode != null">dev_code = #{devCode},</if>
+            <if test="devUnit != null">dev_unit = #{devUnit},</if>
+            <if test="devManufacture != null">dev_manufacture = #{devManufacture},</if>
+            <if test="devFactoryTime != null">dev_factory_time = #{devFactoryTime},</if>
+            <if test="devUseTime != null">dev_use_time = #{devUseTime},</if>
+            <if test="devHappenTime != null">dev_happen_time = #{devHappenTime},</if>
+            <if test="partsType != null">parts_type = #{partsType},</if>
+            <if test="partsName != null">parts_name = #{partsName},</if>
+            <if test="partsModel != null">parts_model = #{partsModel},</if>
+            <if test="partsCode != null">parts_code = #{partsCode},</if>
+            <if test="partsUnit != null">parts_unit = #{partsUnit},</if>
+            <if test="partsManufacture != null">parts_manufacture = #{partsManufacture},</if>
+            <if test="partsFactoryTime != null">parts_factory_time = #{partsFactoryTime},</if>
+            <if test="partsUseTime != null">parts_use_time = #{partsUseTime},</if>
+            <if test="faultPhenomenon != null">fault_phenomenon = #{faultPhenomenon},</if>
+            <if test="faultModel != null">fault_model = #{faultModel},</if>
+            <if test="environment != null">environment = #{environment},</if>
+            <if test="devRepaired != null">dev_repaired = #{devRepaired},</if>
+            <if test="repairedTime != null">repaired_time = #{repairedTime},</if>
+            <if test="repairedFactory != null">repaired_factory = #{repairedFactory},</if>
+            <if test="repairedStaff != null">repaired_staff = #{repairedStaff},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQualityProblemById" parameterType="Long">
+        delete from quality_problem_1 where id = #{id}
+    </delete>
+
+    <delete id="deleteQualityProblemByIds" parameterType="String">
+        delete from quality_problem_1 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
