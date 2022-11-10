@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.project.system.domain.Sum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.QualityProblemMapper;
@@ -89,5 +91,15 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     public int deleteQualityProblemById(Long id)
     {
         return qualityProblemMapper.deleteQualityProblemById(id);
+    }
+    /**
+     * 质量问题发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    @Override
+    public List<Sum> qualityHappenSum(Sum sum) {
+        return qualityProblemMapper.qualityHappenSum(sum);
     }
 }

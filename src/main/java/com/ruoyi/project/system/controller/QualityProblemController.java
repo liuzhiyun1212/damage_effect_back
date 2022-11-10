@@ -1,7 +1,11 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.framework.web.domain.server.Sys;
+import com.ruoyi.project.system.domain.Sum;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,5 +104,43 @@ public class QualityProblemController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(qualityProblemService.deleteQualityProblemByIds(ids));
+    }
+
+    /**
+     * 质量问题发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    @GetMapping("/qualityHappenSum")
+    public List<Sum> qualityHappenSum(Sum sum) {
+        List<Sum> list = qualityProblemService.qualityHappenSum(sum);
+        System.out.println("aaaaaaa" + list);
+        return list;
+    }
+
+
+
+    public List<Sum> oneQuality(List<Sum> list){
+        List<Sum> list1=new ArrayList<>();
+        for(int i=1;i<list.size();i++){
+            if(list.get(i).getSum()<list.get(i-1).getSum()/2||list.get(i).getSum()>list.get(i-1).getSum()*1.5){
+                list1.add(list.get(i));
+            }
+        }
+        return list1;
+    }
+    public List<Sum> twoTime(List<Sum> list){
+        List<Sum> list2=new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            if((list.get(i).getSum()*1.2<list.get(i+1).getSum() && list.get(i+1).getSum()*1.2<list.get(i+2).getSum()) ||
+                    (list.get(i).getSum()*0.8>list.get(i+1).getSum() && list.get(i+1).getSum()*0.8>list.get(i+2).getSum())){
+                list2.add(list.get(i));
+            }
+        }
+        return list2;
+    }
+    public List<Sum> ThreeTime(List<Sum> list){
+        return null;
     }
 }

@@ -3,7 +3,10 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.QualityProblemMapper">
-    
+    <resultMap type="Sum" id="SumResult">
+        <result property="quarter" column="createTime"/>
+        <result property="sum" column="count(*)"/>
+    </resultMap>
     <resultMap type="QualityProblem" id="QualityProblemResult">
         <result property="id"    column="id"    />
         <result property="title"    column="title"    />
@@ -35,9 +38,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
     </sql>
 
+
+    <select id="qualityHappenSum" parameterType="Sum" resultMap="SumResult">
+        SELECT
+    CONCAT(year(dev_happen_time),'年',QUARTER(dev_happen_time),'季度') createTime,count(*)
+        FROM
+            quality_problem_1
+        GROUP BY
+            QUARTER(dev_happen_time)
+    </select>
     <select id="selectQualityProblemList" parameterType="QualityProblem" resultMap="QualityProblemResult">
         <include refid="selectQualityProblemVo"/>
-        <where>  
+        <where>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
             <if test="devCode != null  and devCode != ''"> and dev_code = #{devCode}</if>
