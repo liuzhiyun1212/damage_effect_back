@@ -1,6 +1,12 @@
 package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.aspectj.lang.annotation.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.QualityProblemMapper;
@@ -9,19 +15,21 @@ import com.ruoyi.project.system.service.IQualityProblemService;
 
 /**
  * quality_problemService业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
 @Service
-public class QualityProblemServiceImpl implements IQualityProblemService 
+public class QualityProblemServiceImpl implements IQualityProblemService
 {
+    private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
+
     @Autowired
     private QualityProblemMapper qualityProblemMapper;
 
     /**
      * 查询quality_problem
-     * 
+     *
      * @param id quality_problem主键
      * @return quality_problem
      */
@@ -33,7 +41,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 查询quality_problem列表
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return quality_problem
      */
@@ -45,7 +53,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 新增quality_problem
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -57,7 +65,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 修改quality_problem
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -69,7 +77,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 批量删除quality_problem
-     * 
+     *
      * @param ids 需要删除的quality_problem主键
      * @return 结果
      */
@@ -81,7 +89,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 删除quality_problem信息
-     * 
+     *
      * @param id quality_problem主键
      * @return 结果
      */
@@ -90,4 +98,63 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     {
         return qualityProblemMapper.deleteQualityProblemById(id);
     }
+
+    @Override
+    public String importData(List<QualityProblem> dataManagementList, Boolean isUpdateSupport, String operName)
+    {
+        if (StringUtils.isNull(dataManagementList) || dataManagementList.size() == 0)
+        {
+            throw new ServiceException("导入数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+        List<QualityProblem> existList = selectQualityProblemList(null);
+        for (QualityProblem importData : dataManagementList)
+        {
+            try {
+
+                /*boolean userFlag = false;
+                for (QualityProblem entry : existList) {
+                    if (entry.getResponsiblePerson().equals(importData.getResponsiblePerson())) {
+                        userFlag = true;
+                        break;
+                    }
+                }*/
+                insertQualityProblem((importData));
+                successNum++;
+                successMsg.append("<br/>" + successNum + "、数据 " + importData.getTitle() + " 导入成功");
+                /*if (!userFlag) {
+                    insertDataManagement(importData);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、数据 " + importData.getResponsiblePerson() + " 导入成功");
+                } else if (isUpdateSupport) {
+                    updateDataManagement(importData);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、数据 " + importData.getResponsiblePerson() + " 更新成功");
+                } else {
+                    failureNum++;
+                    failureMsg.append("<br/>" + failureNum + "、数据 " + importData.getResponsiblePerson() + " 已存在");
+                }*/
+            }catch (Exception e)
+            {
+                failureNum++;
+                String msg = "<br/>" + failureNum + "、账号 " + importData.getTitle() + " 导入失败：";
+                failureMsg.append(msg + e.getMessage());
+                log.error(msg, e);
+            }
+        }
+        if (failureNum > 0)
+        {
+            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+            throw new ServiceException(failureMsg.toString());
+        }
+        else
+        {
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        }
+        return successMsg.toString();
+    }
+
 }

@@ -9,7 +9,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * quality_problem对象 quality_problem_1
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
@@ -18,6 +18,7 @@ public class QualityProblem extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 序号 */
+    @Excel(name = "序号", cellType = Excel.ColumnType.NUMERIC)
     private Long id;
 
     /** 质量问题标题 */
@@ -116,219 +117,219 @@ public class QualityProblem extends BaseEntity
     @Excel(name = "大修人员")
     private String repairedStaff;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setTitle(String title) 
+    public void setTitle(String title)
     {
         this.title = title;
     }
 
-    public String getTitle() 
+    public String getTitle()
     {
         return title;
     }
-    public void setPlaneType(String planeType) 
+    public void setPlaneType(String planeType)
     {
         this.planeType = planeType;
     }
 
-    public String getPlaneType() 
+    public String getPlaneType()
     {
         return planeType;
     }
-    public void setDevCode(String devCode) 
+    public void setDevCode(String devCode)
     {
         this.devCode = devCode;
     }
 
-    public String getDevCode() 
+    public String getDevCode()
     {
         return devCode;
     }
-    public void setDevUnit(String devUnit) 
+    public void setDevUnit(String devUnit)
     {
         this.devUnit = devUnit;
     }
 
-    public String getDevUnit() 
+    public String getDevUnit()
     {
         return devUnit;
     }
-    public void setDevManufacture(String devManufacture) 
+    public void setDevManufacture(String devManufacture)
     {
         this.devManufacture = devManufacture;
     }
 
-    public String getDevManufacture() 
+    public String getDevManufacture()
     {
         return devManufacture;
     }
-    public void setDevFactoryTime(Date devFactoryTime) 
+    public void setDevFactoryTime(Date devFactoryTime)
     {
         this.devFactoryTime = devFactoryTime;
     }
 
-    public Date getDevFactoryTime() 
+    public Date getDevFactoryTime()
     {
         return devFactoryTime;
     }
-    public void setDevUseTime(String devUseTime) 
+    public void setDevUseTime(String devUseTime)
     {
         this.devUseTime = devUseTime;
     }
 
-    public String getDevUseTime() 
+    public String getDevUseTime()
     {
         return devUseTime;
     }
-    public void setDevHappenTime(Date devHappenTime) 
+    public void setDevHappenTime(Date devHappenTime)
     {
         this.devHappenTime = devHappenTime;
     }
 
-    public Date getDevHappenTime() 
+    public Date getDevHappenTime()
     {
         return devHappenTime;
     }
-    public void setPartsType(String partsType) 
+    public void setPartsType(String partsType)
     {
         this.partsType = partsType;
     }
 
-    public String getPartsType() 
+    public String getPartsType()
     {
         return partsType;
     }
-    public void setPartsName(String partsName) 
+    public void setPartsName(String partsName)
     {
         this.partsName = partsName;
     }
 
-    public String getPartsName() 
+    public String getPartsName()
     {
         return partsName;
     }
-    public void setPartsModel(String partsModel) 
+    public void setPartsModel(String partsModel)
     {
         this.partsModel = partsModel;
     }
 
-    public String getPartsModel() 
+    public String getPartsModel()
     {
         return partsModel;
     }
-    public void setPartsCode(String partsCode) 
+    public void setPartsCode(String partsCode)
     {
         this.partsCode = partsCode;
     }
 
-    public String getPartsCode() 
+    public String getPartsCode()
     {
         return partsCode;
     }
-    public void setPartsUnit(String partsUnit) 
+    public void setPartsUnit(String partsUnit)
     {
         this.partsUnit = partsUnit;
     }
 
-    public String getPartsUnit() 
+    public String getPartsUnit()
     {
         return partsUnit;
     }
-    public void setPartsManufacture(String partsManufacture) 
+    public void setPartsManufacture(String partsManufacture)
     {
         this.partsManufacture = partsManufacture;
     }
 
-    public String getPartsManufacture() 
+    public String getPartsManufacture()
     {
         return partsManufacture;
     }
-    public void setPartsFactoryTime(Date partsFactoryTime) 
+    public void setPartsFactoryTime(Date partsFactoryTime)
     {
         this.partsFactoryTime = partsFactoryTime;
     }
 
-    public Date getPartsFactoryTime() 
+    public Date getPartsFactoryTime()
     {
         return partsFactoryTime;
     }
-    public void setPartsUseTime(String partsUseTime) 
+    public void setPartsUseTime(String partsUseTime)
     {
         this.partsUseTime = partsUseTime;
     }
 
-    public String getPartsUseTime() 
+    public String getPartsUseTime()
     {
         return partsUseTime;
     }
-    public void setFaultPhenomenon(String faultPhenomenon) 
+    public void setFaultPhenomenon(String faultPhenomenon)
     {
         this.faultPhenomenon = faultPhenomenon;
     }
 
-    public String getFaultPhenomenon() 
+    public String getFaultPhenomenon()
     {
         return faultPhenomenon;
     }
-    public void setFaultModel(String faultModel) 
+    public void setFaultModel(String faultModel)
     {
         this.faultModel = faultModel;
     }
 
-    public String getFaultModel() 
+    public String getFaultModel()
     {
         return faultModel;
     }
-    public void setEnvironment(String environment) 
+    public void setEnvironment(String environment)
     {
         this.environment = environment;
     }
 
-    public String getEnvironment() 
+    public String getEnvironment()
     {
         return environment;
     }
-    public void setDevRepaired(String devRepaired) 
+    public void setDevRepaired(String devRepaired)
     {
         this.devRepaired = devRepaired;
     }
 
-    public String getDevRepaired() 
+    public String getDevRepaired()
     {
         return devRepaired;
     }
-    public void setRepairedTime(Date repairedTime) 
+    public void setRepairedTime(Date repairedTime)
     {
         this.repairedTime = repairedTime;
     }
 
-    public Date getRepairedTime() 
+    public Date getRepairedTime()
     {
         return repairedTime;
     }
-    public void setRepairedFactory(String repairedFactory) 
+    public void setRepairedFactory(String repairedFactory)
     {
         this.repairedFactory = repairedFactory;
     }
 
-    public String getRepairedFactory() 
+    public String getRepairedFactory()
     {
         return repairedFactory;
     }
-    public void setRepairedStaff(String repairedStaff) 
+    public void setRepairedStaff(String repairedStaff)
     {
         this.repairedStaff = repairedStaff;
     }
 
-    public String getRepairedStaff() 
+    public String getRepairedStaff()
     {
         return repairedStaff;
     }
