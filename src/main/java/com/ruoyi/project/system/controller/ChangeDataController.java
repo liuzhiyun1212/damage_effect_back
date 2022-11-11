@@ -30,7 +30,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * @date 2022-11-10
  */
 @RestController
-@RequestMapping("/system/data")
+@RequestMapping("/system/changedata")
 public class ChangeDataController extends BaseController
 {
     @Autowired
