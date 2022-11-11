@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.EquipmentUsageData9Mapper">
+    
+    <resultMap type="EquipmentUsageData9" id="EquipmentUsageData9Result">
+        <result property="id"    column="id"    />
+        <result property="yearMonth"    column="year_month"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="troops"    column="troops"    />
+        <result property="flightHours"    column="flight_hours"    />
+    </resultMap>
+
+    <sql id="selectEquipmentUsageData9Vo">
+        select id, year_month, plane_type, troops, flight_hours from equipment_usage_data_9
+    </sql>
+
+    <select id="selectEquipmentUsageData9List" parameterType="EquipmentUsageData9" resultMap="EquipmentUsageData9Result">
+        <include refid="selectEquipmentUsageData9Vo"/>
+        <where>  
+            <if test="yearMonth != null "> and year_month = #{yearMonth}</if>
+            <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
+            <if test="troops != null  and troops != ''"> and troops = #{troops}</if>
+            <if test="flightHours != null  and flightHours != ''"> and flight_hours = #{flightHours}</if>
+        </where>
+    </select>
+    
+    <select id="selectEquipmentUsageData9ById" parameterType="Long" resultMap="EquipmentUsageData9Result">
+        <include refid="selectEquipmentUsageData9Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEquipmentUsageData9" parameterType="EquipmentUsageData9">
+        insert into equipment_usage_data_9
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="yearMonth != null">year_month,</if>
+            <if test="planeType != null">plane_type,</if>
+            <if test="troops != null">troops,</if>
+            <if test="flightHours != null">flight_hours,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="yearMonth != null">#{yearMonth},</if>
+            <if test="planeType != null">#{planeType},</if>
+            <if test="troops != null">#{troops},</if>
+            <if test="flightHours != null">#{flightHours},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEquipmentUsageData9" parameterType="EquipmentUsageData9">
+        update equipment_usage_data_9
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yearMonth != null">year_month = #{yearMonth},</if>
+            <if test="planeType != null">plane_type = #{planeType},</if>
+            <if test="troops != null">troops = #{troops},</if>
+            <if test="flightHours != null">flight_hours = #{flightHours},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEquipmentUsageData9ById" parameterType="Long">
+        delete from equipment_usage_data_9 where id = #{id}
+    </delete>
+
+    <delete id="deleteEquipmentUsageData9ByIds" parameterType="String">
+        delete from equipment_usage_data_9 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -2,6 +2,10 @@ package com.ruoyi.project.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +24,11 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * quality_problemController
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
@@ -45,6 +50,14 @@ public class QualityProblemController extends BaseController
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
         return getDataTable(list);
     }
+
+    @GetMapping("/listAll")
+    public TableDataInfo listAll(QualityProblem qualityProblem)
+    {
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
+        return getDataTable(list);
+    }
+
 
     /**
      * 导出quality_problem列表
@@ -100,5 +113,25 @@ public class QualityProblemController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(qualityProblemService.deleteQualityProblemByIds(ids));
+    }
+    /**
+     * 导入数据管理列表
+     */
+    @Log(title = "数据管理", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<QualityProblem> util = new ExcelUtil<QualityProblem>(QualityProblem.class);
+        List<QualityProblem> QualityProblemList = util.importExcel(file.getInputStream());
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = getUsername();
+        String message = qualityProblemService.importData(QualityProblemList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<QualityProblem> util = new ExcelUtil<QualityProblem>(QualityProblem.class);
+        util.importTemplateExcel(response, "质量问题数据");
     }
 }
