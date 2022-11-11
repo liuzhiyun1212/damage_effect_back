@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ProductModifyMapper">
+    
+    <resultMap type="ProductModify" id="ProductModifyResult">
+        <result property="id"    column="id"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="productType"    column="product_type"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productModel"    column="product_model"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <result property="modifyMeasures"    column="modify_measures"    />
+    </resultMap>
+
+    <sql id="selectProductModifyVo">
+        select id, plane_type, product_type, product_name, product_model, modify_time, modify_measures from product_modify_4
+    </sql>
+
+    <select id="selectProductModifyList" parameterType="ProductModify" resultMap="ProductModifyResult">
+        <include refid="selectProductModifyVo"/>
+        <where>  
+            <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
+            <if test="productType != null  and productType != ''"> and product_type = #{productType}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="productModel != null  and productModel != ''"> and product_model = #{productModel}</if>
+            <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+            <if test="modifyMeasures != null  and modifyMeasures != ''"> and modify_measures = #{modifyMeasures}</if>
+        </where>
+    </select>
+    
+    <select id="selectProductModifyById" parameterType="Long" resultMap="ProductModifyResult">
+        <include refid="selectProductModifyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertProductModify" parameterType="ProductModify" useGeneratedKeys="true" keyProperty="id">
+        insert into product_modify_4
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">plane_type,</if>
+            <if test="productType != null">product_type,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="productModel != null">product_model,</if>
+            <if test="modifyTime != null">modify_time,</if>
+            <if test="modifyMeasures != null">modify_measures,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">#{planeType},</if>
+            <if test="productType != null">#{productType},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="productModel != null">#{productModel},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+            <if test="modifyMeasures != null">#{modifyMeasures},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductModify" parameterType="ProductModify">
+        update product_modify_4
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planeType != null">plane_type = #{planeType},</if>
+            <if test="productType != null">product_type = #{productType},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="productModel != null">product_model = #{productModel},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime},</if>
+            <if test="modifyMeasures != null">modify_measures = #{modifyMeasures},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductModifyById" parameterType="Long">
+        delete from product_modify_4 where id = #{id}
+    </delete>
+
+    <delete id="deleteProductModifyByIds" parameterType="String">
+        delete from product_modify_4 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

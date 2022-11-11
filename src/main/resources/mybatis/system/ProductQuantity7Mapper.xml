@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ProductQuantity7Mapper">
+    
+    <resultMap type="ProductQuantity7" id="ProductQuantity7Result">
+        <result property="id"    column="id"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productModel"    column="product_model"    />
+        <result property="productFactoryNumber"    column="product_factory_number"    />
+        <result property="productFactoryDate"    column="product_factory_date"    />
+        <result property="productBatch"    column="product_batch"    />
+        <result property="productMakeGroup"    column="product_make_group"    />
+        <result property="productMakePeople"    column="product_make_people"    />
+        <result property="productProcessEquipment"    column="product_process_equipment"    />
+    </resultMap>
+
+    <sql id="selectProductQuantity7Vo">
+        select id, plane_type, product_name, product_model, product_factory_number, product_factory_date, product_batch, product_make_group, product_make_people, product_process_equipment from product_quantity_7
+    </sql>
+
+    <select id="selectProductQuantity7List" parameterType="ProductQuantity7" resultMap="ProductQuantity7Result">
+        <include refid="selectProductQuantity7Vo"/>
+        <where>  
+            <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="productModel != null  and productModel != ''"> and product_model = #{productModel}</if>
+            <if test="productFactoryNumber != null  and productFactoryNumber != ''"> and product_factory_number = #{productFactoryNumber}</if>
+            <if test="productFactoryDate != null "> and product_factory_date = #{productFactoryDate}</if>
+            <if test="productBatch != null  and productBatch != ''"> and product_batch = #{productBatch}</if>
+            <if test="productMakeGroup != null  and productMakeGroup != ''"> and product_make_group = #{productMakeGroup}</if>
+            <if test="productMakePeople != null  and productMakePeople != ''"> and product_make_people = #{productMakePeople}</if>
+            <if test="productProcessEquipment != null  and productProcessEquipment != ''"> and product_process_equipment = #{productProcessEquipment}</if>
+        </where>
+    </select>
+    
+    <select id="selectProductQuantity7ById" parameterType="Long" resultMap="ProductQuantity7Result">
+        <include refid="selectProductQuantity7Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertProductQuantity7" parameterType="ProductQuantity7">
+        insert into product_quantity_7
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="planeType != null">plane_type,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="productModel != null">product_model,</if>
+            <if test="productFactoryNumber != null">product_factory_number,</if>
+            <if test="productFactoryDate != null">product_factory_date,</if>
+            <if test="productBatch != null">product_batch,</if>
+            <if test="productMakeGroup != null">product_make_group,</if>
+            <if test="productMakePeople != null">product_make_people,</if>
+            <if test="productProcessEquipment != null">product_process_equipment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="planeType != null">#{planeType},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="productModel != null">#{productModel},</if>
+            <if test="productFactoryNumber != null">#{productFactoryNumber},</if>
+            <if test="productFactoryDate != null">#{productFactoryDate},</if>
+            <if test="productBatch != null">#{productBatch},</if>
+            <if test="productMakeGroup != null">#{productMakeGroup},</if>
+            <if test="productMakePeople != null">#{productMakePeople},</if>
+            <if test="productProcessEquipment != null">#{productProcessEquipment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductQuantity7" parameterType="ProductQuantity7">
+        update product_quantity_7
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planeType != null">plane_type = #{planeType},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="productModel != null">product_model = #{productModel},</if>
+            <if test="productFactoryNumber != null">product_factory_number = #{productFactoryNumber},</if>
+            <if test="productFactoryDate != null">product_factory_date = #{productFactoryDate},</if>
+            <if test="productBatch != null">product_batch = #{productBatch},</if>
+            <if test="productMakeGroup != null">product_make_group = #{productMakeGroup},</if>
+            <if test="productMakePeople != null">product_make_people = #{productMakePeople},</if>
+            <if test="productProcessEquipment != null">product_process_equipment = #{productProcessEquipment},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductQuantity7ById" parameterType="Long">
+        delete from product_quantity_7 where id = #{id}
+    </delete>
+
+    <delete id="deleteProductQuantity7ByIds" parameterType="String">
+        delete from product_quantity_7 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

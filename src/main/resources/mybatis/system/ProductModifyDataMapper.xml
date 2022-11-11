@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ProductModifyDataMapper">
+    
+    <resultMap type="ProductModifyData" id="ProductModifyDataResult">
+        <result property="id"    column="id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productModel"    column="product_model"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <result property="modifyType"    column="modify_type"    />
+        <result property="modifyMethod"    column="modify_method"    />
+    </resultMap>
+
+    <sql id="selectProductModifyDataVo">
+        select id, product_name, product_model, modify_time, modify_type, modify_method from product_modify_data_6
+    </sql>
+
+    <select id="selectProductModifyDataList" parameterType="ProductModifyData" resultMap="ProductModifyDataResult">
+        <include refid="selectProductModifyDataVo"/>
+        <where>  
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="productModel != null  and productModel != ''"> and product_model = #{productModel}</if>
+            <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+            <if test="modifyType != null  and modifyType != ''"> and modify_type = #{modifyType}</if>
+            <if test="modifyMethod != null  and modifyMethod != ''"> and modify_method = #{modifyMethod}</if>
+        </where>
+    </select>
+    
+    <select id="selectProductModifyDataById" parameterType="Long" resultMap="ProductModifyDataResult">
+        <include refid="selectProductModifyDataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertProductModifyData" parameterType="ProductModifyData" useGeneratedKeys="true" keyProperty="id">
+        insert into product_modify_data_6
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productName != null">product_name,</if>
+            <if test="productModel != null">product_model,</if>
+            <if test="modifyTime != null">modify_time,</if>
+            <if test="modifyType != null">modify_type,</if>
+            <if test="modifyMethod != null">modify_method,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productName != null">#{productName},</if>
+            <if test="productModel != null">#{productModel},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+            <if test="modifyType != null">#{modifyType},</if>
+            <if test="modifyMethod != null">#{modifyMethod},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductModifyData" parameterType="ProductModifyData">
+        update product_modify_data_6
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="productModel != null">product_model = #{productModel},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime},</if>
+            <if test="modifyType != null">modify_type = #{modifyType},</if>
+            <if test="modifyMethod != null">modify_method = #{modifyMethod},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductModifyDataById" parameterType="Long">
+        delete from product_modify_data_6 where id = #{id}
+    </delete>
+
+    <delete id="deleteProductModifyDataByIds" parameterType="String">
+        delete from product_modify_data_6 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
