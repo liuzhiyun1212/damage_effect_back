@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.RuleConstructionMapper">
+    
+    <resultMap type="RuleConstruction" id="RuleConstructionResult">
+        <result property="id"    column="id"    />
+        <result property="changeName"    column="change_name"    />
+        <result property="rule"    column="rule"    />
+        <result property="ruleData"    column="rule_data"    />
+    </resultMap>
+
+    <sql id="selectRuleConstructionVo">
+        select id, change_name, rule, rule_data from rule_construction
+    </sql>
+
+    <select id="selectRuleConstructionList" parameterType="RuleConstruction" resultMap="RuleConstructionResult">
+        <include refid="selectRuleConstructionVo"/>
+        <where>  
+            <if test="changeName != null  and changeName != ''"> and change_name like concat('%', #{changeName}, '%')</if>
+            <if test="rule != null  and rule != ''"> and rule = #{rule}</if>
+            <if test="ruleData != null  and ruleData != ''"> and rule_data = #{ruleData}</if>
+        </where>
+    </select>
+    
+    <select id="selectRuleConstructionById" parameterType="Long" resultMap="RuleConstructionResult">
+        <include refid="selectRuleConstructionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRuleConstruction" parameterType="RuleConstruction" useGeneratedKeys="true" keyProperty="id">
+        insert into rule_construction
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="changeName != null">change_name,</if>
+            <if test="rule != null">rule,</if>
+            <if test="ruleData != null">rule_data,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="changeName != null">#{changeName},</if>
+            <if test="rule != null">#{rule},</if>
+            <if test="ruleData != null">#{ruleData},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRuleConstruction" parameterType="RuleConstruction">
+        update rule_construction
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="changeName != null">change_name = #{changeName},</if>
+            <if test="rule != null">rule = #{rule},</if>
+            <if test="ruleData != null">rule_data = #{ruleData},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRuleConstructionById" parameterType="Long">
+        delete from rule_construction where id = #{id}
+    </delete>
+
+    <delete id="deleteRuleConstructionByIds" parameterType="String">
+        delete from rule_construction where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
