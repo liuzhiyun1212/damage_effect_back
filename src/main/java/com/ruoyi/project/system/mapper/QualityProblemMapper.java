@@ -60,10 +60,24 @@ public interface QualityProblemMapper
      */
     public int deleteQualityProblemByIds(Long[] ids);
     /**
-     * 质量问题发生时间
+     * 质量问题季度发生时间
      *
      * @param
      * @return 统计结果
      */
     public List<Sum> qualityHappenSum(Sum sum);
+    /**
+     * 质量问题年度发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    public List<Sum> yearHappenSum(Sum sum);
+    /**
+     * 质量问题涉及到的机型
+     *
+     * @param
+     * @return 统计结果
+     */
+    public List<Sum> sumByplaneType(Sum sum);
 }

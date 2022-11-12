@@ -7,6 +7,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="quarter" column="createTime"/>
         <result property="sum" column="count(*)"/>
     </resultMap>
+    <resultMap type="Sum" id="SumPlaneTypeResult">
+        <result property="quarter" column="plane_type"/>
+        <result property="sum" column="count(*)"/>
+    </resultMap>
     <resultMap type="QualityProblem" id="QualityProblemResult">
         <result property="id"    column="id"    />
         <result property="title"    column="title"    />
@@ -45,7 +49,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM
             quality_problem_1
         GROUP BY
-            QUARTER(dev_happen_time)
+            createTime
+        order by year(dev_happen_time) asc
+    </select>
+<!--    年份统计-->
+    <select id="yearHappenSum" parameterType="Sum" resultMap="SumResult">
+        SELECT
+    CONCAT(year(dev_happen_time),'年') createTime,count(*)
+        FROM
+            quality_problem_1
+        GROUP BY
+            year(dev_happen_time)
+        order by year(dev_happen_time) asc
+    </select>
+<!--   质量问题涉及到的机型 -->
+    <select id="sumByplaneType" parameterType="Sum" resultMap="SumPlaneTypeResult">
+        SELECT
+            plane_type,count(*)
+                FROM
+                    quality_problem_1
+                GROUP BY
+                    plane_type
+                ORDER BY count(*) asc
     </select>
     <select id="selectQualityProblemList" parameterType="QualityProblem" resultMap="QualityProblemResult">
         <include refid="selectQualityProblemVo"/>

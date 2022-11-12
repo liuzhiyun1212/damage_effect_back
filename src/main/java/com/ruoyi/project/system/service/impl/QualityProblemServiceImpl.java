@@ -102,4 +102,24 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     public List<Sum> qualityHappenSum(Sum sum) {
         return qualityProblemMapper.qualityHappenSum(sum);
     }
+    /**
+     * 年度质量问题发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    @Override
+    public List<Sum> yearHappenSum(Sum sum) {
+        return qualityProblemMapper.yearHappenSum(sum);
+    }
+    /**
+     * 质量问题涉及到的机型
+     *
+     * @param
+     * @return 统计结果
+     */
+    @Override
+    public List<Sum> sumByplaneType(Sum sum) {
+        return qualityProblemMapper.sumByplaneType(sum);
+    }
 }

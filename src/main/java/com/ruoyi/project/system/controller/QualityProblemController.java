@@ -107,7 +107,7 @@ public class QualityProblemController extends BaseController
     }
 
     /**
-     * 质量问题发生时间
+     * 季度质量问题发生时间
      *
      * @param
      * @return 统计结果
@@ -119,9 +119,43 @@ public class QualityProblemController extends BaseController
         return list;
     }
 
+    @GetMapping("/oneQuality")
+    public List oneQuality(Sum sum){
+        List<Sum> list=qualityHappenSum(sum);
+        List<List<Sum>> bigList = new ArrayList<>();
+        bigList.add(oneTime(list));
+        bigList.add(twoTime(list));
+        bigList.add(threeTime(list));
+        return bigList;
+    }
+    /**
+     * 年度质量问题发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    @GetMapping("/yearHappenSum")
+    public List<Sum> yearHappenSum(Sum sum){
+        List<Sum> list = qualityProblemService.yearHappenSum(sum);
+        return list;
+    }
+    @GetMapping("/oneYear")
+    public List oneYear(Sum sum){
+        List<Sum> list=yearHappenSum(sum);
+        List<List<Sum>> bigList = new ArrayList<>();
+        bigList.add(oneTime(list));
+        bigList.add(twoTime(list));
+        bigList.add(threeTime(list));
+        return bigList;
+    }
 
-
-    public List<Sum> oneQuality(List<Sum> list){
+    /**
+     * 条件1较上一时间增加或减少50%以上
+     *
+     * @param
+     * @return 统计结果
+     */
+    public List<Sum> oneTime(List<Sum> list){
         List<Sum> list1=new ArrayList<>();
         for(int i=1;i<list.size();i++){
             if(list.get(i).getSum()<list.get(i-1).getSum()/2||list.get(i).getSum()>list.get(i-1).getSum()*1.5){
@@ -130,9 +164,15 @@ public class QualityProblemController extends BaseController
         }
         return list1;
     }
+    /**
+     * 条件2连续两个时间段增加或减少20%以上
+     *
+     * @param
+     * @return 统计结果
+     */
     public List<Sum> twoTime(List<Sum> list){
         List<Sum> list2=new ArrayList<>();
-        for(int i=0;i<list.size();i++){
+        for(int i=0;i<list.size()-2;i++){
             if((list.get(i).getSum()*1.2<list.get(i+1).getSum() && list.get(i+1).getSum()*1.2<list.get(i+2).getSum()) ||
                     (list.get(i).getSum()*0.8>list.get(i+1).getSum() && list.get(i+1).getSum()*0.8>list.get(i+2).getSum())){
                 list2.add(list.get(i));
@@ -140,7 +180,58 @@ public class QualityProblemController extends BaseController
         }
         return list2;
     }
-    public List<Sum> ThreeTime(List<Sum> list){
-        return null;
+    /**
+     * 条件3连续三个时间段呈单调变化趋势
+     *
+     * @param
+     * @return 统计结果
+     */
+    public List<Sum> threeTime(List<Sum> list){
+        List<Sum> list3 = new ArrayList<>();
+        for(int i=0;i<list.size()-2;i++){
+            if((list.get(i).getSum()<list.get(i+1).getSum() && list.get(i+1).getSum()<list.get(i+2).getSum())||
+            (list.get(i).getSum()>list.get(i+1).getSum() && list.get(i+1).getSum()>list.get(i+2).getSum())){
+                list3.add(list.get(i));
+            }
+        }
+        return list3;
+    }
+    /**
+     * 质量问题涉及到的机型
+     *
+     * @param
+     * @return 统计结果
+     */
+    @GetMapping("/sumByplaneType")
+    public List<Sum> sumByplaneType(Sum sum) {
+        List<Sum> list = qualityProblemService.sumByplaneType(sum);
+        System.out.println("机型" + list);
+        System.out.println("aaaaaaaaaaaa" + list);
+        return list;
+    }
+    /**
+     * 筛选若某机型质量问题发生数大于质量问题机型平均发生数50%
+     *
+     * @param
+     * @return 统计结果
+     */
+    @GetMapping("/selectPlaneType")
+    public List<Sum> selectPlaneType(Sum sum) {
+        List<Sum> list = new ArrayList<>();
+        List<Sum> list1 = new ArrayList<>();
+        list = sumByplaneType(sum);
+        int count=0;
+        int average=0;
+        for(int i=0;i<list.size();i++){
+            count += list.get(i).getSum();
+        }
+        average = count/list.size();
+        for(int i=0;i<list.size();i++) {
+            if(list.get(i).getSum() > average){
+                list1.add(list.get(i));
+            }
+        }
+        System.out.println("机型" + list);
+        return list1;
     }
 }
