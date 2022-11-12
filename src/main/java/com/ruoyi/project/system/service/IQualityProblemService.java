@@ -2,6 +2,7 @@ package com.ruoyi.project.system.service;
 
 import java.util.List;
 import com.ruoyi.project.system.domain.QualityProblem;
+import com.ruoyi.project.system.domain.Sum;
 
 /**
  * quality_problemService接口

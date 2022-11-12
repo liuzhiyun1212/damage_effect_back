@@ -28,6 +28,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * quality_problemController
@@ -179,6 +180,51 @@ public class QualityProblemController extends BaseController
         bigList.add(twoTime(list));
         bigList.add(threeTime(list));
         return bigList;
+    }
+
+
+    public List season(Sum sum){
+        List<Sum> list = new ArrayList<>();
+        List<Sum> listall = qualityProblemService.qualityHappenSum(sum);
+        int mark=0;
+        for(int i=1;i<listall.size();i++) {
+            Sum obj = new Sum();
+            if (listall.get(i).getSum() < listall.get(i - 1).getSum() / 2 || listall.get(i).getSum() > listall.get(i - 1).getSum() * 1.5) {
+                mark = 1;
+                obj.setQuarter(listall.get(i).getQuarter());
+                obj.setSum(listall.get(i).getSum());
+                obj.setCondition("1");
+            }
+            if ((listall.get(i).getSum() * 1.2 < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 1.2 < listall.get(i + 2).getSum()) ||
+                    (listall.get(i).getSum() * 0.8 > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 0.8 > listall.get(i + 2).getSum())) {
+                if (mark == 1) {
+                    obj.setCondition("1,2");
+                    mark=12;
+                } else if (mark == 0) {
+                    mark = 2;
+                    obj.setQuarter(listall.get(i).getQuarter());
+                    obj.setSum(listall.get(i).getSum());
+                    obj.setCondition("2");
+                }
+            }
+            if ((list.get(i).getSum() < list.get(i + 1).getSum() && list.get(i + 1).getSum() < list.get(i + 2).getSum()) ||
+                    (list.get(i).getSum() > list.get(i + 1).getSum() && list.get(i + 1).getSum() > list.get(i + 2).getSum())) {
+                if (mark == 1) {
+                    obj.setCondition("1,3");
+                } else if (mark == 0) {
+                    obj.setQuarter(listall.get(i).getQuarter());
+                    obj.setSum(listall.get(i).getSum());
+                    obj.setCondition("3");
+                } else if (mark == 12) {
+                    obj.setCondition("1,2,3");
+                }
+                else if (mark == 2) {
+                    obj.setCondition("2,3");
+                }
+            }
+            list.add(obj);
+        }
+        return list;
     }
 
     /**
