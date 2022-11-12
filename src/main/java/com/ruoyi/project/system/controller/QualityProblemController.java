@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.project.system.domain.SysUser;
+
 import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.project.system.domain.Sum;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,6 +53,14 @@ public class QualityProblemController extends BaseController
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
         return getDataTable(list);
     }
+
+    @GetMapping("/listAll")
+    public TableDataInfo listAll(QualityProblem qualityProblem)
+    {
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
+        return getDataTable(list);
+    }
+
 
     /**
      * 导出quality_problem列表
@@ -104,6 +116,26 @@ public class QualityProblemController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(qualityProblemService.deleteQualityProblemByIds(ids));
+    }
+    /**
+     * 导入数据管理列表
+     */
+    @Log(title = "数据管理", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<QualityProblem> util = new ExcelUtil<QualityProblem>(QualityProblem.class);
+        List<QualityProblem> QualityProblemList = util.importExcel(file.getInputStream());
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = getUsername();
+        String message = qualityProblemService.importData(QualityProblemList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<QualityProblem> util = new ExcelUtil<QualityProblem>(QualityProblem.class);
+        util.importTemplateExcel(response, "质量问题数据");
     }
 
     /**

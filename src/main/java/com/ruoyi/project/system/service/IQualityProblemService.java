@@ -2,7 +2,6 @@ package com.ruoyi.project.system.service;
 
 import java.util.List;
 import com.ruoyi.project.system.domain.QualityProblem;
-import com.ruoyi.project.system.domain.Sum;
 
 /**
  * quality_problemService接口
@@ -59,6 +58,17 @@ public interface IQualityProblemService
      * @return 结果
      */
     public int deleteQualityProblemById(Long id);
+
+    /**
+     * 导入用户数据
+     *
+     * @param dataManagementList 数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    public String importData(List<QualityProblem> dataManagementList, Boolean isUpdateSupport, String operName);
+
     /**
      * 季度质量问题发生时间
      *

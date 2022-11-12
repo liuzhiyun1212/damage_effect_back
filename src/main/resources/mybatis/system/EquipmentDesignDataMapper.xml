@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.EquipmentDesignDataMapper">
+    
+    <resultMap type="EquipmentDesignData" id="EquipmentDesignDataResult">
+        <result property="id"    column="id"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="remodelDate"    column="remodel_date"    />
+        <result property="remodelMeasure"    column="remodel_measure"    />
+        <result property="makeUnit"    column="make_unit"    />
+    </resultMap>
+
+    <sql id="selectEquipmentDesignDataVo">
+        select id, plane_type, remodel_date, remodel_measure, make_unit from equipment_design_data
+    </sql>
+
+    <select id="selectEquipmentDesignDataList" parameterType="EquipmentDesignData" resultMap="EquipmentDesignDataResult">
+        <include refid="selectEquipmentDesignDataVo"/>
+        <where>  
+            <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
+            <if test="remodelDate != null "> and remodel_date = #{remodelDate}</if>
+            <if test="remodelMeasure != null  and remodelMeasure != ''"> and remodel_measure = #{remodelMeasure}</if>
+            <if test="makeUnit != null  and makeUnit != ''"> and make_unit = #{makeUnit}</if>
+        </where>
+    </select>
+    
+    <select id="selectEquipmentDesignDataById" parameterType="Long" resultMap="EquipmentDesignDataResult">
+        <include refid="selectEquipmentDesignDataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEquipmentDesignData" parameterType="EquipmentDesignData" useGeneratedKeys="true" keyProperty="id">
+        insert into equipment_design_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">plane_type,</if>
+            <if test="remodelDate != null">remodel_date,</if>
+            <if test="remodelMeasure != null">remodel_measure,</if>
+            <if test="makeUnit != null">make_unit,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">#{planeType},</if>
+            <if test="remodelDate != null">#{remodelDate},</if>
+            <if test="remodelMeasure != null">#{remodelMeasure},</if>
+            <if test="makeUnit != null">#{makeUnit},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEquipmentDesignData" parameterType="EquipmentDesignData">
+        update equipment_design_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planeType != null">plane_type = #{planeType},</if>
+            <if test="remodelDate != null">remodel_date = #{remodelDate},</if>
+            <if test="remodelMeasure != null">remodel_measure = #{remodelMeasure},</if>
+            <if test="makeUnit != null">make_unit = #{makeUnit},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEquipmentDesignDataById" parameterType="Long">
+        delete from equipment_design_data where id = #{id}
+    </delete>
+
+    <delete id="deleteEquipmentDesignDataByIds" parameterType="String">
+        delete from equipment_design_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

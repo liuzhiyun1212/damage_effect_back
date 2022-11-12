@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ChangeDataMapper">
+    
+    <resultMap type="ChangeData" id="ChangeDataResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="parentId"    column="parent_id"    />
+    </resultMap>
+
+    <sql id="selectChangeDataVo">
+        select id, name, parent_id from change_data
+    </sql>
+
+    <select id="selectChangeDataList" parameterType="ChangeData" resultMap="ChangeDataResult">
+        <include refid="selectChangeDataVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectChangeDataById" parameterType="Long" resultMap="ChangeDataResult">
+        <include refid="selectChangeDataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertChangeData" parameterType="ChangeData" useGeneratedKeys="true" keyProperty="id">
+        insert into change_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="parentId != null">parent_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="parentId != null">#{parentId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChangeData" parameterType="ChangeData">
+        update change_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChangeDataById" parameterType="Long">
+        delete from change_data where id = #{id}
+    </delete>
+
+    <delete id="deleteChangeDataByIds" parameterType="String">
+        delete from change_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
