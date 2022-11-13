@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.AircraftTypeAndTypeMapper">
+
+    <resultMap type="AircraftTypeAndTime" id="AircraftTypeAndTypeResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="planeType" column="plane_type"/>
+        <result property="devCode" column="dev_code"/>
+        <result property="devUnit" column="dev_unit"/>
+        <result property="devManufacture" column="dev_manufacture"/>
+        <result property="devFactoryTime" column="dev_factory_time"/>
+        <result property="devUseTime" column="dev_use_time"/>
+        <result property="devHappenTime" column="dev_happen_time"/>
+        <result property="partsType" column="parts_type"/>
+        <result property="partsName" column="parts_name"/>
+        <result property="partsModel" column="parts_model"/>
+        <result property="partsCode" column="parts_code"/>
+        <result property="partsUnit" column="parts_unit"/>
+        <result property="partsManufacture" column="parts_manufacture"/>
+        <result property="partsFactoryTime" column="parts_factory_time"/>
+        <result property="partsUseTime" column="parts_use_time"/>
+        <result property="faultPhenomenon" column="fault_phenomenon"/>
+        <result property="faultModel" column="fault_model"/>
+        <result property="environment" column="environment"/>
+        <result property="devRepaired" column="dev_repaired"/>
+        <result property="repairedTime" column="repaired_time"/>
+        <result property="repairedFactory" column="repaired_factory"/>
+        <result property="repairedStaff" column="repaired_staff"/>
+        <result property="quarter" column="quarter"/>
+    </resultMap>
+
+    <select id="selectQuarter" resultMap="AircraftTypeAndTypeResult">
+        select id, QUARTER(dev_happen_time) as quarter, title, plane_type, dev_happen_time
+        from quality_problem_1
+        ORDER BY dev_happen_time
+    </select>
+</mapper>
