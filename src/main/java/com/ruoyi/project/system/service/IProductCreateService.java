@@ -5,15 +5,15 @@ import com.ruoyi.project.system.domain.ProductCreate;
 
 /**
  * 产品制造数据Service接口
- * 
+ *
  * @author ruoyi
  * @date 2022-11-11
  */
-public interface IProductCreateService 
+public interface IProductCreateService
 {
     /**
      * 查询产品制造数据
-     * 
+     *
      * @param id 产品制造数据主键
      * @return 产品制造数据
      */
@@ -21,7 +21,7 @@ public interface IProductCreateService
 
     /**
      * 查询产品制造数据列表
-     * 
+     *
      * @param productCreate 产品制造数据
      * @return 产品制造数据集合
      */
@@ -29,7 +29,7 @@ public interface IProductCreateService
 
     /**
      * 新增产品制造数据
-     * 
+     *
      * @param productCreate 产品制造数据
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface IProductCreateService
 
     /**
      * 修改产品制造数据
-     * 
+     *
      * @param productCreate 产品制造数据
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface IProductCreateService
 
     /**
      * 批量删除产品制造数据
-     * 
+     *
      * @param ids 需要删除的产品制造数据主键集合
      * @return 结果
      */
@@ -53,9 +53,19 @@ public interface IProductCreateService
 
     /**
      * 删除产品制造数据信息
-     * 
+     *
      * @param id 产品制造数据主键
      * @return 结果
      */
     public int deleteProductCreateById(Long id);
+
+    /**
+     * 导入产品制造数据
+     *
+     * @param importDataList 数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    public String importData(List<ProductCreate> importDataList, Boolean isUpdateSupport, String operName);
 }
