@@ -1,7 +1,9 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.ServletUtils;
@@ -148,11 +150,19 @@ public class QualityProblemController extends BaseController
     @GetMapping("/qualityHappenSum")
     public List<Sum> qualityHappenSum(Sum sum) {
         List<Sum> list = qualityProblemService.qualityHappenSum(sum);
-        System.out.println("aaaaaaa" + list);
+        List<Sum> list1=season(sum);
+        for(int i=0;i<list.size();i++){
+            for(int j=0;j<list1.size();j++){
+                if(list.get(i).getQuarter().equals(list1.get(j).getQuarter())){
+                    list.get(i).setCondition(list1.get(j).getCondition());
+                }
+            }
+        }
+        System.out.println("aaaaaaaaaaaa" + list);
         return list;
     }
 
-    @GetMapping("/oneQuality")
+//    @GetMapping("/oneQuality")
     public List oneQuality(Sum sum){
         List<Sum> list=qualityHappenSum(sum);
         List<List<Sum>> bigList = new ArrayList<>();
@@ -172,7 +182,7 @@ public class QualityProblemController extends BaseController
         List<Sum> list = qualityProblemService.yearHappenSum(sum);
         return list;
     }
-    @GetMapping("/oneYear")
+//    @GetMapping("/oneYear")
     public List oneYear(Sum sum){
         List<Sum> list=yearHappenSum(sum);
         List<List<Sum>> bigList = new ArrayList<>();
@@ -182,47 +192,113 @@ public class QualityProblemController extends BaseController
         return bigList;
     }
 
-
+    @GetMapping("/oneQuality")
     public List season(Sum sum){
         List<Sum> list = new ArrayList<>();
         List<Sum> listall = qualityProblemService.qualityHappenSum(sum);
         int mark=0;
-        for(int i=1;i<listall.size();i++) {
+        for(int i=0;i<listall.size();i++) {
+            mark=0;
             Sum obj = new Sum();
-            if (listall.get(i).getSum() < listall.get(i - 1).getSum() / 2 || listall.get(i).getSum() > listall.get(i - 1).getSum() * 1.5) {
-                mark = 1;
-                obj.setQuarter(listall.get(i).getQuarter());
-                obj.setSum(listall.get(i).getSum());
-                obj.setCondition("1");
-            }
-            if ((listall.get(i).getSum() * 1.2 < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 1.2 < listall.get(i + 2).getSum()) ||
-                    (listall.get(i).getSum() * 0.8 > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 0.8 > listall.get(i + 2).getSum())) {
-                if (mark == 1) {
-                    obj.setCondition("1,2");
-                    mark=12;
-                } else if (mark == 0) {
-                    mark = 2;
+            if(i-1 >=0){
+                if (listall.get(i).getSum() < listall.get(i - 1).getSum() / 2 || listall.get(i).getSum() > listall.get(i - 1).getSum() * 1.5) {
+                    mark = 1;
                     obj.setQuarter(listall.get(i).getQuarter());
                     obj.setSum(listall.get(i).getSum());
-                    obj.setCondition("2");
+                    obj.setCondition("1");
                 }
             }
-            if ((list.get(i).getSum() < list.get(i + 1).getSum() && list.get(i + 1).getSum() < list.get(i + 2).getSum()) ||
-                    (list.get(i).getSum() > list.get(i + 1).getSum() && list.get(i + 1).getSum() > list.get(i + 2).getSum())) {
-                if (mark == 1) {
-                    obj.setCondition("1,3");
-                } else if (mark == 0) {
+            if(i+2<listall.size()){
+                if ((listall.get(i).getSum() * 1.2 < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 1.2 < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() * 0.8 > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 0.8 > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,2");
+                        mark=12;
+                    } else if (mark == 0) {
+                        mark = 2;
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("2");
+                    }
+                }
+                if ((listall.get(i).getSum() < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,3");
+                    } else if (mark == 0) {
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("3");
+                    } else if (mark == 12) {
+                        obj.setCondition("1,2,3");
+                    }
+                    else if (mark == 2) {
+                        obj.setCondition("2,3");
+                    }
+                }
+            }
+            if(obj.getQuarter()!=null){
+                list.add(obj);
+            }
+
+        }
+        return list;
+    }
+    /**
+     * 年度质量问题发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    @GetMapping("/oneYear")
+    public List year(Sum sum){
+        List<Sum> list = new ArrayList<>();
+        List<Sum> listall = qualityProblemService.yearHappenSum(sum);
+        int mark=0;
+        for(int i=0;i<listall.size();i++) {
+            mark=0;
+            Sum obj = new Sum();
+            if(i-1 >=0){
+                if (listall.get(i).getSum() < listall.get(i - 1).getSum() / 2 || listall.get(i).getSum() > listall.get(i - 1).getSum() * 1.5) {
+                    mark = 1;
                     obj.setQuarter(listall.get(i).getQuarter());
                     obj.setSum(listall.get(i).getSum());
-                    obj.setCondition("3");
-                } else if (mark == 12) {
-                    obj.setCondition("1,2,3");
-                }
-                else if (mark == 2) {
-                    obj.setCondition("2,3");
+                    obj.setCondition("1");
                 }
             }
-            list.add(obj);
+            if(i+2<listall.size()){
+                if ((listall.get(i).getSum() * 1.2 < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 1.2 < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() * 0.8 > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 0.8 > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,2");
+                        mark=12;
+                    } else if (mark == 0) {
+                        mark = 2;
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("2");
+                    }
+                }
+                if ((listall.get(i).getSum() < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,3");
+                    } else if (mark == 0) {
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("3");
+                    } else if (mark == 12) {
+                        obj.setCondition("1,2,3");
+                    }
+                    else if (mark == 2) {
+                        obj.setCondition("2,3");
+                    }
+                }
+            }
+            if(obj.getQuarter()!=null){
+                list.add(obj);
+            }
+
         }
         return list;
     }
@@ -284,7 +360,7 @@ public class QualityProblemController extends BaseController
     public List<Sum> sumByplaneType(Sum sum) {
         List<Sum> list = qualityProblemService.sumByplaneType(sum);
         System.out.println("机型" + list);
-        System.out.println("aaaaaaaaaaaa" + list);
+//        System.out.println("aaaaaaaaaaaa" + list);
         return list;
     }
     /**
