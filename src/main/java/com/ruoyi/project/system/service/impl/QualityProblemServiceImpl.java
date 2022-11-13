@@ -2,6 +2,8 @@ package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.project.system.domain.Sum;
+
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
@@ -15,7 +17,7 @@ import com.ruoyi.project.system.service.IQualityProblemService;
 
 /**
  * quality_problemService业务层处理
- *
+ * 
  * @author ruoyi
  * @date 2022-11-10
  */
@@ -29,7 +31,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 查询quality_problem
-     *
+     * 
      * @param id quality_problem主键
      * @return quality_problem
      */
@@ -41,7 +43,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 查询quality_problem列表
-     *
+     * 
      * @param qualityProblem quality_problem
      * @return quality_problem
      */
@@ -53,7 +55,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 新增quality_problem
-     *
+     * 
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -65,7 +67,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 修改quality_problem
-     *
+     * 
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -77,7 +79,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 批量删除quality_problem
-     *
+     * 
      * @param ids 需要删除的quality_problem主键
      * @return 结果
      */
@@ -89,7 +91,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 删除quality_problem信息
-     *
+     * 
      * @param id quality_problem主键
      * @return 结果
      */
@@ -97,6 +99,36 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     public int deleteQualityProblemById(Long id)
     {
         return qualityProblemMapper.deleteQualityProblemById(id);
+    }
+    /**
+     * 质量问题发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    @Override
+    public List<Sum> qualityHappenSum(Sum sum) {
+        return qualityProblemMapper.qualityHappenSum(sum);
+    }
+    /**
+     * 年度质量问题发生时间
+     *
+     * @param
+     * @return 统计结果
+     */
+    @Override
+    public List<Sum> yearHappenSum(Sum sum) {
+        return qualityProblemMapper.yearHappenSum(sum);
+    }
+    /**
+     * 质量问题涉及到的机型
+     *
+     * @param
+     * @return 统计结果
+     */
+    @Override
+    public List<Sum> sumByplaneType(Sum sum) {
+        return qualityProblemMapper.sumByplaneType(sum);
     }
 
     @Override
