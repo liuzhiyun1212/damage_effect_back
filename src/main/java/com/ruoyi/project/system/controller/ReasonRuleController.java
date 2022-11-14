@@ -176,7 +176,7 @@ public class ReasonRuleController extends BaseController
                     a=4;
                 }
                 String ss = calendar.get(Calendar.YEAR)+"-"+a;
-                if(halfyear(name1.get(i),ss)&&!plane2.contains(plane1.get(i))){
+                if(halfyear(name1.get(i),ss)){
                     plane2.add(plane1.get(i));
                     name2.add(ss);
                 }
@@ -233,13 +233,5 @@ public class ReasonRuleController extends BaseController
             }
         }
         return false;
-    }
-
-    public static void main(String[] args)
-    {
-        String s1 = "2021-1";
-        String s2 = "2020-3";
-        System.out.println(s1.compareTo(s2));
-        System.out.println(s1.substring(s1.length() - 1));
     }
 }
