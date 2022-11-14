@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ProductDesign3Mapper">
+
+    <resultMap type="ProductDesign3" id="ProductDesign3Result">
+        <result property="id"    column="id"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="finishedType"    column="finished_type"    />
+        <result property="finishedName"    column="finished_name"    />
+        <result property="finishedModel"    column="finished_model"    />
+        <result property="finishedManufacturer"    column="finished_manufacturer"    />
+        <result property="frame"    column="frame"    />
+        <result property="upperMiddleLower"    column="upper_middle_lower"    />
+        <result property="leftMiddleRight"    column="left_middle_right"    />
+        <result property="installMethod"    column="install_method"    />
+        <result property="rawMaterial"    column="raw_material"    />
+        <result property="spareParts"    column="spare_parts"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <result property="modifyMeasures"    column="modify_measures"    />
+    </resultMap>
+
+    <sql id="selectProductDesign3Vo">
+        select id, plane_type, finished_type, finished_name, finished_model, finished_manufacturer, frame, upper_middle_lower, left_middle_right, install_method, raw_material, spare_parts, modify_time, modify_measures from product_design_3
+    </sql>
+
+    <select id="selectProductDesign3List" parameterType="ProductDesign3" resultMap="ProductDesign3Result">
+        <include refid="selectProductDesign3Vo"/>
+        <where>
+            <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
+            <if test="finishedType != null  and finishedType != ''"> and finished_type = #{finishedType}</if>
+            <if test="finishedName != null  and finishedName != ''"> and finished_name like concat('%', #{finishedName}, '%')</if>
+            <if test="finishedModel != null  and finishedModel != ''"> and finished_model = #{finishedModel}</if>
+            <if test="finishedManufacturer != null  and finishedManufacturer != ''"> and finished_manufacturer = #{finishedManufacturer}</if>
+            <if test="frame != null "> and frame = #{frame}</if>
+            <if test="upperMiddleLower != null "> and upper_middle_lower = #{upperMiddleLower}</if>
+            <if test="leftMiddleRight != null "> and left_middle_right = #{leftMiddleRight}</if>
+            <if test="installMethod != null  and installMethod != ''"> and install_method = #{installMethod}</if>
+            <if test="rawMaterial != null  and rawMaterial != ''"> and raw_material = #{rawMaterial}</if>
+            <if test="spareParts != null  and spareParts != ''"> and spare_parts = #{spareParts}</if>
+            <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+            <if test="modifyMeasures != null  and modifyMeasures != ''"> and modify_measures = #{modifyMeasures}</if>
+        </where>
+    </select>
+
+    <select id="selectProductDesign3ById" parameterType="Long" resultMap="ProductDesign3Result">
+        <include refid="selectProductDesign3Vo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductDesign3" parameterType="ProductDesign3" useGeneratedKeys="true" keyProperty="id">
+        insert into product_design_3
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">plane_type,</if>
+            <if test="finishedType != null">finished_type,</if>
+            <if test="finishedName != null">finished_name,</if>
+            <if test="finishedModel != null">finished_model,</if>
+            <if test="finishedManufacturer != null">finished_manufacturer,</if>
+            <if test="frame != null">frame,</if>
+            <if test="upperMiddleLower != null">upper_middle_lower,</if>
+            <if test="leftMiddleRight != null">left_middle_right,</if>
+            <if test="installMethod != null">install_method,</if>
+            <if test="rawMaterial != null">raw_material,</if>
+            <if test="spareParts != null">spare_parts,</if>
+            <if test="modifyTime != null">modify_time,</if>
+            <if test="modifyMeasures != null">modify_measures,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">#{planeType},</if>
+            <if test="finishedType != null">#{finishedType},</if>
+            <if test="finishedName != null">#{finishedName},</if>
+            <if test="finishedModel != null">#{finishedModel},</if>
+            <if test="finishedManufacturer != null">#{finishedManufacturer},</if>
+            <if test="frame != null">#{frame},</if>
+            <if test="upperMiddleLower != null">#{upperMiddleLower},</if>
+            <if test="leftMiddleRight != null">#{leftMiddleRight},</if>
+            <if test="installMethod != null">#{installMethod},</if>
+            <if test="rawMaterial != null">#{rawMaterial},</if>
+            <if test="spareParts != null">#{spareParts},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+            <if test="modifyMeasures != null">#{modifyMeasures},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductDesign3" parameterType="ProductDesign3">
+        update product_design_3
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planeType != null">plane_type = #{planeType},</if>
+            <if test="finishedType != null">finished_type = #{finishedType},</if>
+            <if test="finishedName != null">finished_name = #{finishedName},</if>
+            <if test="finishedModel != null">finished_model = #{finishedModel},</if>
+            <if test="finishedManufacturer != null">finished_manufacturer = #{finishedManufacturer},</if>
+            <if test="frame != null">frame = #{frame},</if>
+            <if test="upperMiddleLower != null">upper_middle_lower = #{upperMiddleLower},</if>
+            <if test="leftMiddleRight != null">left_middle_right = #{leftMiddleRight},</if>
+            <if test="installMethod != null">install_method = #{installMethod},</if>
+            <if test="rawMaterial != null">raw_material = #{rawMaterial},</if>
+            <if test="spareParts != null">spare_parts = #{spareParts},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime},</if>
+            <if test="modifyMeasures != null">modify_measures = #{modifyMeasures},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductDesign3ById" parameterType="Long">
+        delete from product_design_3 where id = #{id}
+    </delete>
+
+    <delete id="deleteProductDesign3ByIds" parameterType="String">
+        delete from product_design_3 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
