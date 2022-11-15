@@ -33,16 +33,13 @@ public class AircraftTypeAndTypeController extends BaseController {
 
     @GetMapping("/getCheckList")
     public TableDataInfo getCheckList(AircraftTypeAndTime aircraftTypeAndTime) {
-        startPage();
-        List<AircraftTypeAndTime> list = Lists.newArrayList();
+        List<AircraftTypeAndTime> list;
         list = aircraftTypeAndTypeService.getCheckList(aircraftTypeAndTime);
-
         return getDataTable(list);
     }
 
     @GetMapping("/getChartData")
     public R getChartData() {
-        startPage();
         return R.ok(aircraftTypeAndTypeService.getChartData());
     }
 }

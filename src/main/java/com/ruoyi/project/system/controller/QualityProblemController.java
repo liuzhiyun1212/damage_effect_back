@@ -145,7 +145,6 @@ public class QualityProblemController extends BaseController
                 }
             }
         }
-        System.out.println("aaaaaaaaaaaa" + list);
         return list;
     }
 
@@ -167,6 +166,14 @@ public class QualityProblemController extends BaseController
     @GetMapping("/yearHappenSum")
     public List<Sum> yearHappenSum(Sum sum){
         List<Sum> list = qualityProblemService.yearHappenSum(sum);
+        List<Sum> list1=year(sum);
+        for(int i=0;i<list.size();i++){
+            for(int j=0;j<list1.size();j++){
+                if(list.get(i).getQuarter().equals(list1.get(j).getQuarter())){
+                    list.get(i).setCondition(list1.get(j).getCondition());
+                }
+            }
+        }
         return list;
     }
 //    @GetMapping("/oneYear")
@@ -358,9 +365,8 @@ public class QualityProblemController extends BaseController
      */
     @GetMapping("/selectPlaneType")
     public List<Sum> selectPlaneType(Sum sum) {
-        List<Sum> list = new ArrayList<>();
+        List<Sum> list = sumByplaneType(sum);
         List<Sum> list1 = new ArrayList<>();
-        list = sumByplaneType(sum);
         int count=0;
         int average=0;
         for(int i=0;i<list.size();i++){
@@ -368,11 +374,11 @@ public class QualityProblemController extends BaseController
         }
         average = count/list.size();
         for(int i=0;i<list.size();i++) {
-            if(list.get(i).getSum() > average){
+            if(list.get(i).getSum() >= average){
                 list1.add(list.get(i));
             }
         }
-        System.out.println("机型" + list);
+        System.out.println("机型" + list1);
         return list1;
     }
 
