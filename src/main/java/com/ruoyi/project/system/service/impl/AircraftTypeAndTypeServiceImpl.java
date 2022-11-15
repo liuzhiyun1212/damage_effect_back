@@ -1,9 +1,8 @@
 package com.ruoyi.project.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.io.unit.DataUnit;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.MathUtil;
 import cn.hutool.core.util.StrUtil;
@@ -26,6 +25,8 @@ import java.util.*;
  */
 @Service
 public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeService {
+    //筛选条件变量的前缀
+    public static final String PREFIX_CHECKED_METHOD_NAME = "check";
     @Autowired
     private QualityProblemMapper qualityProblemMapper;
 
@@ -58,14 +59,17 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
         List<Map> resList = new ArrayList();
         switch (aircraftTypeAndTime.getCheckedMethodName()) {
+            case "allCheck":
+                resList = allCheck(typeNumMap, aircraftTypeAndTime);
+                break;
             case "check1":
-                resList = check1(typeNumMap);
+                resList = check1(typeNumMap, aircraftTypeAndTime);
                 break;
             case "check2":
-                resList = check2(typeNumMap);
+                resList = check2(typeNumMap, aircraftTypeAndTime);
                 break;
             case "check3":
-                resList = check3(typeNumMap);
+                resList = check3(typeNumMap, aircraftTypeAndTime);
                 break;
         }
         return resList;
@@ -108,6 +112,72 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         return typeMap;
     }
 
+    List allCheck(Map<String, List<AircraftTypeAndTime>> typeMap, AircraftTypeAndTime paramObj) {
+        List resList = Lists.newArrayList();
+        Iterator<Map.Entry<String, List<AircraftTypeAndTime>>> iterator = typeMap.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<AircraftTypeAndTime>> next = iterator.next();
+            String key = next.getKey();
+            List<AircraftTypeAndTime> numList = next.getValue();
+            //计算符合三个条件的
+            for (int i = 1; i < numList.size(); i++) {
+                HashMap<String, Object> tableMap = MapUtil.newHashMap();
+                if (isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                    tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                    tableMap.put("changeRange", wrapChangeRange(getChangeRangeNonnegative(numList.get(i - 1).getNum(), numList.get(i).getNum())));
+                    tableMap.put("eldTime", DateUtil.year(numList.get(i - 1).getDevHappenTime()) + "年第" + numList.get(i - 1).getQuarter() + "季度");
+                    tableMap.put("eldTimeNum", numList.get(i - 1).getNum());
+                    tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
+                    tableMap.put("recentTimeNum", numList.get(i).getNum());
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", "1");
+                }
+                if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                    if (tableMap.isEmpty()) {
+                        tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                        tableMap.put("changeRange", "第一次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 2).getNum(), numList.get(i - 1).getNum())) + ",第二次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 1).getNum(), numList.get(i).getNum())));
+                        tableMap.put("eldTime", DateUtil.year(numList.get(i - 2).getDevHappenTime()) + "年第" + numList.get(i - 1).getQuarter() + "季度");
+                        tableMap.put("eldTimeNum", numList.get(i - 2).getNum());
+                        tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
+                        tableMap.put("recentTimeNum", numList.get(i).getNum());
+                        //去掉指定前缀
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "2");
+                    } else {
+                        //去掉指定前缀
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "2");
+                    }
+                }
+                if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                    if (tableMap.isEmpty()) {
+                        tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                        tableMap.put("changeRange", "");
+                        tableMap.put("eldTime", DateUtil.year(numList.get(i - 3).getDevHappenTime()) + "年第" + numList.get(i - 3).getQuarter() + "季度");
+                        tableMap.put("eldTimeNum", numList.get(i - 3).getNum());
+                        tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
+                        tableMap.put("recentTimeNum", numList.get(i).getNum());
+                        //去掉指定前缀
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "3");
+                    } else {
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "3");
+                    }
+                }
+                if (!CollectionUtil.isEmpty(tableMap)) {
+                    resList.add(tableMap);
+                }
+            }
+        }
+        return resList;
+    }
+
     //todo 先对map进行遍历，key是机型，value是数量情况，按照不同机型进行计算
 
     /**
@@ -115,7 +185,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
      *
      * @return
      */
-    List check1(Map<String, List<AircraftTypeAndTime>> typeMap) {
+    List check1(Map<String, List<AircraftTypeAndTime>> typeMap, AircraftTypeAndTime paramObj) {
         List resList = Lists.newArrayList();
         Iterator<Map.Entry<String, List<AircraftTypeAndTime>>> iterator = typeMap.entrySet().iterator();
 
@@ -133,6 +203,18 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                     tableMap.put("eldTimeNum", numList.get(i - 1).getNum());
                     tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
                     tableMap.put("recentTimeNum", numList.get(i).getNum());
+
+                    String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
+                    //是否符合条件2
+                    if(i>=2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
+                        checkCondition = checkCondition+",2";
+                    }
+                    //是否符合条件3
+                    if(i>=3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
+                        checkCondition = checkCondition+",3";
+                    }
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", checkCondition);
                     resList.add(tableMap);
                 }
             }
@@ -140,7 +222,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         return resList;
     }
 
-    List check2(Map<String, List<AircraftTypeAndTime>> typeMap) {
+    List check2(Map<String, List<AircraftTypeAndTime>> typeMap, AircraftTypeAndTime paramObj) {
         List resList = Lists.newArrayList();
         Iterator<Map.Entry<String, List<AircraftTypeAndTime>>> iterator = typeMap.entrySet().iterator();
 
@@ -154,10 +236,22 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                     HashMap<String, Object> tableMap = MapUtil.newHashMap();
                     tableMap.put("aircraftType", numList.get(i).getPlaneType());
                     tableMap.put("changeRange", "第一次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 2).getNum(), numList.get(i - 1).getNum())) + ",第二次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 1).getNum(), numList.get(i).getNum())));
-                    tableMap.put("eldTime", DateUtil.year(numList.get(i - 2).getDevHappenTime()) + "年第" + numList.get(i - 1).getQuarter() + "季度");
+                    tableMap.put("eldTime", DateUtil.year(numList.get(i - 2).getDevHappenTime()) + "年第" + numList.get(i - 2).getQuarter() + "季度");
                     tableMap.put("eldTimeNum", numList.get(i - 2).getNum());
                     tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
                     tableMap.put("recentTimeNum", numList.get(i).getNum());
+
+                    String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
+                    //是否符合条件1
+                    if(isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())){
+                        checkCondition = "1,"+checkCondition;
+                    }
+                    //是否符合条件3
+                    if(i>=3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
+                        checkCondition = checkCondition+",3";
+                    }
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", checkCondition);
                     resList.add(tableMap);
                 }
             }
@@ -165,7 +259,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         return resList;
     }
 
-    List check3(Map<String, List<AircraftTypeAndTime>> typeMap) {
+    List check3(Map<String, List<AircraftTypeAndTime>> typeMap, AircraftTypeAndTime paramObj) {
         List resList = Lists.newArrayList();
         Iterator<Map.Entry<String, List<AircraftTypeAndTime>>> iterator = typeMap.entrySet().iterator();
 
@@ -184,6 +278,18 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                     tableMap.put("eldTimeNum", numList.get(i - 3).getNum());
                     tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
                     tableMap.put("recentTimeNum", numList.get(i).getNum());
+
+                    String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
+                    //是否符合条件1
+                    if(isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())){
+                        checkCondition = "1,"+checkCondition;
+                    }
+                    //是否符合条件2
+                    if(i>=2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
+                        checkCondition = checkCondition+",2";
+                    }
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", checkCondition);
                     resList.add(tableMap);
                 }
             }
@@ -290,10 +396,10 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
     }
 
     String wrapChangeRange(double val) {
-        if(val==Double.POSITIVE_INFINITY){
+        if (val == Double.POSITIVE_INFINITY) {
             return "上个时间点无数据";
-        }else
-            return val*100+"%";
+        } else
+            return val * 100 + "%";
     }
 
     boolean isChange20PercentTwoTime(double prePreVal, double preVal, double val) {
