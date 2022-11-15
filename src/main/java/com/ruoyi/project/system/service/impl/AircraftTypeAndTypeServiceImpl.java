@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.math.MathUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ruoyi.project.system.domain.AircraftTypeAndTime;
 import com.ruoyi.project.system.domain.QualityProblem;
@@ -12,7 +11,6 @@ import com.ruoyi.project.system.mapper.AircraftTypeAndTypeMapper;
 import com.ruoyi.project.system.mapper.QualityProblemMapper;
 import com.ruoyi.project.system.service.IAircraftTypeAndTypeService;
 import org.apache.commons.compress.utils.Lists;
-import org.apache.commons.compress.utils.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +55,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         //按机型方式分类
         Map typeNumMap = spliteByAircraft(numList);
 
-        List<Map> resList = new ArrayList();
+        List<Map<String, Object>> resList = new ArrayList();
         switch (aircraftTypeAndTime.getCheckedMethodName()) {
             case "allCheck":
                 resList = allCheck(typeNumMap, aircraftTypeAndTime);
@@ -178,10 +176,10 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         return resList;
     }
 
-    //todo 先对map进行遍历，key是机型，value是数量情况，按照不同机型进行计算
 
     /**
-     * 较上一时间增加或减少50%以上，该时间为质量问题发生故障件变化时间
+     * 较上一时间增加或减少50%以上，该时间为质量问题发生故障件变化时间。
+     * 先对map进行遍历，key是机型，value是数量情况，按照不同机型进行计算
      *
      * @return
      */
@@ -206,12 +204,12 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
                     String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
                     //是否符合条件2
-                    if(i>=2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",2";
+                    if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",2";
                     }
                     //是否符合条件3
-                    if(i>=3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",3";
+                    if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",3";
                     }
                     //去掉指定前缀
                     tableMap.put("checkCondition", checkCondition);
@@ -243,12 +241,12 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
                     String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
                     //是否符合条件1
-                    if(isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = "1,"+checkCondition;
+                    if (isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = "1," + checkCondition;
                     }
                     //是否符合条件3
-                    if(i>=3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",3";
+                    if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",3";
                     }
                     //去掉指定前缀
                     tableMap.put("checkCondition", checkCondition);
@@ -281,12 +279,12 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
                     String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
                     //是否符合条件1
-                    if(isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = "1,"+checkCondition;
+                    if (isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = "1," + checkCondition;
                     }
                     //是否符合条件2
-                    if(i>=2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",2";
+                    if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",2";
                     }
                     //去掉指定前缀
                     tableMap.put("checkCondition", checkCondition);
