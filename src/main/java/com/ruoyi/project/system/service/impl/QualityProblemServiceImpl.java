@@ -1,23 +1,22 @@
 package com.ruoyi.project.system.service.impl;
 
-import java.util.List;
-
-import com.ruoyi.project.system.domain.Sum;
-
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.aspectj.lang.annotation.Log;
+import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.QualityProblem;
+import com.ruoyi.project.system.domain.Sum;
+import com.ruoyi.project.system.mapper.QualityProblemMapper;
+import com.ruoyi.project.system.service.IQualityProblemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.system.mapper.QualityProblemMapper;
-import com.ruoyi.project.system.domain.QualityProblem;
-import com.ruoyi.project.system.service.IQualityProblemService;
+
+import java.util.List;
 
 /**
  * quality_problemService业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
@@ -31,7 +30,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 查询quality_problem
-     * 
+     *
      * @param id quality_problem主键
      * @return quality_problem
      */
@@ -43,7 +42,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 查询quality_problem列表
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return quality_problem
      */
@@ -55,7 +54,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 新增quality_problem
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -67,7 +66,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 修改quality_problem
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -79,7 +78,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 批量删除quality_problem
-     * 
+     *
      * @param ids 需要删除的quality_problem主键
      * @return 结果
      */
@@ -91,7 +90,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
 
     /**
      * 删除quality_problem信息
-     * 
+     *
      * @param id quality_problem主键
      * @return 结果
      */
@@ -187,6 +186,43 @@ public class QualityProblemServiceImpl implements IQualityProblemService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    /**
+     * @Description 统计所有故障次数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @Override
+    public int selectAllCount(){
+        return qualityProblemMapper.selectAllCount();
+    }
+    /**
+     * @Description 统计不同故障件发生故障次数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @Override
+    public List<FaultyPartsCount> selectCountByName(){
+        return qualityProblemMapper.selectCountByName();
+    }
+    /**
+     * @Description 统计故障件数量
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @Override
+    public int selectPartsCount(){
+        return qualityProblemMapper.selectPartsCount();
     }
 
 }

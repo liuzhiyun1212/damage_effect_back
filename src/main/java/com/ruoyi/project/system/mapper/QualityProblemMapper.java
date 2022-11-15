@@ -1,20 +1,22 @@
 package com.ruoyi.project.system.mapper;
 
-import java.util.List;
+import com.ruoyi.project.system.domain.FaultyPartsCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
 
+import java.util.List;
+
 /**
  * quality_problemMapper接口
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
-public interface QualityProblemMapper 
+public interface QualityProblemMapper
 {
     /**
      * 查询quality_problem
-     * 
+     *
      * @param id quality_problem主键
      * @return quality_problem
      */
@@ -22,7 +24,7 @@ public interface QualityProblemMapper
 
     /**
      * 查询quality_problem列表
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return quality_problem集合
      */
@@ -30,7 +32,7 @@ public interface QualityProblemMapper
 
     /**
      * 新增quality_problem
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -38,7 +40,7 @@ public interface QualityProblemMapper
 
     /**
      * 修改quality_problem
-     * 
+     *
      * @param qualityProblem quality_problem
      * @return 结果
      */
@@ -46,7 +48,7 @@ public interface QualityProblemMapper
 
     /**
      * 删除quality_problem
-     * 
+     *
      * @param id quality_problem主键
      * @return 结果
      */
@@ -54,7 +56,7 @@ public interface QualityProblemMapper
 
     /**
      * 批量删除quality_problem
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
@@ -80,4 +82,32 @@ public interface QualityProblemMapper
      * @return 统计结果
      */
     public List<Sum> sumByplaneType(Sum sum);
+
+    /**
+     * @Description 统计所有故障次数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public int selectAllCount();
+    /**
+     * @Description 统计不同故障件发生故障次数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<FaultyPartsCount> selectCountByName();
+    /**
+     * @Description 统计故障件数量
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public int selectPartsCount();
 }
