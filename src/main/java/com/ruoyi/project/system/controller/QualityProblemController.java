@@ -387,7 +387,7 @@ public class QualityProblemController extends BaseController
         }
         average = count/list.size();
         for(int i=0;i<list.size();i++) {
-            if(list.get(i).getSum() >= average){
+            if(list.get(i).getSum() >= average*0.5){
                 list1.add(list.get(i));
             }
         }
