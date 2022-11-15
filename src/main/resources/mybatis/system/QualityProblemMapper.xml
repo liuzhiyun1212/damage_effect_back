@@ -37,6 +37,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="repairedFactory"    column="repaired_factory"    />
         <result property="repairedStaff"    column="repaired_staff"    />
     </resultMap>
+    <resultMap type="FaultyPartsCount" id="FaultyPartsCountResult">
+        <result property="partsModelName" column="parts_model_name"/>
+        <result property="partsCount" column="parts_count"/>
+    </resultMap>
 
     <sql id="selectQualityProblemVo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
@@ -100,12 +104,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="repairedStaff != null  and repairedStaff != ''"> and repaired_staff = #{repairedStaff}</if>
         </where>
     </select>
-    
+
     <select id="selectQualityProblemById" parameterType="Long" resultMap="QualityProblemResult">
         <include refid="selectQualityProblemVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertQualityProblem" parameterType="QualityProblem" useGeneratedKeys="true" keyProperty="id">
         insert into quality_problem_1
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -195,9 +199,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteQualityProblemByIds" parameterType="String">
-        delete from quality_problem_1 where id in 
+        delete from quality_problem_1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectAllCount" resultType="int">
+        SELECT
+          COUNT(*)
+        FROM
+          quality_problem_1
+    </select>
+
+    <select id="selectCountByName" resultMap="FaultyPartsCountResult">
+        SELECT
+            COUNT(*) AS parts_count,
+            CONCAT( parts_model, '-', parts_name ) AS parts_model_name
+        FROM
+            quality_problem_1
+        GROUP BY
+            parts_name
+    </select>
+
+    <select id="selectPartsCount" resultType="int">
+        SELECT
+            COUNT( DISTINCT CONCAT( parts_model, '-', parts_name ) )
+        FROM
+            quality_problem_1
+    </select>
 </mapper>

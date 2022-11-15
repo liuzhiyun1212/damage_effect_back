@@ -1,7 +1,9 @@
 package com.ruoyi.project.system.controller;
 
-import java.util.List;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 质量问题数据Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-11-13
  */
@@ -45,6 +47,63 @@ public class QualityProblem1Controller extends BaseController
         List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
         return getDataTable(list);
     }
+
+    /**
+     * 故障模式和个数
+     */
+    static class ModelCount {
+        public String getFaultModel() {
+            return faultModel;
+        }
+
+        public void setFaultModel(String faultModel) {
+            this.faultModel = faultModel;
+        }
+
+        public int getModelCount() {
+            return modelCount;
+        }
+
+        public void setModelCount(int modelCount) {
+            this.modelCount = modelCount;
+        }
+
+        private String faultModel;
+        private int modelCount;
+    }
+
+
+    @GetMapping("/faultStatistics")
+    public List<ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
+    {
+        Set<String> modelName = new HashSet<>();
+        List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+        List<ModelCount> listMC = new ArrayList<>();
+
+        int count;
+        for(QualityProblem1 q:list){
+            modelName.add(q.getFaultModel());
+        }
+
+        for (String s:modelName) {
+            count = 0;
+            ModelCount modelCount = new ModelCount();
+            for (QualityProblem1 q : list) {
+                if (Objects.equals(s, q.getFaultModel())) {
+                    modelCount.setFaultModel(s);
+                    count++;
+                    modelCount.setModelCount(count);
+                }
+            }
+            listMC.add(modelCount);
+        }
+
+        return listMC;
+    }
+
+
+
+
 
     /**
      * 导出质量问题数据列表

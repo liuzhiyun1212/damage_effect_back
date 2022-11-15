@@ -1,6 +1,6 @@
 package com.ruoyi.project.system.domain.reasonrule;
 
-public class devuptwo {
+public class devupone {
 
     /** 机型 */
     private String planeType;
@@ -9,6 +9,19 @@ public class devuptwo {
     private String devHappenTime;
 
     private int devHappennum;
+
+    /** 故障模式 */
+    private String faultModel;
+
+    public void setFaultModel(String faultModel)
+    {
+        this.faultModel = faultModel;
+    }
+
+    public String getFaultModel()
+    {
+        return faultModel;
+    }
 
     public void setPlaneType(String planeType)
     {
