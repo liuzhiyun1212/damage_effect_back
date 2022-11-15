@@ -9,9 +9,9 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 装备设计/改型数据对象 equipment_design_data
- * 
+ *
  * @author ruoyi
- * @date 2022-11-10
+ * @date 2022-11-15
  */
 public class EquipmentDesignData extends BaseEntity
 {
@@ -37,60 +37,74 @@ public class EquipmentDesignData extends BaseEntity
     @Excel(name = "装备制造单位")
     private String makeUnit;
 
-    public void setId(Long id) 
+    /** 型号系列 */
+    @Excel(name = "型号系列")
+    private String modelSeries;
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setPlaneType(String planeType) 
+    public void setPlaneType(String planeType)
     {
         this.planeType = planeType;
     }
 
-    public String getPlaneType() 
+    public String getPlaneType()
     {
         return planeType;
     }
-    public void setRemodelDate(Date remodelDate) 
+    public void setRemodelDate(Date remodelDate)
     {
         this.remodelDate = remodelDate;
     }
 
-    public Date getRemodelDate() 
+    public Date getRemodelDate()
     {
         return remodelDate;
     }
-    public void setRemodelMeasure(String remodelMeasure) 
+    public void setRemodelMeasure(String remodelMeasure)
     {
         this.remodelMeasure = remodelMeasure;
     }
 
-    public String getRemodelMeasure() 
+    public String getRemodelMeasure()
     {
         return remodelMeasure;
     }
-    public void setMakeUnit(String makeUnit) 
+    public void setMakeUnit(String makeUnit)
     {
         this.makeUnit = makeUnit;
     }
 
-    public String getMakeUnit() 
+    public String getMakeUnit()
     {
         return makeUnit;
+    }
+    public void setModelSeries(String modelSeries)
+    {
+        this.modelSeries = modelSeries;
+    }
+
+    public String getModelSeries()
+    {
+        return modelSeries;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("planeType", getPlaneType())
-            .append("remodelDate", getRemodelDate())
-            .append("remodelMeasure", getRemodelMeasure())
-            .append("makeUnit", getMakeUnit())
-            .toString();
+                .append("id", getId())
+                .append("planeType", getPlaneType())
+                .append("remodelDate", getRemodelDate())
+                .append("remodelMeasure", getRemodelMeasure())
+                .append("makeUnit", getMakeUnit())
+                .append("modelSeries", getModelSeries())
+                .toString();
     }
 }
