@@ -7,6 +7,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="quarter" column="createTime"/>
         <result property="sum" column="count(*)"/>
     </resultMap>
+
+    <resultMap type="QualityProblem" id="partsNameResult">
+        <result property="partsName"    column="parts_name"    />
+        <result property="partsModel"    column="parts_model"    />
+    </resultMap>
+
     <resultMap type="Sum" id="SumPlaneTypeResult">
         <result property="quarter" column="plane_type"/>
         <result property="sum" column="count(*)"/>
@@ -102,6 +108,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             year(dev_happen_time)
         order by year(dev_happen_time) asc
     </select>
+
+    <!--返回所有故障件名称和型号-->
+    <select id="partsName" parameterType="QualityProblem" resultMap="partsNameResult">
+            SELECT parts_name,parts_model
+            FROM quality_problem_1
+    </select>
+
+
 <!--   质量问题涉及到的机型 -->
     <select id="sumByplaneType" parameterType="Sum" resultMap="SumPlaneTypeResult">
         SELECT

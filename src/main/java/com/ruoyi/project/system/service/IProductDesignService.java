@@ -2,6 +2,8 @@ package com.ruoyi.project.system.service;
 
 import java.util.List;
 import com.ruoyi.project.system.domain.ProductDesign;
+import com.ruoyi.project.system.domain.install_way;
+import com.ruoyi.project.system.domain.partsSite;
 
 /**
  * 成品件设计数据Service接口
@@ -18,6 +20,29 @@ public interface IProductDesignService
      * @return 成品件设计数据
      */
     public ProductDesign selectProductDesignById(Long id);
+
+    /**
+     * 统计成品件的安装位置和该位置上成品件安装的数量
+     *
+     *
+     * @return
+     */
+    public List<partsSite> selectpartsSite();
+
+//4.2.1.11
+    public List<partsSite> selectPartsSitenum();
+//4.2.1.12 selectPartsinstall
+    public List<ProductDesign> selectPartsinstall();
+
+
+    public List<partsSite> selectPartsqulitynum();
+
+
+
+    public List<partsSite> selectPartsinstallnum();
+
+    public List<install_way> selectinstallmethod();
+
 
     /**
      * 查询成品件设计数据列表

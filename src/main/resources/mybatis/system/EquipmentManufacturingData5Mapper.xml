@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.EquipmentManufacturingData5Mapper">
+    
+    <resultMap type="EquipmentManufacturingData5" id="EquipmentManufacturingData5Result">
+        <result property="id"    column="id"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="devCode"    column="dev_code"    />
+        <result property="type"    column="type"    />
+        <result property="productionUpgradeTime"    column="production_upgrade_time"    />
+        <result property="devUnit"    column="dev_unit"    />
+        <result property="devManufacture"    column="dev_manufacture"    />
+        <result property="capabilityStatus"    column="capability_status"    />
+    </resultMap>
+
+    <sql id="selectEquipmentManufacturingData5Vo">
+        select id, plane_type, dev_code, type, production_upgrade_time, dev_unit, dev_manufacture, capability_status from equipment_manufacturing_data5
+    </sql>
+
+    <select id="selectEquipmentManufacturingData5List" parameterType="EquipmentManufacturingData5" resultMap="EquipmentManufacturingData5Result">
+        <include refid="selectEquipmentManufacturingData5Vo"/>
+        <where>  
+            <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
+            <if test="devCode != null  and devCode != ''"> and dev_code = #{devCode}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="productionUpgradeTime != null "> and production_upgrade_time = #{productionUpgradeTime}</if>
+            <if test="devUnit != null  and devUnit != ''"> and dev_unit = #{devUnit}</if>
+            <if test="devManufacture != null  and devManufacture != ''"> and dev_manufacture = #{devManufacture}</if>
+            <if test="capabilityStatus != null  and capabilityStatus != ''"> and capability_status = #{capabilityStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectEquipmentManufacturingData5ById" parameterType="Long" resultMap="EquipmentManufacturingData5Result">
+        <include refid="selectEquipmentManufacturingData5Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEquipmentManufacturingData5" parameterType="EquipmentManufacturingData5" useGeneratedKeys="true" keyProperty="id">
+        insert into equipment_manufacturing_data5
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">plane_type,</if>
+            <if test="devCode != null">dev_code,</if>
+            <if test="type != null">type,</if>
+            <if test="productionUpgradeTime != null">production_upgrade_time,</if>
+            <if test="devUnit != null">dev_unit,</if>
+            <if test="devManufacture != null">dev_manufacture,</if>
+            <if test="capabilityStatus != null">capability_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planeType != null">#{planeType},</if>
+            <if test="devCode != null">#{devCode},</if>
+            <if test="type != null">#{type},</if>
+            <if test="productionUpgradeTime != null">#{productionUpgradeTime},</if>
+            <if test="devUnit != null">#{devUnit},</if>
+            <if test="devManufacture != null">#{devManufacture},</if>
+            <if test="capabilityStatus != null">#{capabilityStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEquipmentManufacturingData5" parameterType="EquipmentManufacturingData5">
+        update equipment_manufacturing_data5
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planeType != null">plane_type = #{planeType},</if>
+            <if test="devCode != null">dev_code = #{devCode},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="productionUpgradeTime != null">production_upgrade_time = #{productionUpgradeTime},</if>
+            <if test="devUnit != null">dev_unit = #{devUnit},</if>
+            <if test="devManufacture != null">dev_manufacture = #{devManufacture},</if>
+            <if test="capabilityStatus != null">capability_status = #{capabilityStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEquipmentManufacturingData5ById" parameterType="Long">
+        delete from equipment_manufacturing_data5 where id = #{id}
+    </delete>
+
+    <delete id="deleteEquipmentManufacturingData5ByIds" parameterType="String">
+        delete from equipment_manufacturing_data5 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
