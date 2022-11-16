@@ -2,6 +2,9 @@ package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.project.system.domain.install_way;
+import com.ruoyi.project.system.domain.partsSite;
+
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.controller.BaseController;
@@ -36,6 +39,61 @@ public class ProductDesignServiceImpl implements IProductDesignService
     public ProductDesign selectProductDesignById(Long id)
     {
         return productDesignMapper.selectProductDesignById(id);
+    }
+
+
+
+    /**
+     * 统计成品件的安装位置和该位置上成品件安装的数量
+     *
+     *
+     * @return
+     */
+    @Override
+    public List<partsSite> selectpartsSite()
+    {
+        return productDesignMapper.selectPartsSite();
+    }
+
+
+    @Override
+    public List<ProductDesign> selectPartsinstall()
+    {
+        return productDesignMapper.selectPartsinstall();
+    }
+
+
+    @Override
+    public List<partsSite> selectPartsqulitynum()
+    {
+        return productDesignMapper.selectPartsqulitynum();
+    }
+
+
+    @Override
+    public List<partsSite> selectPartsinstallnum()
+    {
+        return productDesignMapper.selectPartsinstallnum();
+    }
+
+
+    @Override
+    public List<install_way> selectinstallmethod()
+    {
+        return productDesignMapper.selectinstallmethod();
+    }
+
+
+    /**
+     * 统计成品件的安装位置和该位置上成品件安装的数量
+     *
+     *
+     * @return
+     */
+    @Override
+    public List<partsSite> selectPartsSitenum()
+    {
+        return productDesignMapper.selectPartsSitenum();
     }
 
     /**
