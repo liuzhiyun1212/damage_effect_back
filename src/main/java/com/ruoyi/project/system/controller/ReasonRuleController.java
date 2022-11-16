@@ -342,7 +342,7 @@ public class ReasonRuleController extends BaseController
                                 s3 = Sites.get(s1+nname.get(ii));
                             }
                         }else if(ii==0){
-                            if(s2.compareTo(nname.get(ii))>0){
+                            if(s2.compareTo(nname.get(ii))>=0&&s2.compareTo(nname.get(ii+1))<0){
                                 s3 = Sites.get(s1+nname.get(ii));
                             }
                         }else{
