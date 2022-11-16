@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.ProductDesignMapper">
-    
+
     <resultMap type="ProductDesign" id="ProductDesignResult">
         <result property="id"    column="id"    />
         <result property="planeType"    column="plane_type"    />
@@ -17,9 +17,106 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="installMethod"    column="install_method"    />
         <result property="rawMaterial"    column="raw_material"    />
         <result property="spareParts"    column="spare_parts"    />
-        <result property="modifyTime"    column="modify_time"    />
-        <result property="modifyMeasures"    column="modify_measures"    />
+       <!-- <result property="modifyTime"    column="modify_time"    />
+        <result property="modifyMeasures"    column="modify_measures"    />-->
     </resultMap>
+
+    <!--4.2.1.12-->
+    <resultMap type="ProductDesign" id="Partsinstall">
+
+        <result property="finishedName"    column="finished_name"    />
+        <result property="finishedModel"    column="finished_model"    />
+        <result property="frame"    column="frame"    />
+        <result property="upperMiddleLower"    column="upper_middle_lower"    />
+        <result property="leftMiddleRight"    column="left_middle_right"    />
+        <result property="installMethod"    column="install_method"    />
+
+    </resultMap>
+
+
+
+
+
+    <resultMap type="partsSite" id="partsSiteResult">
+
+        <result property="finishedName"    column="finished_name"    />
+        <result property="finishedModel"    column="finished_model"    />
+        <result property="frame"    column="frame"    />
+        <result property="upperMiddleLower"    column="upper_middle_lower"    />
+        <result property="leftMiddleRight"    column="left_middle_right"    />
+        <result property="num"    column="count(*)"    />
+    </resultMap>
+
+    <resultMap type="partsSite" id="partsSiteResult2">
+
+        <result property="finishedName"    column="finished_name"    />
+        <result property="finishedModel"    column="finished_model"    />
+        <result property="frame"    column="frame"    />
+        <result property="upperMiddleLower"    column="upper_middle_lower"    />
+        <result property="leftMiddleRight"    column="left_middle_right"    />
+        <result property="num"    column="num"    />
+    </resultMap>
+
+    <resultMap type="install_way" id="install_wayResult">
+
+        <result property="finishedName"    column="finished_name"    />
+        <result property="finishedModel"    column="finished_model"    />
+        <result property="installMethod"    column="install_method"    />
+        <result property="num"    column="num"    />
+        <!-- <result property="modifyTime"    column="modify_time"    />
+         <result property="modifyMeasures"    column="modify_measures"    />-->
+    </resultMap>
+
+
+    <select id="selectinstallmethod"  resultMap="install_wayResult">
+       SELECT finished_name,finished_model,install_method,COUNT(install_method) as num
+        from product_design_3
+        GROUP BY install_method,finished_name,finished_model
+    </select>
+
+
+
+
+   <select id="selectPartsSitenum"  resultMap="partsSiteResult">
+       select frame,upper_middle_lower,left_middle_right,COUNT(*) from  product_design_3
+        where  finished_model in (SELECT parts_model
+            FROM quality_problem_1)
+        GROUP BY frame,upper_middle_lower,left_middle_right
+    </select>
+
+    <!--4.2.1.12-->
+    <select id="selectPartsinstall"  resultMap="Partsinstall">
+      select finished_name,finished_model,frame,upper_middle_lower,left_middle_right,install_method from  product_design_3
+        where  finished_model in (SELECT parts_model
+            FROM quality_problem_1)
+    </select>
+
+
+
+    <select id="selectPartsSite"  resultMap="partsSiteResult">
+       select finished_name,finished_model,frame,upper_middle_lower,left_middle_right from  product_design_3
+        where  finished_model in (SELECT parts_model
+            FROM quality_problem_1)
+    </select>
+<!--按故障件分组并统计每个故障件的质量问题数 -->
+    <select id="selectPartsqulitynum"  resultMap="partsSiteResult2">
+       SELECT  parts_name as finished_name,parts_model as finished_model,COUNT(*) as num
+        from quality_problem_1
+        GROUP BY parts_model
+    </select>
+
+    <!--按故障件分组并统计每个故障件的质量问题数 -->
+    <select id="selectPartsinstallnum"  resultMap="partsSiteResult2">
+        select finished_name,finished_model,COUNT(DISTINCT install_method) as num
+        from product_design_3
+        where finished_model in (SELECT parts_model from quality_problem_1 )
+        GROUP BY finished_model
+    </select>
+
+
+
+
+
 
     <sql id="selectProductDesignVo">
         select id, plane_type, finished_type, finished_name, finished_model, finished_manufacturer, frame, upper_middle_lower, left_middle_right, install_method, raw_material, spare_parts, modify_time, modify_measures from product_design_3
@@ -27,7 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectProductDesignList" parameterType="ProductDesign" resultMap="ProductDesignResult">
         <include refid="selectProductDesignVo"/>
-        <where>  
+        <where>
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
             <if test="finishedType != null  and finishedType != ''"> and finished_type = #{finishedType}</if>
             <if test="finishedName != null  and finishedName != ''"> and finished_name like concat('%', #{finishedName}, '%')</if>
@@ -39,16 +136,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="installMethod != null  and installMethod != ''"> and install_method = #{installMethod}</if>
             <if test="rawMaterial != null  and rawMaterial != ''"> and raw_material = #{rawMaterial}</if>
             <if test="spareParts != null  and spareParts != ''"> and spare_parts = #{spareParts}</if>
-            <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
-            <if test="modifyMeasures != null  and modifyMeasures != ''"> and modify_measures = #{modifyMeasures}</if>
+           <!-- <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+            <if test="modifyMeasures != null  and modifyMeasures != ''"> and modify_measures = #{modifyMeasures}</if>-->
         </where>
     </select>
-    
+
     <select id="selectProductDesignById" parameterType="Long" resultMap="ProductDesignResult">
         <include refid="selectProductDesignVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertProductDesign" parameterType="ProductDesign" useGeneratedKeys="true" keyProperty="id">
         insert into product_design_3
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -63,8 +160,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="installMethod != null">install_method,</if>
             <if test="rawMaterial != null">raw_material,</if>
             <if test="spareParts != null">spare_parts,</if>
-            <if test="modifyTime != null">modify_time,</if>
-            <if test="modifyMeasures != null">modify_measures,</if>
+           <!-- <if test="modifyTime != null">modify_time,</if>
+            <if test="modifyMeasures != null">modify_measures,</if>-->
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="planeType != null">#{planeType},</if>
@@ -78,8 +175,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="installMethod != null">#{installMethod},</if>
             <if test="rawMaterial != null">#{rawMaterial},</if>
             <if test="spareParts != null">#{spareParts},</if>
-            <if test="modifyTime != null">#{modifyTime},</if>
-            <if test="modifyMeasures != null">#{modifyMeasures},</if>
+           <!-- <if test="modifyTime != null">#{modifyTime},</if>
+            <if test="modifyMeasures != null">#{modifyMeasures},</if>-->
          </trim>
     </insert>
 
@@ -97,8 +194,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="installMethod != null">install_method = #{installMethod},</if>
             <if test="rawMaterial != null">raw_material = #{rawMaterial},</if>
             <if test="spareParts != null">spare_parts = #{spareParts},</if>
-            <if test="modifyTime != null">modify_time = #{modifyTime},</if>
-            <if test="modifyMeasures != null">modify_measures = #{modifyMeasures},</if>
+            <!--<if test="modifyTime != null">modify_time = #{modifyTime},</if>
+            <if test="modifyMeasures != null">modify_measures = #{modifyMeasures},</if>-->
         </trim>
         where id = #{id}
     </update>
@@ -108,7 +205,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductDesignByIds" parameterType="String">
-        delete from product_design_3 where id in 
+        delete from product_design_3 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

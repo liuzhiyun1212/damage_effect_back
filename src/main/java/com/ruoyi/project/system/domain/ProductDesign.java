@@ -9,7 +9,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 成品件设计数据对象 product_design_3
- * 
+ *
  * @author ruoyi
  * @date 2022-11-11
  */
@@ -64,141 +64,141 @@ public class ProductDesign extends BaseEntity
     @Excel(name = "零部件")
     private String spareParts;
 
-    /** 成品件改型时间 */
+   /* *//** 成品件改型时间 *//*
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "成品件改型时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date modifyTime;
 
-    /** 成品件改型措施 */
+    *//** 成品件改型措施 *//*
     @Excel(name = "成品件改型措施")
-    private String modifyMeasures;
+    private String modifyMeasures;*/
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setPlaneType(String planeType) 
+    public void setPlaneType(String planeType)
     {
         this.planeType = planeType;
     }
 
-    public String getPlaneType() 
+    public String getPlaneType()
     {
         return planeType;
     }
-    public void setFinishedType(String finishedType) 
+    public void setFinishedType(String finishedType)
     {
         this.finishedType = finishedType;
     }
 
-    public String getFinishedType() 
+    public String getFinishedType()
     {
         return finishedType;
     }
-    public void setFinishedName(String finishedName) 
+    public void setFinishedName(String finishedName)
     {
         this.finishedName = finishedName;
     }
 
-    public String getFinishedName() 
+    public String getFinishedName()
     {
         return finishedName;
     }
-    public void setFinishedModel(String finishedModel) 
+    public void setFinishedModel(String finishedModel)
     {
         this.finishedModel = finishedModel;
     }
 
-    public String getFinishedModel() 
+    public String getFinishedModel()
     {
         return finishedModel;
     }
-    public void setFinishedManufacturer(String finishedManufacturer) 
+    public void setFinishedManufacturer(String finishedManufacturer)
     {
         this.finishedManufacturer = finishedManufacturer;
     }
 
-    public String getFinishedManufacturer() 
+    public String getFinishedManufacturer()
     {
         return finishedManufacturer;
     }
-    public void setFrame(Long frame) 
+    public void setFrame(Long frame)
     {
         this.frame = frame;
     }
 
-    public Long getFrame() 
+    public Long getFrame()
     {
         return frame;
     }
-    public void setUpperMiddleLower(Long upperMiddleLower) 
+    public void setUpperMiddleLower(Long upperMiddleLower)
     {
         this.upperMiddleLower = upperMiddleLower;
     }
 
-    public Long getUpperMiddleLower() 
+    public Long getUpperMiddleLower()
     {
         return upperMiddleLower;
     }
-    public void setLeftMiddleRight(Long leftMiddleRight) 
+    public void setLeftMiddleRight(Long leftMiddleRight)
     {
         this.leftMiddleRight = leftMiddleRight;
     }
 
-    public Long getLeftMiddleRight() 
+    public Long getLeftMiddleRight()
     {
         return leftMiddleRight;
     }
-    public void setInstallMethod(String installMethod) 
+    public void setInstallMethod(String installMethod)
     {
         this.installMethod = installMethod;
     }
 
-    public String getInstallMethod() 
+    public String getInstallMethod()
     {
         return installMethod;
     }
-    public void setRawMaterial(String rawMaterial) 
+    public void setRawMaterial(String rawMaterial)
     {
         this.rawMaterial = rawMaterial;
     }
 
-    public String getRawMaterial() 
+    public String getRawMaterial()
     {
         return rawMaterial;
     }
-    public void setSpareParts(String spareParts) 
+    public void setSpareParts(String spareParts)
     {
         this.spareParts = spareParts;
     }
 
-    public String getSpareParts() 
+    public String getSpareParts()
     {
         return spareParts;
     }
-    public void setModifyTime(Date modifyTime) 
+   /* public void setModifyTime(Date modifyTime)
     {
         this.modifyTime = modifyTime;
     }
 
-    public Date getModifyTime() 
+    public Date getModifyTime()
     {
         return modifyTime;
     }
-    public void setModifyMeasures(String modifyMeasures) 
+    public void setModifyMeasures(String modifyMeasures)
     {
         this.modifyMeasures = modifyMeasures;
     }
 
-    public String getModifyMeasures() 
+    public String getModifyMeasures()
     {
         return modifyMeasures;
-    }
+    }*/
 
     @Override
     public String toString() {
@@ -215,8 +215,8 @@ public class ProductDesign extends BaseEntity
             .append("installMethod", getInstallMethod())
             .append("rawMaterial", getRawMaterial())
             .append("spareParts", getSpareParts())
-            .append("modifyTime", getModifyTime())
-            .append("modifyMeasures", getModifyMeasures())
+           /* .append("modifyTime", getModifyTime())
+            .append("modifyMeasures", getModifyMeasures())*/
             .toString();
     }
 }
