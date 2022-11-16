@@ -20,10 +20,11 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 产品制造变更数据Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-11-11
  */
@@ -100,5 +101,33 @@ public class ProductModifyDataController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(productModifyDataService.deleteProductModifyDataByIds(ids));
+    }
+
+    /**
+     * 导入产品制造变更列表
+     */
+    @Log(title = "产品制造变更", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<ProductModifyData> util = new ExcelUtil<ProductModifyData>(ProductModifyData.class);
+        List<ProductModifyData> importDataList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = productModifyDataService.importData(importDataList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+    /**
+     * @Description 下载导入产品设计模板
+     * @Author guohuijia
+     * @Date  2022/11/13
+     * @Param [response]
+     * @Return void
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<ProductModifyData> util = new ExcelUtil<ProductModifyData>(ProductModifyData.class);
+        util.importTemplateExcel(response, "产品制造变更数据");
     }
 }

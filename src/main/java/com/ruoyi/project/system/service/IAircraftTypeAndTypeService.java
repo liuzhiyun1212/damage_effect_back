@@ -14,4 +14,6 @@ public interface IAircraftTypeAndTypeService {
     public List getCheckList(AircraftTypeAndTime aircraftTypeAndTime);
 
     public Map getChartData();
+
+    public Map getUseIntensityChartData();
 }

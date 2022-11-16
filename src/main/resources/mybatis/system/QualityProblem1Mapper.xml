@@ -2,22 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.system.mapper.QualityProblemMapper">
-    <resultMap type="Sum" id="SumResult">
-        <result property="quarter" column="createTime"/>
-        <result property="sum" column="count(*)"/>
-    </resultMap>
+<mapper namespace="com.ruoyi.project.system.mapper.QualityProblem1Mapper">
 
-    <resultMap type="QualityProblem" id="partsNameResult">
-        <result property="partsName"    column="parts_name"    />
-        <result property="partsModel"    column="parts_model"    />
-    </resultMap>
-
-    <resultMap type="Sum" id="SumPlaneTypeResult">
-        <result property="quarter" column="plane_type"/>
-        <result property="sum" column="count(*)"/>
-    </resultMap>
-    <resultMap type="QualityProblem" id="QualityProblemResult">
+    <resultMap type="QualityProblem1" id="QualityProblem1Result">
         <result property="id"    column="id"    />
         <result property="title"    column="title"    />
         <result property="planeType"    column="plane_type"    />
@@ -43,55 +30,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="repairedFactory"    column="repaired_factory"    />
         <result property="repairedStaff"    column="repaired_staff"    />
     </resultMap>
-    <resultMap type="FaultyPartsCount" id="FaultyPartsCountResult">
-        <result property="partsModelName" column="parts_model_name"/>
-        <result property="partsCount" column="parts_count"/>
-    </resultMap>
 
-    <sql id="selectQualityProblemVo">
+    <sql id="selectQualityProblem1Vo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
     </sql>
 
-
-    <select id="qualityHappenSum" parameterType="Sum" resultMap="SumResult">
-        SELECT
-    CONCAT(year(dev_happen_time),'年',QUARTER(dev_happen_time),'季度') createTime,count(*)
-        FROM
-            quality_problem_1
-        GROUP BY
-            createTime
-        order by year(dev_happen_time) asc
-    </select>
-<!--    年份统计-->
-    <select id="yearHappenSum" parameterType="Sum" resultMap="SumResult">
-        SELECT
-    CONCAT(year(dev_happen_time),'年') createTime,count(*)
-        FROM
-            quality_problem_1
-        GROUP BY
-            year(dev_happen_time)
-        order by year(dev_happen_time) asc
-    </select>
-
-    <!--返回所有故障件名称和型号-->
-    <select id="partsName" parameterType="QualityProblem" resultMap="partsNameResult">
-            SELECT parts_name,parts_model
-            FROM quality_problem_1
-    </select>
-
-
-<!--   质量问题涉及到的机型 -->
-    <select id="sumByplaneType" parameterType="Sum" resultMap="SumPlaneTypeResult">
-        SELECT
-            plane_type,count(*)
-                FROM
-                    quality_problem_1
-                GROUP BY
-                    plane_type
-                ORDER BY count(*) asc
-    </select>
-    <select id="selectQualityProblemList" parameterType="QualityProblem" resultMap="QualityProblemResult">
-        <include refid="selectQualityProblemVo"/>
+    <select id="selectQualityProblem1List" parameterType="QualityProblem1" resultMap="QualityProblem1Result">
+        <include refid="selectQualityProblem1Vo"/>
         <where>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
@@ -119,12 +64,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectQualityProblemById" parameterType="Long" resultMap="QualityProblemResult">
-        <include refid="selectQualityProblemVo"/>
+    <select id="selectQualityProblem1ById" parameterType="Long" resultMap="QualityProblem1Result">
+        <include refid="selectQualityProblem1Vo"/>
         where id = #{id}
     </select>
 
-    <insert id="insertQualityProblem" parameterType="QualityProblem" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertQualityProblem1" parameterType="QualityProblem1" useGeneratedKeys="true" keyProperty="id">
         insert into quality_problem_1
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null">title,</if>
@@ -178,7 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateQualityProblem" parameterType="QualityProblem">
+    <update id="updateQualityProblem1" parameterType="QualityProblem1">
         update quality_problem_1
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null">title = #{title},</if>
@@ -208,38 +153,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteQualityProblemById" parameterType="Long">
+    <delete id="deleteQualityProblem1ById" parameterType="Long">
         delete from quality_problem_1 where id = #{id}
     </delete>
 
-    <delete id="deleteQualityProblemByIds" parameterType="String">
+    <delete id="deleteQualityProblem1ByIds" parameterType="String">
         delete from quality_problem_1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-
-    <select id="selectAllCount" resultType="int">
-        SELECT
-          COUNT(*)
-        FROM
-          quality_problem_1
-    </select>
-
-    <select id="selectCountByName" resultMap="FaultyPartsCountResult">
-        SELECT
-            COUNT(*) AS parts_count,
-            CONCAT( parts_model, '-', parts_name ) AS parts_model_name
-        FROM
-            quality_problem_1
-        GROUP BY
-            parts_name
-    </select>
-
-    <select id="selectPartsCount" resultType="int">
-        SELECT
-            COUNT( DISTINCT CONCAT( parts_model, '-', parts_name ) )
-        FROM
-            quality_problem_1
-    </select>
 </mapper>

@@ -258,8 +258,16 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.9</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 	    <finalName>${project.artifactId}</finalName>
