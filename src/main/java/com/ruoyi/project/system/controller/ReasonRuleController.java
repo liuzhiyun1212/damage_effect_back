@@ -313,45 +313,6 @@ public class ReasonRuleController extends BaseController
                         sa++;
                     }
                 }
-                if(s3==null){
-                    EquipmentDesignData equipmentDesignData = new EquipmentDesignData();
-                    equipmentDesignData.setModelSeries(s1);
-                    List<EquipmentDesignData> listed = equipmentDesignDataService.selectEquipmentDesignDataList(equipmentDesignData);
-                    List<String> nname = new ArrayList<String>();//时间
-                    for(int ii=0;ii<listed.size();ii++){
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(listed.get(ii).getRemodelDate());
-                        int a = calendar.get(Calendar.MONTH)+1;
-                        if(a>0&&a<4){
-                            a=1;
-                        } else if(a>3&&a<7){
-                            a=2;
-                        } else if(a>6&&a<10){
-                            a=3;
-                        } else if(a>9&&a<13){
-                            a=4;
-                        }
-                        nname.add(calendar.get(Calendar.YEAR)+"-"+a);
-                    }
-                    Collections.sort(nname);
-                    for(int ii=0;ii<nname.size();ii++){
-                        if(ii==name.size()-1){
-                            if(s2.compareTo(nname.get(ii))<0&&s2.compareTo(nname.get(ii-1))>=0){
-                                s3 = Sites.get(s1+nname.get(ii-1));
-                            }else if(s2.compareTo(nname.get(ii))>=0){
-                                s3 = Sites.get(s1+nname.get(ii));
-                            }
-                        }else if(ii==0){
-                            if(s2.compareTo(nname.get(ii))>=0&&s2.compareTo(nname.get(ii+1))<0){
-                                s3 = Sites.get(s1+nname.get(ii));
-                            }
-                        }else{
-                            if(s2.compareTo(nname.get(ii))<0&&s2.compareTo(nname.get(ii-1))>=0){
-                                s3 = Sites.get(s1+nname.get(ii-1));
-                            }
-                        }
-                    }
-                }
                 devuptwo devup2 = new devuptwo();
                 devup2.setDevHappenTime(s2);
                 devup2.setPlaneType(s3);
