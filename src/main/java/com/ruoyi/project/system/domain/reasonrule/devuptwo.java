@@ -10,6 +10,9 @@ public class devuptwo {
 
     private int devHappennum;
 
+    /** 型号系列 */
+    private String modelSeries;
+
     public void setPlaneType(String planeType)
     {
         this.planeType = planeType;
@@ -38,5 +41,15 @@ public class devuptwo {
     public int getdevHappennum()
     {
         return devHappennum;
+    }
+
+    public void setModelSeries(String modelSeries)
+    {
+        this.modelSeries = modelSeries;
+    }
+
+    public String getModelSeries()
+    {
+        return modelSeries;
     }
 }

@@ -13,6 +13,9 @@ public class devupone {
     /** 故障模式 */
     private String faultModel;
 
+    /** 型号系列 */
+    private String modelSeries;
+
     public void setFaultModel(String faultModel)
     {
         this.faultModel = faultModel;
@@ -51,5 +54,15 @@ public class devupone {
     public int getdevHappennum()
     {
         return devHappennum;
+    }
+
+    public void setModelSeries(String modelSeries)
+    {
+        this.modelSeries = modelSeries;
+    }
+
+    public String getModelSeries()
+    {
+        return modelSeries;
     }
 }
