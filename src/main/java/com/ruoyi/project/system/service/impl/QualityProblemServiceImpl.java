@@ -3,6 +3,7 @@ package com.ruoyi.project.system.service.impl;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.GradeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
 import com.ruoyi.project.system.mapper.QualityProblemMapper;
@@ -223,6 +224,21 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     @Override
     public int selectPartsCount(){
         return qualityProblemMapper.selectPartsCount();
+    }
+
+    @Override
+    public List<GradeCount> selectByGradeFaultModel() {
+        return qualityProblemMapper.selectByGradeFaultModel();
+    }
+
+    @Override
+    public List<Sum> qualitySumByGrade() {
+        return qualityProblemMapper.qualitySumByGrade();
+    }
+
+    @Override
+    public List<Sum> productSumByGrade() {
+        return qualityProblemMapper.productSumByGrade();
     }
 
 }

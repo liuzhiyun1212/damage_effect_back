@@ -1,6 +1,7 @@
 package com.ruoyi.project.system.service;
 
 import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.GradeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
 
@@ -122,4 +123,31 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public int selectPartsCount();
+    /**4.2.2.3
+     * @Description 高发故障模式涉及到的故障件的生产班组
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<GradeCount> selectByGradeFaultModel();
+    /**4.2.2.3
+     * @Description 生产班组统计质量问题总数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> qualitySumByGrade();
+    /**4.2.2.3
+     * @Description 生产班组统计产品总数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> productSumByGrade();
 }

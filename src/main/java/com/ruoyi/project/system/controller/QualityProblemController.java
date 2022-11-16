@@ -6,9 +6,8 @@ import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.project.system.domain.FaultyPartsCount;
-import com.ruoyi.project.system.domain.QualityProblem;
-import com.ruoyi.project.system.domain.Sum;
+import com.ruoyi.project.system.domain.*;
+import com.ruoyi.project.system.service.IQualityProblem1Service;
 import com.ruoyi.project.system.service.IQualityProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * quality_problemController
@@ -31,7 +29,8 @@ public class QualityProblemController extends BaseController
 {
     @Autowired
     private IQualityProblemService qualityProblemService;
-
+    @Autowired
+    private IQualityProblem1Service qualityProblem1Service;
     /**
      * 查询quality_problem列表
      */
@@ -368,7 +367,7 @@ public class QualityProblemController extends BaseController
         List<Sum> list = sumByplaneType(sum);
         List<Sum> list1 = new ArrayList<>();
         int count=0;
-        int average=0;
+        double average=0;
         for(int i=0;i<list.size();i++){
             count += list.get(i).getSum();
         }
@@ -378,7 +377,7 @@ public class QualityProblemController extends BaseController
                 list1.add(list.get(i));
             }
         }
-        System.out.println("机型" + list1);
+//        System.out.println("机型" + list1);
         return list1;
     }
 
@@ -419,5 +418,105 @@ public class QualityProblemController extends BaseController
     public List<FaultyPartsCount> selectAllFaulty() {
         List<FaultyPartsCount> list = qualityProblemService.selectCountByName();
         return list;
+    }
+
+
+    public List<QualityProblem1Controller.ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
+    {
+        Set<String> modelName = new HashSet<>();
+        List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+        List<QualityProblem1Controller.ModelCount> listMC = new ArrayList<>();
+
+        int count;
+        for(QualityProblem1 q:list){
+            modelName.add(q.getFaultModel());
+        }
+
+        for (String s:modelName) {
+            count = 0;
+            QualityProblem1Controller.ModelCount modelCount = new QualityProblem1Controller.ModelCount();
+            for (QualityProblem1 q : list) {
+                if (Objects.equals(s, q.getFaultModel())) {
+                    modelCount.setFaultModel(s);
+                    count++;
+                    modelCount.setModelCount(count);
+                }
+            }
+            listMC.add(modelCount);
+        }
+        return listMC;
+    }
+    /**4.2.2.3
+     * @Description 高发故障模式涉及到的故障件的生产班组
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectByGradeFaultModel")
+    public List<GradeCount> selectByGradeFaultModel(){
+        List<GradeCount> list = new ArrayList<>();
+        List<GradeCount> list1 = qualityProblemService.selectByGradeFaultModel();
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        for(int i=0;i<list1.size();i++){
+            for(int j=0;j<list2.size();j++){
+                if(list1.get(i).getFaultModel().equals(list2.get(j).getFaultModel())){
+                    list.add(list1.get(i));
+                }
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        int mark=0;
+        for (GradeCount str : list) {
+            for (String g : result) {
+                if (str.getProductMakeGroup().equals(g)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                result.add(str.getProductMakeGroup());
+            }
+        }
+//        System.out.println("测试aaaaaaaaa" + result);
+        return list;
+    }
+    /**4.2.2.3
+     * @Description 生产班组统计质量问题总数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/qualitySumByGrade")
+    public List<Sum> qualitySumByGrade() {
+        List<Sum> l1 = qualityProblemService.qualitySumByGrade();
+        List<String> grade = new ArrayList<>();
+        List<Sum> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:grade){
+                if(i.getQuarter().equals(j)){
+                    res.add(i);
+                }
+            }
+        }
+        System.out.println("测试aaaaaaaaa" + l1);
+//        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+    /**4.2.2.3
+     * @Description 生产班组统计产品总数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/productSumByGrade")
+    public List<Sum> productSumByGrade() {
+        return qualityProblemService.productSumByGrade();
     }
 }

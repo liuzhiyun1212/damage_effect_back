@@ -41,12 +41,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="partsModelName" column="parts_model_name"/>
         <result property="partsCount" column="parts_count"/>
     </resultMap>
-
+    <resultMap type="GradeCount" id="GradeCountResult">
+        <result property="partsName"    column="parts_name"    />
+        <result property="faultModel"    column="fault_model"    />
+        <result property="productMakeGroup"    column="product_make_group"    />
+    </resultMap>
+<!--    生产表-->
+    <resultMap type="ProductQuantity7" id="ProductQuantity7Result">
+        <result property="id"    column="id"    />
+        <result property="planeType"    column="plane_type"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productModel"    column="product_model"    />
+        <result property="productFactoryNumber"    column="product_factory_number"    />
+        <result property="productFactoryDate"    column="product_factory_date"    />
+        <result property="productBatch"    column="product_batch"    />
+        <result property="productMakeGroup"    column="product_make_group"    />
+        <result property="productMakePeople"    column="product_make_people"    />
+        <result property="productProcessEquipment"    column="product_process_equipment"    />
+    </resultMap>
     <sql id="selectQualityProblemVo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
     </sql>
 
-
+<!--班组、故障件、故障模式-->
+    <select id="selectByGradeFaultModel" parameterType="GradeCount" resultMap="GradeCountResult">
+        SELECT parts_name,fault_model,product_make_group
+        from quality_problem_1 as q, product_quantity_7 as p
+        WHERE q.parts_code = p.product_factory_number
+    </select>
+    <!--班组统计质量问题总数-->
+    <select id="qualitySumByGrade" parameterType="Sum" resultMap="SumResult">
+        SELECT product_make_group, count(q.title)
+        from quality_problem_1 as q, product_quantity_7 as p
+        WHERE q.parts_name = p.product_name
+        GROUP BY product_make_group
+    </select>
+    <!--班组统计产品总数-->
+    <select id="productSumByGrade" parameterType="Sum" resultMap="SumResult">
+        SELECT product_make_group,count(product_name)
+        from product_quantity_7
+        GROUP BY product_make_group
+    </select>
+    <!--    季度统计-->
     <select id="qualityHappenSum" parameterType="Sum" resultMap="SumResult">
         SELECT
     CONCAT(year(dev_happen_time),'年',QUARTER(dev_happen_time),'季度') createTime,count(*)
