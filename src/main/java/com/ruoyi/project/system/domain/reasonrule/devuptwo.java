@@ -13,6 +13,32 @@ public class devuptwo {
     /** 型号系列 */
     private String modelSeries;
 
+    /** 故障件名称 */
+    private String partsName;
+
+    /** 故障模式 */
+    private String faultModel;
+
+    public void setFaultModel(String faultModel)
+    {
+        this.faultModel = faultModel;
+    }
+
+    public String getFaultModel()
+    {
+        return faultModel;
+    }
+
+    public void setPartsName(String partsName)
+    {
+        this.partsName = partsName;
+    }
+
+    public String getPartsName()
+    {
+        return partsName;
+    }
+
     public void setPlaneType(String planeType)
     {
         this.planeType = planeType;

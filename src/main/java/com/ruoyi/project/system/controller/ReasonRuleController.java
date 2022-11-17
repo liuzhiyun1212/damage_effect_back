@@ -120,7 +120,7 @@ public class ReasonRuleController extends BaseController
                 if(d.getModelSeries().equals(s1)){
                     for(int a1=0;a1< name.size();a1++){
                         if(a1==name.size()-1){
-                            if(d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
+                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
                                 devupone devup2 = new devupone();
                                 devup2.setFaultModel(d.getFaultModel());
                                 devup2.setDevHappenTime(String.valueOf(a1));
@@ -148,7 +148,7 @@ public class ReasonRuleController extends BaseController
                                 list2.add(devup2);
                             }
                         }else{
-                            if(d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
+                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
                                 devupone devup2 = new devupone();
                                 devup2.setFaultModel(d.getFaultModel());
                                 devup2.setDevHappenTime(String.valueOf(a1));
@@ -178,13 +178,15 @@ public class ReasonRuleController extends BaseController
                             aa3 = d.getPlaneType();
                         }
                     }
-                    devupone devup2 = new devupone();
-                    devup2.setDevHappenTime(aa2);
-                    devup2.setFaultModel(s2);
-                    devup2.setModelSeries(s1);
-                    devup2.setPlaneType(aa3);
-                    devup2.setdevHappennum(sa);
-                    list3.add(devup2);
+                    if(sa>0){
+                        devupone devup2 = new devupone();
+                        devup2.setDevHappenTime(aa2);
+                        devup2.setFaultModel(s2);
+                        devup2.setModelSeries(s1);
+                        devup2.setPlaneType(aa3);
+                        devup2.setdevHappennum(sa);
+                        list3.add(devup2);
+                    }
                 }
             }
         }
@@ -316,12 +318,14 @@ public class ReasonRuleController extends BaseController
                         sa++;
                     }
                 }
-                devuptwo devup2 = new devuptwo();
-                devup2.setDevHappenTime(s2);
-                devup2.setPlaneType(s3);
-                devup2.setModelSeries(s1);
-                devup2.setdevHappennum(sa);
-                list2.add(devup2);
+                if(sa>0){
+                    devuptwo devup2 = new devuptwo();
+                    devup2.setDevHappenTime(s2);
+                    devup2.setPlaneType(s3);
+                    devup2.setModelSeries(s1);
+                    devup2.setdevHappennum(sa);
+                    list2.add(devup2);
+                }
             }
         }
         List<String> name1 = new ArrayList<String>();//时间
@@ -439,7 +443,8 @@ public class ReasonRuleController extends BaseController
      * 同一型号的不同能力状态中，某种故障模式质量问题数量存在较大差异
      */
     @GetMapping("/devcapup1")
-    public TableDataInfo devcapup1(){
+    public TableDataInfo devcapup1()
+    {
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
         RuleConstruction ruleConstruction = new RuleConstruction();
         ruleConstruction.setRule("同一型号的不同能力状态中，某种故障模式质量问题数量存在较大差异");
@@ -499,7 +504,7 @@ public class ReasonRuleController extends BaseController
                     if(d.getPlaneType().equals(s1)&&d.getDevCode().equals(s2)){
                         for(int a1=0;a1< name.size();a1++){
                             if(a1==name.size()-1){
-                                if(d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
+                                if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
                                     devupone devup2 = new devupone();
                                     devup2.setFaultModel(d.getFaultModel());
                                     devup2.setDevHappenTime(String.valueOf(a1));
@@ -527,7 +532,7 @@ public class ReasonRuleController extends BaseController
                                     list2.add(devup2);
                                 }
                             }else{
-                                if(d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
+                                if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
                                     devupone devup2 = new devupone();
                                     devup2.setFaultModel(d.getFaultModel());
                                     devup2.setDevHappenTime(String.valueOf(a1));
@@ -603,7 +608,8 @@ public class ReasonRuleController extends BaseController
      * 问题装备型号能力提升时间与质量问题变化时间一致或不超过一定范围
      */
     @GetMapping("/devcapup2")
-    public TableDataInfo devcapup2(){
+    public TableDataInfo devcapup2()
+    {
         QualityProblem qualityProblem = new QualityProblem();
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
         List<devuptwo> list1 = new ArrayList<devuptwo>();
@@ -644,11 +650,13 @@ public class ReasonRuleController extends BaseController
                         sa++;
                     }
                 }
-                devuptwo devup2 = new devuptwo();
-                devup2.setDevHappenTime(s2);
-                devup2.setPlaneType(s1);
-                devup2.setdevHappennum(sa);
-                list2.add(devup2);
+                if(sa>0){
+                    devuptwo devup2 = new devuptwo();
+                    devup2.setDevHappenTime(s2);
+                    devup2.setPlaneType(s1);
+                    devup2.setdevHappennum(sa);
+                    list2.add(devup2);
+                }
             }
         }
         List<String> name1 = new ArrayList<String>();//时间
@@ -753,7 +761,314 @@ public class ReasonRuleController extends BaseController
         return getDataTable(listfin);
     }
 
-    public boolean halfyear(String s1,String s2){
+    /**
+     * 不同故障件型号中，某种故障模式质量问题数量存在较大差异
+     */
+    @GetMapping("/prochaange1")
+    public TableDataInfo prochaange1(){
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        RuleConstruction ruleConstruction = new RuleConstruction();
+        ruleConstruction.setRule("不同故障件型号中，某种故障模式质量问题数量存在较大差异");
+        List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
+        float ruledata = Float.parseFloat(listr.get(0).getRuleData());
+        QualityProblem qualityProblem = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
+        List<devuptwo> list1 = new ArrayList<devuptwo>();
+        List<String> plane = new ArrayList<String>();
+        List<String> series = new ArrayList<String>();
+        List<String> model = new ArrayList<String>();
+        for(QualityProblem i: list){
+            devuptwo devup1 = new devuptwo();
+            devup1.setDevHappenTime(simpleDateFormat.format(i.getDevHappenTime()));
+            devup1.setPlaneType(i.getPartsModel());
+            devup1.setFaultModel(i.getFaultModel());
+            devup1.setPartsName(i.getPartsName());
+            devup1.setdevHappennum(1);
+            list1.add(devup1);
+            if(!plane.contains(i.getPartsModel())){
+                plane.add(i.getPartsModel());
+            }
+            if(!model.contains(i.getFaultModel())){
+                model.add(i.getFaultModel());
+            }
+            if(!series.contains(i.getPartsName())){
+                series.add(i.getPartsName());
+            }
+        }
+        List<devuptwo> list2 = new ArrayList<devuptwo>();
+        int max = 0;
+        for(String s1: series) {
+            List<String> name = new ArrayList<String>();//时间
+            ProductModify equipmentDesignData = new ProductModify();
+            equipmentDesignData.setProductName(s1);
+            List<ProductModify> listed = productModifyService.selectProductModifyList(equipmentDesignData);
+            for(int ii=0;ii<listed.size();ii++){
+                name.add(simpleDateFormat.format(listed.get(ii).getModifyTime()));
+            }
+            Collections.sort(name);
+            for(devuptwo d:list1){
+                if(d.getPartsName().equals(s1)){
+                    for(int a1=0;a1< name.size();a1++){
+                        if(a1==name.size()-1){
+                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
+                                devuptwo devup2 = new devuptwo();
+                                devup2.setFaultModel(d.getFaultModel());
+                                devup2.setDevHappenTime(String.valueOf(a1));
+                                devup2.setPlaneType(d.getPlaneType());
+                                devup2.setPartsName(s1);
+                                devup2.setdevHappennum(1);
+                                list2.add(devup2);
+                            }else if(d.getDevHappenTime().compareTo(name.get(a1))>=0){
+                                devuptwo devup2 = new devuptwo();
+                                devup2.setFaultModel(d.getFaultModel());
+                                devup2.setDevHappenTime(String.valueOf(a1+1));
+                                devup2.setPlaneType(d.getPlaneType());
+                                devup2.setPartsName(s1);
+                                devup2.setdevHappennum(1);
+                                list2.add(devup2);
+                            }
+                        }else if(a1==0){
+                            if(d.getDevHappenTime().compareTo(name.get(a1))<0){
+                                devuptwo devup2 = new devuptwo();
+                                devup2.setFaultModel(d.getFaultModel());
+                                devup2.setDevHappenTime(String.valueOf(a1));
+                                devup2.setPlaneType(d.getPlaneType());
+                                devup2.setPartsName(s1);
+                                devup2.setdevHappennum(1);
+                                list2.add(devup2);
+                            }
+                        }else{
+                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
+                                devuptwo devup2 = new devuptwo();
+                                devup2.setFaultModel(d.getFaultModel());
+                                devup2.setDevHappenTime(String.valueOf(a1));
+                                devup2.setPlaneType(d.getPlaneType());
+                                devup2.setPartsName(s1);
+                                devup2.setdevHappennum(1);
+                                list2.add(devup2);
+                            }
+                        }
+                    }
+                }
+            }
+            if(name.size()>max){
+                max= name.size();
+            }
+        }
+        List<devuptwo> list3 = new ArrayList<devuptwo>();
+        for(String s1: series){
+            for(String s2: model){
+                for(int a2=0;a2<max+1;a2++){
+                    String aa2 = String.valueOf(a2);
+                    int sa = 0;
+                    String aa3 = "";
+                    for(devuptwo d:list2){
+                        if(d.getPartsName().equals(s1)&&d.getDevHappenTime().equals(aa2)&&d.getFaultModel().equals(s2)){
+                            sa++;
+                            aa3 = d.getPlaneType();
+                        }
+                    }
+                    if(sa>0){
+                        devuptwo devup2 = new devuptwo();
+                        devup2.setDevHappenTime(aa2);
+                        devup2.setFaultModel(s2);
+                        devup2.setPartsName(s1);
+                        devup2.setPlaneType(aa3);
+                        devup2.setdevHappennum(sa);
+                        list3.add(devup2);
+                    }
+                }
+            }
+        }
+        List<String> model1 = new ArrayList<String>();
+        List<String> series1 = new ArrayList<String>();
+        for(String s1: series){
+            for(String s2: model){
+                List<devuptwo> list4 = new ArrayList<devuptwo>();
+                for(devuptwo d:list3){
+                    if(d.getPartsName().equals(s1)&&d.getFaultModel().equals(s2)&&d.getdevHappennum()>0){
+                        list4.add(d);
+                    }
+                }
+                for(int i=0;i<list4.size();i++){
+                    if(i>0&&list4.get(i).getdevHappennum()>list4.get(i-1).getdevHappennum()*ruledata){
+                        model1.add(list4.get(i).getFaultModel());
+                        series1.add(list4.get(i).getPartsName());
+                    }
+                    if(i>0&&list4.get(i).getdevHappennum()*ruledata<list4.get(i-1).getdevHappennum()){
+                        model1.add(list4.get(i).getFaultModel());
+                        series1.add(list4.get(i).getPartsName());
+                    }
+                }
+            }
+        }
+        List<devuptwo> listfin = new ArrayList<devuptwo>();
+        for(int i=0;i<series1.size();i++){
+            for(devuptwo d:list3){
+                if(d.getPartsName().equals(series1.get(i))&&d.getFaultModel().equals(model1.get(i))){
+                    listfin.add(d);
+                }
+            }
+        }
+        return getDataTable(listfin);
+    }
+
+    /**
+     * 故障件型号技术状态升级时间与质量问题数量变化时间一致或不超过一定范围
+     */
+    @GetMapping("/prochaange4")
+    public TableDataInfo prochaange4()
+    {
+        QualityProblem qualityProblem = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
+        List<devuptwo> list1 = new ArrayList<devuptwo>();
+        List<devuptwo> list2 = new ArrayList<devuptwo>();
+        List<String> name = new ArrayList<String>();//时间
+        List<String> series = new ArrayList<String>();//故障件名称
+        for(QualityProblem i: list){
+            devuptwo devup1 = new devuptwo();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(i.getDevHappenTime());
+            int a = calendar.get(Calendar.MONTH)+1;
+            if(a>0&&a<4){
+                a=1;
+            } else if(a>3&&a<7){
+                a=2;
+            } else if(a>6&&a<10){
+                a=3;
+            } else if(a>9&&a<13){
+                a=4;
+            }
+            devup1.setDevHappenTime(calendar.get(Calendar.YEAR)+"-"+a);
+            devup1.setPartsName(i.getPartsName());
+            devup1.setdevHappennum(1);
+            list1.add(devup1);
+            if(!name.contains(calendar.get(Calendar.YEAR)+"-"+a)){
+                name.add(calendar.get(Calendar.YEAR)+"-"+a);
+            }
+            if(!series.contains(i.getPartsName())){
+                series.add(i.getPartsName());
+            }
+        }
+        Collections.sort(name);
+        for(String s1: series){
+            for(String s2: name){
+                int sa = 0;
+                for(devuptwo d:list1){
+                    if(d.getDevHappenTime().equals(s2)&&d.getPartsName().equals(s1)){
+                        sa++;
+                    }
+                }
+                if(sa>0){
+                    devuptwo devup2 = new devuptwo();
+                    devup2.setDevHappenTime(s2);
+                    devup2.setPartsName(s1);
+                    devup2.setdevHappennum(sa);
+                    list2.add(devup2);
+                }
+            }
+        }
+        List<String> name1 = new ArrayList<String>();//时间
+        List<String> series1 = new ArrayList<String>();//机型
+        for(String s1: series){
+            List<devuptwo> list3 = new ArrayList<devuptwo>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(s1)&&d.getdevHappennum()>0){
+                    list3.add(d);
+                }
+            }
+            for(int i=0;i<list3.size();i++){
+                if(i>0&&list3.get(i).getdevHappennum()>list3.get(i-1).getdevHappennum()*1.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    series1.add(list3.get(i).getPartsName());
+                }
+                if(i>0&&list3.get(i).getdevHappennum()<list3.get(i-1).getdevHappennum()*0.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    series1.add(list3.get(i).getPartsName());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()*1.2&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()*1.2){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    series1.add(list3.get(i).getPartsName());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()*0.8&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()*0.8){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    series1.add(list3.get(i).getPartsName());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()>list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    series1.add(list3.get(i).getPartsName());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()<list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    series1.add(list3.get(i).getPartsName());
+                }
+            }
+        }
+        List<String> name2 = new ArrayList<String>();//时间
+        List<String> series2 = new ArrayList<String>();//时间
+        for(int i=0;i<series1.size();i++){
+            ProductModify equipmentDesignData = new ProductModify();
+            equipmentDesignData.setProductName(series1.get(i));
+            List<ProductModify> listed = productModifyService.selectProductModifyList(equipmentDesignData);
+            for(int ii=0;ii<listed.size();ii++){
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(listed.get(ii).getModifyTime());
+                int a = calendar.get(Calendar.MONTH)+1;
+                if(a>0&&a<4){
+                    a=1;
+                } else if(a>3&&a<7){
+                    a=2;
+                } else if(a>6&&a<10){
+                    a=3;
+                } else if(a>9&&a<13){
+                    a=4;
+                }
+                String ss = calendar.get(Calendar.YEAR)+"-"+a;
+                if(halfyear(name1.get(i),ss)){
+                    name2.add(ss);
+                    series2.add(series1.get(i));
+                }
+            }
+        }
+        List<devuptwo> listfin = new ArrayList<devuptwo>();
+        for(String s1: series2){
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(s1)&&!listfin.contains(d)){
+                    listfin.add(d);
+                }
+            }
+        }
+        for(int i =0;i<series2.size();i++){
+            boolean iffind = false;
+            for(devuptwo d:list2){
+                if(d.getDevHappenTime().equals(name2.get(i))&&d.getPartsName().equals(series2.get(i))){
+                    iffind = true;
+                    devuptwo devup3 = new devuptwo();
+                    devup3.setDevHappenTime(name2.get(i));
+                    devup3.setPartsName(series2.get(i));
+                    devup3.setdevHappennum(-1);
+                    listfin.add(devup3);
+                }
+            }
+            if(iffind==false){
+                devuptwo devup2 = new devuptwo();
+                devup2.setDevHappenTime(name2.get(i));
+                devup2.setPartsName(series2.get(i));
+                devup2.setdevHappennum(0);
+                listfin.add(devup2);
+
+                devuptwo devup3 = new devuptwo();
+                devup3.setDevHappenTime(name2.get(i));
+                devup3.setPartsName(series2.get(i));
+                devup3.setdevHappennum(-1);
+                listfin.add(devup3);
+            }
+        }
+        return getDataTable(listfin);
+    }
+
+    public boolean halfyear(String s1,String s2)
+    {
         if(s1.substring(0,4).equals(s2.substring(0,4))){
             if(s1.compareTo(s2)<=2){
                 return true;
