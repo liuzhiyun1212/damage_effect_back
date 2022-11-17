@@ -112,53 +112,22 @@ public class ReasonRuleController extends BaseController
             EquipmentDesignData equipmentDesignData = new EquipmentDesignData();
             equipmentDesignData.setModelSeries(s1);
             List<EquipmentDesignData> listed = equipmentDesignDataService.selectEquipmentDesignDataList(equipmentDesignData);
+            HashMap<String, String> Sites = new HashMap<String, String>();
             for(int ii=0;ii<listed.size();ii++){
                 name.add(simpleDateFormat.format(listed.get(ii).getRemodelDate()));
+                Sites.put(listed.get(ii).getPlaneType(),simpleDateFormat.format(listed.get(ii).getRemodelDate()));
             }
             Collections.sort(name);
             for(devupone d:list1){
                 if(d.getModelSeries().equals(s1)){
-                    for(int a1=0;a1< name.size();a1++){
-                        if(a1==name.size()-1){
-                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
-                                devupone devup2 = new devupone();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setModelSeries(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }else if(d.getDevHappenTime().compareTo(name.get(a1))>=0){
-                                devupone devup2 = new devupone();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1+1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setModelSeries(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }
-                        }else if(a1==0){
-                            if(d.getDevHappenTime().compareTo(name.get(a1))<0){
-                                devupone devup2 = new devupone();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setModelSeries(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }
-                        }else{
-                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
-                                devupone devup2 = new devupone();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setModelSeries(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }
-                        }
-                    }
+                    devupone devup2 = new devupone();
+                    devup2.setFaultModel(d.getFaultModel());
+                    int a1 = name.indexOf(Sites.get(d.getPlaneType()));
+                    devup2.setDevHappenTime(String.valueOf(a1));
+                    devup2.setPlaneType(d.getPlaneType());
+                    devup2.setModelSeries(s1);
+                    devup2.setdevHappennum(1);
+                    list2.add(devup2);
                 }
             }
             if(name.size()>max){
