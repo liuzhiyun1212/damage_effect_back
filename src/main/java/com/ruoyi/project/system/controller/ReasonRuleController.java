@@ -501,7 +501,7 @@ public class ReasonRuleController extends BaseController
                                     list2.add(devup2);
                                 }
                             }else{
-                                if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
+                                if(d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
                                     devupone devup2 = new devupone();
                                     devup2.setFaultModel(d.getFaultModel());
                                     devup2.setDevHappenTime(String.valueOf(a1));
