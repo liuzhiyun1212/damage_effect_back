@@ -67,7 +67,7 @@ public class ReasonRuleController extends BaseController
         List<EquipmentDesignData> listing = equipmentDesignDataService.selectEquipmentDesignDataList(equipmentDesignData1);
         List<devupone> list1 = new ArrayList<devupone>();
         List<String> plane = new ArrayList<String>();//机型
-        List<String> series = new ArrayList<String>();//机型
+        List<String> series = new ArrayList<String>();
         List<String> model = new ArrayList<String>();//故障模式
         for(EquipmentDesignData i: listing){
             if(!series.contains(i.getModelSeries())){
@@ -449,16 +449,30 @@ public class ReasonRuleController extends BaseController
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
         List<devupone> list1 = new ArrayList<devupone>();
         List<String> plane = new ArrayList<String>();
+        List<String> mplane = new ArrayList<String>();
         List<String> model = new ArrayList<String>();
+        List<String> series = new ArrayList<String>();
+        EquipmentManufacturingData5 equipmentManufacturingData51 = new EquipmentManufacturingData5();
+        List<EquipmentManufacturingData5> listing = equipmentManufacturingData5Service.selectEquipmentManufacturingData5List(equipmentManufacturingData51);
+        for(EquipmentManufacturingData5 i: listing){
+            if(!series.contains(i.getCapabilityStatus())){
+                series.add(i.getCapabilityStatus());
+            }
+        }
+        Collections.sort(series);
         for(QualityProblem i: list){
             devupone devup1 = new devupone();
             devup1.setDevHappenTime(simpleDateFormat.format(i.getDevHappenTime()));
             devup1.setPlaneType(i.getPlaneType());
             devup1.setFaultModel(i.getFaultModel());
+            devup1.setDevCode(i.getDevCode());
             devup1.setdevHappennum(1);
             list1.add(devup1);
             if(!plane.contains(i.getPlaneType())){
                 plane.add(i.getPlaneType());
+            }
+            if(!mplane.contains(i.getPlaneType()+";"+i.getDevCode())){
+                mplane.add(i.getPlaneType()+";"+i.getDevCode());
             }
             if(!model.contains(i.getFaultModel())){
                 model.add(i.getFaultModel());
@@ -467,10 +481,13 @@ public class ReasonRuleController extends BaseController
         List<devupone> list2 = new ArrayList<devupone>();
         HashMap<String, String> Sites = new HashMap<String, String>();
         int max = 0;
-        for(String s1: plane){
+        for(String as1: mplane){
+            String s1 = as1.split(";")[0];
+            String s2 = as1.split(";")[1];
             List<String> name = new ArrayList<String>();//时间
             EquipmentManufacturingData5 equipmentManufacturingData5 = new EquipmentManufacturingData5();
             equipmentManufacturingData5.setPlaneType(s1);
+            equipmentManufacturingData5.setDevCode(s2);
             List<EquipmentManufacturingData5> listed = equipmentManufacturingData5Service.selectEquipmentManufacturingData5List(equipmentManufacturingData5);
             if(listed.size()!=0){
                 for(int ii=0;ii<listed.size();ii++){
@@ -479,7 +496,7 @@ public class ReasonRuleController extends BaseController
                 }
                 Collections.sort(name);
                 for(devupone d:list1){
-                    if(d.getPlaneType().equals(s1)){
+                    if(d.getPlaneType().equals(s1)&&d.getDevCode().equals(s2)){
                         for(int a1=0;a1< name.size();a1++){
                             if(a1==name.size()-1){
                                 if(d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
@@ -490,7 +507,6 @@ public class ReasonRuleController extends BaseController
                                     devup2.setPlaneType(s1);
                                     devup2.setdevHappennum(1);
                                     list2.add(devup2);
-                                    Sites.put(devup2.getPlaneType()+devup2.getFaultModel()+devup2.getDevHappenTime(), devup2.getCapabilityStatus());
                                 }else if(d.getDevHappenTime().compareTo(name.get(a1))>=0){
                                     devupone devup2 = new devupone();
                                     devup2.setFaultModel(d.getFaultModel());
@@ -499,7 +515,6 @@ public class ReasonRuleController extends BaseController
                                     devup2.setPlaneType(s1);
                                     devup2.setdevHappennum(1);
                                     list2.add(devup2);
-                                    Sites.put(devup2.getPlaneType()+devup2.getFaultModel()+devup2.getDevHappenTime(), devup2.getCapabilityStatus());
                                 }
                             }else if(a1==0){
                                 if(d.getDevHappenTime().compareTo(name.get(a1))<0){
@@ -510,7 +525,6 @@ public class ReasonRuleController extends BaseController
                                     devup2.setPlaneType(s1);
                                     devup2.setdevHappennum(1);
                                     list2.add(devup2);
-                                    Sites.put(devup2.getPlaneType()+devup2.getFaultModel()+devup2.getDevHappenTime(), devup2.getCapabilityStatus());
                                 }
                             }else{
                                 if(d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
@@ -521,7 +535,6 @@ public class ReasonRuleController extends BaseController
                                     devup2.setPlaneType(s1);
                                     devup2.setdevHappennum(1);
                                     list2.add(devup2);
-                                    Sites.put(devup2.getPlaneType()+devup2.getFaultModel()+devup2.getDevHappenTime(), devup2.getCapabilityStatus());
                                 }
                             }
                         }
@@ -534,23 +547,22 @@ public class ReasonRuleController extends BaseController
         }
         List<devupone> list3 = new ArrayList<devupone>();
         for(String s1: plane){
-            for(String s2: model){
-                for(int a2=0;a2<max+1;a2++){
-                    String aa2 = String.valueOf(a2);
+            for(String sss:series){
+                for(String s2: model){
                     int sa = 0;
-                    String sss = Sites.get(s1+s2+aa2);
                     for(devupone d:list2){
-                        if(d.getPlaneType().equals(s1)&&d.getDevHappenTime().equals(aa2)&&d.getFaultModel().equals(s2)){
+                        if(d.getPlaneType().equals(s1)&&d.getCapabilityStatus().equals(sss)&&d.getFaultModel().equals(s2)){
                             sa++;
                         }
                     }
-                    devupone devup2 = new devupone();
-                    devup2.setDevHappenTime(aa2);
-                    devup2.setFaultModel(s2);
-                    devup2.setCapabilityStatus(sss);
-                    devup2.setPlaneType(s1);
-                    devup2.setdevHappennum(sa);
-                    list3.add(devup2);
+                    if(sa>0){
+                        devupone devup2 = new devupone();
+                        devup2.setFaultModel(s2);
+                        devup2.setCapabilityStatus(sss);
+                        devup2.setPlaneType(s1);
+                        devup2.setdevHappennum(sa);
+                        list3.add(devup2);
+                    }
                 }
             }
         }

@@ -19,6 +19,19 @@ public class devupone {
     /** 能力状态 */
     private String capabilityStatus;
 
+    /** 装备出厂编号 */
+    private String devCode;
+
+    public void setDevCode(String devCode)
+    {
+        this.devCode = devCode;
+    }
+
+    public String getDevCode()
+    {
+        return devCode;
+    }
+
     public void setFaultModel(String faultModel)
     {
         this.faultModel = faultModel;
