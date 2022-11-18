@@ -219,7 +219,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM
             quality_problem_1
         GROUP BY
-            parts_name
+            parts_model_name
     </select>
 
     <select id="selectPartsCount" resultType="int">

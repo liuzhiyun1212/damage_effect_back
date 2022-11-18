@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.domain;
 
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * @Title:
@@ -17,7 +19,7 @@ public class FaultyPartsCount {
     private int partsCount;
 
     @Excel(name = "故障件发生数占比")
-    private int partsProportion;
+    private String partsProportion;
 
     public String getPartsModelName() {
         return partsModelName;
@@ -35,11 +37,20 @@ public class FaultyPartsCount {
         this.partsCount = partsCount;
     }
 
-    public int getPartsProportion() {
+    public String getPartsProportion() {
         return partsProportion;
     }
 
-    public void setPartsProportion(int partsProportion) {
+    public void setPartsProportion(String partsProportion) {
         this.partsProportion = partsProportion;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("partsModelName", getPartsModelName())
+                .append("partsCount", getPartsCount())
+                .append("partsProportion", getPartsProportion())
+                .toString();
     }
 }
