@@ -1,9 +1,6 @@
 package com.ruoyi.project.system.service;
 
-import com.ruoyi.project.system.domain.FaultyPartsCount;
-import com.ruoyi.project.system.domain.GradeCount;
-import com.ruoyi.project.system.domain.QualityProblem;
-import com.ruoyi.project.system.domain.Sum;
+import com.ruoyi.project.system.domain.*;
 
 import java.util.List;
 
@@ -150,4 +147,13 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> productSumByGrade();
+    /**4.2.2.3
+     * @Description 故障件生产班组变更
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<ProductModifyData> selectByGradeChanged();
 }

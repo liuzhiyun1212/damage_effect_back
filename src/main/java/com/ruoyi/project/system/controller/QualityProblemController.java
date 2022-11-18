@@ -455,7 +455,7 @@ public class QualityProblemController extends BaseController
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @GetMapping("/selectByGradeFaultModel")
-    public List<GradeCount> selectByGradeFaultModel(){
+    public List<String> selectByGradeFaultModel(){
         List<GradeCount> list = new ArrayList<>();
         List<GradeCount> list1 = qualityProblemService.selectByGradeFaultModel();
         QualityProblem1 qualityProblem1 = new QualityProblem1();
@@ -481,7 +481,7 @@ public class QualityProblemController extends BaseController
             }
         }
 //        System.out.println("测试aaaaaaaaa" + result);
-        return list;
+        return result;
     }
     /**4.2.2.3
      * @Description 生产班组统计质量问题总数
@@ -492,18 +492,18 @@ public class QualityProblemController extends BaseController
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @GetMapping("/qualitySumByGrade")
-    public List<Sum> qualitySumByGrade() {
+    public List<Integer> qualitySumByGrade() {
         List<Sum> l1 = qualityProblemService.qualitySumByGrade();
-        List<String> grade = new ArrayList<>();
-        List<Sum> res = new ArrayList<>();
+        List<String> grade = selectByGradeFaultModel();
+        List<Integer> res = new ArrayList<>();
         for(Sum i:l1){
             for(String j:grade){
                 if(i.getQuarter().equals(j)){
-                    res.add(i);
+                    res.add(i.getSum());
                 }
             }
         }
-        System.out.println("测试aaaaaaaaa" + l1);
+//        System.out.println("测试aaaaaaaaa" + l1);
 //        System.out.println("测试aaaaaaaaa" + res);
         return res;
     }
@@ -516,7 +516,138 @@ public class QualityProblemController extends BaseController
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @GetMapping("/productSumByGrade")
-    public List<Sum> productSumByGrade() {
-        return qualityProblemService.productSumByGrade();
+    public List<Integer> productSumByGrade() {
+        List<Sum> l1 = qualityProblemService.productSumByGrade();
+        List<String> grade = selectByGradeFaultModel();
+        List<Integer> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:grade){
+                if(i.getQuarter().equals(j)){
+                    res.add(i.getSum());
+                }
+            }
+        }
+//        System.out.println("测试aaaaaaaaa" + l1);
+//        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+    static class time1{
+        public String name;
+        public List<Date> list=new ArrayList<>();
+
+        @Override
+        public String toString() {
+            return "time1{" +
+                    "name='" + name + '\'' +
+                    ", list=" + list +
+                    '}';
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public List<Date> getList() {
+            return list;
+        }
+
+        public void setList(List<Date> list) {
+            this.list = list;
+        }
+    }
+    static class timeCount{
+        public String name;
+        public Date time;
+
+        @Override
+        public String toString() {
+            return "timeCount{" +
+                    "name='" + name + '\'' +
+                    ", time=" + time +
+                    '}';
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Date getTime() {
+            return time;
+        }
+
+        public void setTime(Date time) {
+            this.time = time;
+        }
+    }
+    /**4.2.2.3
+     * @Description 故障件生产班组变更
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectByGradeChanged")
+    public List<timeCount> selectByGradeChanged(){
+        List <ProductModifyData> list = qualityProblemService.selectByGradeChanged();
+        List<timeCount> res = new ArrayList<>();
+        for(ProductModifyData p:list){
+            timeCount t1=new timeCount();
+            t1.setName(p.getProductName());
+            t1.setTime(p.getModifyTime());
+            res.add(t1);
+        }
+//        System.out.println("测试aaaaaaaaa" + res);
+
+        return res;
+    }
+    /**4.2.2.3
+     * @Description 时间线图用故障件生产班组变更
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/timeGradeChanged")
+    public List<time1> timeGradeChanged(){
+        List<String> st = new ArrayList<>();
+        List<String> st1 = new ArrayList<>();
+        List<time1> res = new ArrayList<>();
+        List <ProductModifyData> list = qualityProblemService.selectByGradeChanged();
+        int mark=0;
+        for(ProductModifyData p:list){
+            for(String s:st){
+                if(p.getProductName().equals(s)){
+                    mark=-1;
+                }
+            }
+            if(mark==0){
+                st.add(p.getProductName());
+            }
+        }
+        for(String s:st){
+            time1 t1= new time1();
+            List<Date> t = new ArrayList<>();
+//            t.clear();
+            for(ProductModifyData p:list){
+                if(s.equals(p.getProductName())){
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                }
+            }
+            res.add(t1);
+        }
+        System.out.println("测试aaaaaaaaa" + res);
+        return res;
     }
 }
