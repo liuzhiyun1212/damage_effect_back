@@ -734,7 +734,8 @@ public class ReasonRuleController extends BaseController
      * 不同故障件型号中，某种故障模式质量问题数量存在较大差异
      */
     @GetMapping("/prochaange1")
-    public TableDataInfo prochaange1(){
+    public TableDataInfo prochaange1()
+    {
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
         RuleConstruction ruleConstruction = new RuleConstruction();
         ruleConstruction.setRule("不同故障件型号中，某种故障模式质量问题数量存在较大差异");
@@ -771,53 +772,22 @@ public class ReasonRuleController extends BaseController
             ProductModify equipmentDesignData = new ProductModify();
             equipmentDesignData.setProductName(s1);
             List<ProductModify> listed = productModifyService.selectProductModifyList(equipmentDesignData);
+            HashMap<String, String> Sites = new HashMap<String, String>();
             for(int ii=0;ii<listed.size();ii++){
                 name.add(simpleDateFormat.format(listed.get(ii).getModifyTime()));
+                Sites.put(listed.get(ii).getProductModel(),simpleDateFormat.format(listed.get(ii).getModifyTime()));
             }
             Collections.sort(name);
             for(devuptwo d:list1){
                 if(d.getPartsName().equals(s1)){
-                    for(int a1=0;a1< name.size();a1++){
-                        if(a1==name.size()-1){
-                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
-                                devuptwo devup2 = new devuptwo();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setPartsName(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }else if(d.getDevHappenTime().compareTo(name.get(a1))>=0){
-                                devuptwo devup2 = new devuptwo();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1+1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setPartsName(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }
-                        }else if(a1==0){
-                            if(d.getDevHappenTime().compareTo(name.get(a1))<0){
-                                devuptwo devup2 = new devuptwo();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setPartsName(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }
-                        }else{
-                            if(a1!=0&&d.getDevHappenTime().compareTo(name.get(a1))<0&&d.getDevHappenTime().compareTo(name.get(a1-1))>=0){
-                                devuptwo devup2 = new devuptwo();
-                                devup2.setFaultModel(d.getFaultModel());
-                                devup2.setDevHappenTime(String.valueOf(a1));
-                                devup2.setPlaneType(d.getPlaneType());
-                                devup2.setPartsName(s1);
-                                devup2.setdevHappennum(1);
-                                list2.add(devup2);
-                            }
-                        }
-                    }
+                    devuptwo devup2 = new devuptwo();
+                    devup2.setFaultModel(d.getFaultModel());
+                    int a1 = name.indexOf(Sites.get(d.getPlaneType()));
+                    devup2.setDevHappenTime(String.valueOf(a1));
+                    devup2.setPlaneType(d.getPlaneType());
+                    devup2.setPartsName(s1);
+                    devup2.setdevHappennum(1);
+                    list2.add(devup2);
                 }
             }
             if(name.size()>max){
