@@ -57,6 +57,14 @@ public class ProductDesignController extends BaseController
     {
 
         List<ProductDesign> list = productDesignService.selectProductDesignList(productDesign);
+        List<partsSite> list2 = productDesignService.selectpartsSite();
+        List<partsSite> list3 = new ArrayList<>();
+        /*for(partsSite p : list2){
+            int mark=0;
+            for(ProductDesign pro : list){
+                if()
+            }
+        }*/
         return list;
     }
 
@@ -119,27 +127,42 @@ public class ProductDesignController extends BaseController
             install_way.setUpperMiddleLower(i.getUpperMiddleLower()+mockLongBetween2(-0.2, 0.2));
             install_way.setFrame(i.getFrame()+mockLongBetween2(-0.2, 0.2));
             install_way.setInstallMethod(i.getInstallMethod());
+            install_way.setPlaneType(i.getPlaneType());
             list2.add(install_way);
         }
-    /*List<String> intall_way = new ArrayList<>();
-    for(ProductDesign p : list){
-        int mark=0;
-        for(String s : intall_way){
-            if(p.getInstallMethod().equals(s)){
-                mark=-1;
-            }
-        }
-        if(mark==0){
-            intall_way.add(p.getInstallMethod());
-        }
-    }*/
         return  list2;
 }
 
     @GetMapping("/getana_install_way")
-    public List<install_way> ana_install_way(){
-        List<partsSite> listqua = productDesignService.selectPartsqulitynum();
-        List<partsSite> listins = productDesignService.selectPartsinstallnum();
+    public List<install_way2> ana_install_way(){
+
+        List<partsSite> listins = productDesignService.selectPartsinstallnum();  //按照机型和故障附件型号、故障件名称分组统计质量问题数
+        List<install_way2> list = new ArrayList<>();
+        Long sum = null;
+        int length =listins.size();
+        double avrage = 0;
+        for(partsSite p :listins){
+            sum+=p.getNum();
+        }
+        avrage = sum.doubleValue()/(double)length*0.5;
+        for(partsSite p :listins){
+
+            if(p.getNum()>avrage){
+                install_way2 ins = new install_way2();
+                ins.setFinishedModel(p.getFinishedModel());
+                ins.setFinishedName(p.getFinishedName());
+                ins.setFrame(p.getFrame());
+                ins.setLeftMiddleRight(p.getLeftMiddleRight());
+                ins.setUpperMiddleLower(p.getUpperMiddleLower());
+                ins.setPlaneType(p.getPlaneType());
+                ins.setInstallMethod(p.getInstallMethod());
+                list.add(ins);
+            }
+        }
+
+
+        /*List<partsSite> listqua = productDesignService.selectPartsqulitynum();  //统计机型和故障附件型号、故障件名称、安装方法分组后的数量
+        List<partsSite> listins = productDesignService.selectPartsinstallnum();  //按照机型和故障附件型号、故障件名称分组统计质量问题数
         List<install_way> listway = productDesignService.selectinstallmethod();
         List<install_way> list = new ArrayList<>();
         List<install_way> final_list = new ArrayList<>();
@@ -147,15 +170,7 @@ public class ProductDesignController extends BaseController
             for(partsSite par : listins){
                 if(p.getFinishedModel().equals(par.getFinishedModel())&&p.getFinishedName().equals(par.getFinishedName())){
                     double averge = p.getNum().doubleValue()/par.getNum().doubleValue()*0.5;
-                    System.out.println("11111--"+p.getNum());
-                    System.out.println("11111--"+par.getNum());
-                    System.out.println("11111--"+p.getNum().doubleValue()/par.getNum().doubleValue());
-                    System.out.println("11111--"+p.getNum().doubleValue()/par.getNum().doubleValue()*0.5);
-                    System.out.println("---------------");
-                    install_way ins = new install_way();
-                    ins.setFinishedModel(par.getFinishedModel());
-                    ins.setFinishedName(par.getFinishedName());
-                    ins.setAverge(averge);
+
                     list.add(ins);
                 }
             }
@@ -166,8 +181,8 @@ public class ProductDesignController extends BaseController
                     final_list.add(i);
                 }
             }
-        }
-        return final_list;
+        }*/
+        return list;
     }
 
     static class install_way2{
@@ -219,12 +234,20 @@ public class ProductDesignController extends BaseController
             this.installMethod = installMethod;
         }
 
+        public String getPlaneType() {
+            return planeType;
+        }
+
+        public void setPlaneType(String planeType) {
+            this.planeType = planeType;
+        }
         private double LeftMiddleRight;
         private double UpperMiddleLower;
         private double Frame;
         private String finishedName;
         private String finishedModel;
         private String installMethod;
+        private String planeType;
     }
 
 

@@ -10,6 +10,21 @@ public class partsSite {
     @Excel(name = "成品件型号")
     private String finishedModel;
 
+    private String planeType;
+
+
+    public String getInstallMethod() {
+        return installMethod;
+    }
+
+    public void setInstallMethod(String installMethod) {
+        this.installMethod = installMethod;
+    }
+
+    private String installMethod;
+
+    private String devCode;
+
     /** 框 */
     @Excel(name = "框")
     private double frame;
@@ -32,7 +47,22 @@ public class partsSite {
         this.num = num;
     }
 
+    public String getPlaneType() {
+        return planeType;
+    }
 
+    public void setPlaneType(String planeType) {
+        this.planeType = planeType;
+    }
+
+
+    public String getDevCode() {
+        return devCode;
+    }
+
+    public void setDevCode(String devCode) {
+        this.devCode = devCode;
+    }
 
 
     public String getFinishedName() {

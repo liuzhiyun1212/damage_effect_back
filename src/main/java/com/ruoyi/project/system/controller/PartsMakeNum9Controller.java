@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.system.domain.EquipmentUsageData9;
-import com.ruoyi.project.system.service.IEquipmentUsageData9Service;
+import com.ruoyi.project.system.domain.PartsMakeNum9;
+import com.ruoyi.project.system.service.IPartsMakeNum9Service;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -25,24 +25,24 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * 9：装备使用数据Controller
  * 
  * @author ruoyi
- * @date 2022-11-11
+ * @date 2022-11-18
  */
 @RestController
 @RequestMapping("/system/9")
-public class EquipmentUsageData9Controller extends BaseController
+public class PartsMakeNum9Controller extends BaseController
 {
     @Autowired
-    private IEquipmentUsageData9Service equipmentUsageData9Service;
+    private IPartsMakeNum9Service partsMakeNum9Service;
 
     /**
      * 查询9：装备使用数据列表
      */
     @PreAuthorize("@ss.hasPermi('system:9:list')")
     @GetMapping("/list")
-    public TableDataInfo list(EquipmentUsageData9 equipmentUsageData9)
+    public TableDataInfo list(PartsMakeNum9 partsMakeNum9)
     {
         startPage();
-        List<EquipmentUsageData9> list = equipmentUsageData9Service.selectEquipmentUsageData9List(equipmentUsageData9);
+        List<PartsMakeNum9> list = partsMakeNum9Service.selectPartsMakeNum9List(partsMakeNum9);
         return getDataTable(list);
     }
 
@@ -52,10 +52,10 @@ public class EquipmentUsageData9Controller extends BaseController
     @PreAuthorize("@ss.hasPermi('system:9:export')")
     @Log(title = "9：装备使用数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, EquipmentUsageData9 equipmentUsageData9)
+    public void export(HttpServletResponse response, PartsMakeNum9 partsMakeNum9)
     {
-        List<EquipmentUsageData9> list = equipmentUsageData9Service.selectEquipmentUsageData9List(equipmentUsageData9);
-        ExcelUtil<EquipmentUsageData9> util = new ExcelUtil<EquipmentUsageData9>(EquipmentUsageData9.class);
+        List<PartsMakeNum9> list = partsMakeNum9Service.selectPartsMakeNum9List(partsMakeNum9);
+        ExcelUtil<PartsMakeNum9> util = new ExcelUtil<PartsMakeNum9>(PartsMakeNum9.class);
         util.exportExcel(response, list, "9：装备使用数据数据");
     }
 
@@ -66,7 +66,7 @@ public class EquipmentUsageData9Controller extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return success(equipmentUsageData9Service.selectEquipmentUsageData9ById(id));
+        return success(partsMakeNum9Service.selectPartsMakeNum9ById(id));
     }
 
     /**
@@ -75,9 +75,9 @@ public class EquipmentUsageData9Controller extends BaseController
     @PreAuthorize("@ss.hasPermi('system:9:add')")
     @Log(title = "9：装备使用数据", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EquipmentUsageData9 equipmentUsageData9)
+    public AjaxResult add(@RequestBody PartsMakeNum9 partsMakeNum9)
     {
-        return toAjax(equipmentUsageData9Service.insertEquipmentUsageData9(equipmentUsageData9));
+        return toAjax(partsMakeNum9Service.insertPartsMakeNum9(partsMakeNum9));
     }
 
     /**
@@ -86,9 +86,9 @@ public class EquipmentUsageData9Controller extends BaseController
     @PreAuthorize("@ss.hasPermi('system:9:edit')")
     @Log(title = "9：装备使用数据", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EquipmentUsageData9 equipmentUsageData9)
+    public AjaxResult edit(@RequestBody PartsMakeNum9 partsMakeNum9)
     {
-        return toAjax(equipmentUsageData9Service.updateEquipmentUsageData9(equipmentUsageData9));
+        return toAjax(partsMakeNum9Service.updatePartsMakeNum9(partsMakeNum9));
     }
 
     /**
@@ -99,6 +99,6 @@ public class EquipmentUsageData9Controller extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(equipmentUsageData9Service.deleteEquipmentUsageData9ByIds(ids));
+        return toAjax(partsMakeNum9Service.deletePartsMakeNum9ByIds(ids));
     }
 }
