@@ -4,15 +4,14 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.math.MathUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.ruoyi.project.system.domain.AircraftTypeAndTime;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.mapper.AircraftTypeAndTypeMapper;
 import com.ruoyi.project.system.mapper.QualityProblemMapper;
 import com.ruoyi.project.system.service.IAircraftTypeAndTypeService;
 import org.apache.commons.compress.utils.Lists;
-import org.apache.commons.compress.utils.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +56,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         //按机型方式分类
         Map typeNumMap = spliteByAircraft(numList);
 
-        List<Map> resList = new ArrayList();
+        List<Map<String, Object>> resList = new ArrayList();
         switch (aircraftTypeAndTime.getCheckedMethodName()) {
             case "allCheck":
                 resList = allCheck(typeNumMap, aircraftTypeAndTime);
@@ -178,10 +177,10 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         return resList;
     }
 
-    //todo 先对map进行遍历，key是机型，value是数量情况，按照不同机型进行计算
 
     /**
-     * 较上一时间增加或减少50%以上，该时间为质量问题发生故障件变化时间
+     * 较上一时间增加或减少50%以上，该时间为质量问题发生故障件变化时间。
+     * 先对map进行遍历，key是机型，value是数量情况，按照不同机型进行计算
      *
      * @return
      */
@@ -206,12 +205,12 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
                     String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
                     //是否符合条件2
-                    if(i>=2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",2";
+                    if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",2";
                     }
                     //是否符合条件3
-                    if(i>=3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",3";
+                    if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",3";
                     }
                     //去掉指定前缀
                     tableMap.put("checkCondition", checkCondition);
@@ -243,12 +242,12 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
                     String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
                     //是否符合条件1
-                    if(isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = "1,"+checkCondition;
+                    if (isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = "1," + checkCondition;
                     }
                     //是否符合条件3
-                    if(i>=3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",3";
+                    if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",3";
                     }
                     //去掉指定前缀
                     tableMap.put("checkCondition", checkCondition);
@@ -281,12 +280,12 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
                     String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
                     //是否符合条件1
-                    if(isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = "1,"+checkCondition;
+                    if (isChange50Percent(numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = "1," + checkCondition;
                     }
                     //是否符合条件2
-                    if(i>=2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())){
-                        checkCondition = checkCondition+",2";
+                    if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",2";
                     }
                     //去掉指定前缀
                     tableMap.put("checkCondition", checkCondition);
@@ -339,6 +338,67 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
             resMap.put("name", item.getPlaneType());
             resMap.put("type", "line");
             resMap.put("data", numList2);
+            //添加到list中的是不同机型的map
+            distinctNameMap.put(item.getPlaneType(), resMap);
+        }
+
+        //todo 这里和上面的的功能不需要同步，可以用多线程来做，只要最后都放到res就行了
+        List xData = getXData(list);
+
+        List<AircraftTypeAndTime> resList = new ArrayList(distinctNameMap.values());
+
+        HashMap<Object, Object> resultMap = MapUtil.newHashMap();
+        resultMap.put("xdata", xData);
+        resultMap.put("list", resList);
+        return resultMap;
+    }
+
+    @Override
+    public Map getUseIntensityChartData() {
+
+        List<AircraftTypeAndTime> list = aircraftTypeAndTypeMapper.selectQuarter();
+        //todo 为什么实体类中的devHappenTime的@JsonFormat不起作用
+        //格式化数据
+        for (AircraftTypeAndTime item : list) {
+            item.setDevHappenTime(DateUtil.date(item.getDevHappenTime()));
+        }
+
+        HashMap<String, AircraftTypeAndTime> map = MapUtil.newHashMap();
+
+        //合并季度相同的
+        for (AircraftTypeAndTime item : list) {
+            //统计某一时间段的不同机型的数量
+            item.setNum(map.getOrDefault(DateUtil.year(item.getDevHappenTime()) + "-" + item.getQuarter() + "-" + item.getPlaneType(), new AircraftTypeAndTime()).getNum() + 1);
+            map.put(DateUtil.year(item.getDevHappenTime()) + "-" + item.getQuarter() + "-" + item.getPlaneType(), item);
+        }
+
+        //没有数据的赋零
+        for (AircraftTypeAndTime item : list) {
+            setBlankData(map, list.get(0).getDevHappenTime(), list.get(list.size() - 1).getDevHappenTime(), item);
+        }
+
+        List<AircraftTypeAndTime> numList = new ArrayList(map.values());
+        //按照时间顺序排序
+        numList.sort(Comparator.comparing(QualityProblem::getDevHappenTime));
+
+        //结果的对象
+        HashMap<String, Object> resMap = MapUtil.newHashMap();
+
+        //相同机型的根据时间顺序放进list
+        HashMap<String, Object> distinctNameMap = MapUtil.newHashMap();
+        HashMap<String, Object> typeMap = MapUtil.newHashMap();
+        for (AircraftTypeAndTime item : numList) {
+            //一个机型里存所有季度的数量
+            ArrayList<Object> numList2 = (ArrayList<Object>) typeMap.getOrDefault(item.getPlaneType(), Lists.newArrayList());
+            numList2.add(item.getNum());
+            typeMap.put(item.getPlaneType(), numList2);
+            resMap = MapUtil.newHashMap();
+            resMap.put("name", item.getPlaneType());
+            resMap.put("type", "line");
+            resMap.put("data", numList2);
+            resMap.put("stack", "Total");
+            resMap.put("areaStyle", new JSONObject());
+            resMap.put("emphasis", new JSONObject().append("focus", "series"));
             //添加到list中的是不同机型的map
             distinctNameMap.put(item.getPlaneType(), resMap);
         }

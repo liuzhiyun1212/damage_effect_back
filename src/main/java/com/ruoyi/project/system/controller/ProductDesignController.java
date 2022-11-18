@@ -1,7 +1,12 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.framework.aspectj.lang.annotation.Excel;
+import com.ruoyi.project.system.domain.install_way;
+import com.ruoyi.project.system.domain.partsSite;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +51,205 @@ public class ProductDesignController extends BaseController
         List<ProductDesign> list = productDesignService.selectProductDesignList(productDesign);
         return getDataTable(list);
     }
+
+    @GetMapping("/listall")
+    public List<ProductDesign> listall(ProductDesign productDesign)
+    {
+
+        List<ProductDesign> list = productDesignService.selectProductDesignList(productDesign);
+        List<partsSite> list2 = productDesignService.selectpartsSite();
+        List<partsSite> list3 = new ArrayList<>();
+        /*for(partsSite p : list2){
+            int mark=0;
+            for(ProductDesign pro : list){
+                if()
+            }
+        }*/
+        return list;
+    }
+
+
+    @GetMapping("/partssite")
+    public List<partsSite> list()
+    {
+
+        List<partsSite> list = productDesignService.selectpartsSite();
+        for(partsSite i : list){
+            i.setLeftMiddleRight(i.getLeftMiddleRight()+mockLongBetween2(-0.2, 0.2));
+            i.setUpperMiddleLower(i.getUpperMiddleLower()+mockLongBetween2(-0.2, 0.2));
+            i.setFrame(i.getFrame()+mockLongBetween2(-0.2, 0.2));
+        }
+        return list;
+    }
+
+    public double mockLongBetween2(double begin, double end) {
+        double between = end - begin;
+        double random = Math.random();
+        double randomBetween = new Double(random * between);
+        double result = begin + randomBetween;
+        return result;
+    }
+
+    @GetMapping("/pointcount")
+    public List<partsSite> pointcount(ProductDesign productDesign){
+        int sum=0;
+        List<partsSite> listall= productDesignService.selectPartsSitenum();
+        List<partsSite> list = new ArrayList<>();
+        for(partsSite p : listall){
+            sum+=p.getNum();
+        }
+        for(partsSite p : listall){
+            if(p.getNum()>sum*0.3){
+                list.add(p);
+            }
+        }
+
+       /* List<ProductDesign> listdesign = productDesignService.selectProductDesignList(productDesign);
+        for(ProductDesign p : listdesign ){
+            for(partsSite par : list){
+                if(p.getFrame()==par.getFrame()&&p.getLeftMiddleRight()==par.getLeftMiddleRight()&&p.getUpperMiddleLower()==par.getUpperMiddleLower()){
+                    listdesign.add(p);
+                }
+            }
+        }*/
+        return list;
+    }
+
+    @GetMapping("/getinstall_way")
+    public List<install_way2> getinstall_way(){
+    List<ProductDesign> list = productDesignService.selectPartsinstall();
+        List<install_way2> list2 = new ArrayList<>();
+        for(ProductDesign i : list){
+            install_way2 install_way=new install_way2();
+            install_way.setFinishedName(i.getFinishedName());
+            install_way.setFinishedModel(i.getFinishedModel());
+            install_way.setLeftMiddleRight(i.getLeftMiddleRight()+mockLongBetween2(-0.2, 0.2));
+            install_way.setUpperMiddleLower(i.getUpperMiddleLower()+mockLongBetween2(-0.2, 0.2));
+            install_way.setFrame(i.getFrame()+mockLongBetween2(-0.2, 0.2));
+            install_way.setInstallMethod(i.getInstallMethod());
+            install_way.setPlaneType(i.getPlaneType());
+            list2.add(install_way);
+        }
+        return  list2;
+}
+
+    @GetMapping("/getana_install_way")
+    public List<install_way2> ana_install_way(){
+
+        List<partsSite> listins = productDesignService.selectPartsinstallnum();  //按照机型和故障附件型号、故障件名称分组统计质量问题数
+        List<install_way2> list = new ArrayList<>();
+        Long sum = null;
+        int length =listins.size();
+        double avrage = 0;
+        for(partsSite p :listins){
+            sum+=p.getNum();
+        }
+        avrage = sum.doubleValue()/(double)length*0.5;
+        for(partsSite p :listins){
+
+            if(p.getNum()>avrage){
+                install_way2 ins = new install_way2();
+                ins.setFinishedModel(p.getFinishedModel());
+                ins.setFinishedName(p.getFinishedName());
+                ins.setFrame(p.getFrame());
+                ins.setLeftMiddleRight(p.getLeftMiddleRight());
+                ins.setUpperMiddleLower(p.getUpperMiddleLower());
+                ins.setPlaneType(p.getPlaneType());
+                ins.setInstallMethod(p.getInstallMethod());
+                list.add(ins);
+            }
+        }
+
+
+        /*List<partsSite> listqua = productDesignService.selectPartsqulitynum();  //统计机型和故障附件型号、故障件名称、安装方法分组后的数量
+        List<partsSite> listins = productDesignService.selectPartsinstallnum();  //按照机型和故障附件型号、故障件名称分组统计质量问题数
+        List<install_way> listway = productDesignService.selectinstallmethod();
+        List<install_way> list = new ArrayList<>();
+        List<install_way> final_list = new ArrayList<>();
+        for(partsSite p : listqua){
+            for(partsSite par : listins){
+                if(p.getFinishedModel().equals(par.getFinishedModel())&&p.getFinishedName().equals(par.getFinishedName())){
+                    double averge = p.getNum().doubleValue()/par.getNum().doubleValue()*0.5;
+
+                    list.add(ins);
+                }
+            }
+        }
+        for(install_way i : listway){
+            for(install_way l : list){
+                if(i.getFinishedModel().equals(l.getFinishedModel())&&i.getFinishedName().equals(l.getFinishedName())&&i.getNum()>l.getAverge()){
+                    final_list.add(i);
+                }
+            }
+        }*/
+        return list;
+    }
+
+    static class install_way2{
+        public double getLeftMiddleRight() {
+            return LeftMiddleRight;
+        }
+
+        public void setLeftMiddleRight(double leftMiddleRight) {
+            LeftMiddleRight = leftMiddleRight;
+        }
+
+        public double getUpperMiddleLower() {
+            return UpperMiddleLower;
+        }
+
+        public void setUpperMiddleLower(double upperMiddleLower) {
+            UpperMiddleLower = upperMiddleLower;
+        }
+
+        public double getFrame() {
+            return Frame;
+        }
+
+        public void setFrame(double frame) {
+            Frame = frame;
+        }
+
+        public String getFinishedName() {
+            return finishedName;
+        }
+
+        public void setFinishedName(String finishedName) {
+            this.finishedName = finishedName;
+        }
+
+        public String getFinishedModel() {
+            return finishedModel;
+        }
+
+        public void setFinishedModel(String finishedModel) {
+            this.finishedModel = finishedModel;
+        }
+
+        public String getInstallMethod() {
+            return installMethod;
+        }
+
+        public void setInstallMethod(String installMethod) {
+            this.installMethod = installMethod;
+        }
+
+        public String getPlaneType() {
+            return planeType;
+        }
+
+        public void setPlaneType(String planeType) {
+            this.planeType = planeType;
+        }
+        private double LeftMiddleRight;
+        private double UpperMiddleLower;
+        private double Frame;
+        private String finishedName;
+        private String finishedModel;
+        private String installMethod;
+        private String planeType;
+    }
+
 
     /**
      * 导出成品件设计数据列表
