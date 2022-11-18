@@ -119,7 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectProductDesignVo">
-        select id, plane_type, finished_type, finished_name, finished_model, finished_manufacturer, frame, upper_middle_lower, left_middle_right, install_method, raw_material, spare_parts, modify_time, modify_measures from product_design_3
+        select id, plane_type, finished_type, finished_name, finished_model, finished_manufacturer, frame, upper_middle_lower, left_middle_right, install_method, raw_material, spare_parts/*, modify_time, modify_measures*/ from product_design_3
     </sql>
 
     <select id="selectProductDesignList" parameterType="ProductDesign" resultMap="ProductDesignResult">
