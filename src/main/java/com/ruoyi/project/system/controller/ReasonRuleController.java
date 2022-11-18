@@ -42,9 +42,6 @@ public class ReasonRuleController extends BaseController
     private IEquipmentDeploymentData8Service equipmentDeploymentData8Service;
 
     @Autowired
-    private IEquipmentUsageData9Service equipmentUsageData9Service;
-
-    @Autowired
     private IRuleConstructionService ruleConstructionService;
 
     @Autowired
@@ -853,6 +850,268 @@ public class ReasonRuleController extends BaseController
     }
 
     /**
+     * 相同故障件型号的不同安装方式中，某种故障模式质量问题数量存在较大差异
+     */
+    @GetMapping("/prochaange2")
+    public TableDataInfo prochaange2()
+    {
+        RuleConstruction ruleConstruction = new RuleConstruction();
+        ruleConstruction.setRule("相同故障件型号的不同安装方式中，某种故障模式质量问题数量存在较大差异");
+        List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
+        float ruledata = Float.parseFloat(listr.get(0).getRuleData());
+        QualityProblem qualityProblem = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
+        List<devupone> list1 = new ArrayList<devupone>();
+        List<String> plane = new ArrayList<String>();
+        List<String> mplane = new ArrayList<String>();
+        List<String> model = new ArrayList<String>();
+        List<String> series = new ArrayList<String>();
+        ProductDesign equipmentManufacturingData51 = new ProductDesign();
+        List<ProductDesign> listing = productDesignService.selectProductDesignList(equipmentManufacturingData51);
+        for(ProductDesign i: listing){
+            if(!series.contains(i.getInstallMethod())){
+                series.add(i.getInstallMethod());
+            }
+        }
+        for(QualityProblem i: list){
+            devupone devup1 = new devupone();
+            devup1.setPlaneType(i.getPlaneType());
+            devup1.setFaultModel(i.getFaultModel());
+            devup1.setPartsName(i.getPartsName());
+            devup1.setPartsModel(i.getPartsModel());
+            devup1.setdevHappennum(1);
+            list1.add(devup1);
+            if(!plane.contains(i.getPlaneType()+"/"+i.getPartsName()+"/"+i.getPartsModel())){
+                plane.add(i.getPlaneType()+"/"+i.getPartsName()+"/"+i.getPartsModel());
+            }
+            if(!mplane.contains(i.getPartsName()+"/"+i.getPartsModel())){
+                mplane.add(i.getPartsName()+"/"+i.getPartsModel());
+            }
+            if(!model.contains(i.getFaultModel())){
+                model.add(i.getFaultModel());
+            }
+        }
+        List<devupone> list2 = new ArrayList<devupone>();
+        for(String as1: plane){
+            String s1 = as1.split("/")[0];
+            String s2 = as1.split("/")[1];
+            String s3 = as1.split("/")[2];
+            String name = "";//时间
+            ProductDesign equipmentManufacturingData5 = new ProductDesign();
+            equipmentManufacturingData5.setPlaneType(s1);
+            equipmentManufacturingData5.setFinishedName(s2);
+            equipmentManufacturingData5.setFinishedModel(s3);
+            List<ProductDesign> listed = productDesignService.selectProductDesignList(equipmentManufacturingData5);
+            if(listed.size()>0){
+                name=listed.get(0).getInstallMethod();
+                for(devupone d:list1){
+                    if(d.getPlaneType().equals(s1)&&d.getPartsName().equals(s2)&&d.getPartsModel().equals(s3)){
+                        devupone devup2 = new devupone();
+                        devup2.setFaultModel(d.getFaultModel());
+                        devup2.setPlaneType(s1);
+                        devup2.setPartsName(s2);
+                        devup2.setPartsModel(s3);
+                        devup2.setInstallMethod(name);
+                        devup2.setdevHappennum(1);
+                        list2.add(devup2);
+                    }
+                }
+            }
+        }
+        List<devupone> list3 = new ArrayList<devupone>();
+        for(String as1: mplane){
+            String s1 = as1.split("/")[0];
+            String ss = as1.split("/")[1];
+            for(String sss:series){
+                for(String s2: model){
+                    int sa = 0;
+                    for(devupone d:list2){
+                        if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getInstallMethod().equals(sss)&&d.getFaultModel().equals(s2)){
+                            sa++;
+                        }
+                    }
+                    if(sa>0){
+                        devupone devup2 = new devupone();
+                        devup2.setPartsName(s1);
+                        devup2.setPartsModel(ss);
+                        devup2.setInstallMethod(sss);
+                        devup2.setFaultModel(s2);
+                        devup2.setdevHappennum(sa);
+                        list3.add(devup2);
+                    }
+                }
+            }
+        }
+        List<String> model1 = new ArrayList<String>();//故障模式
+        List<String> plane1 = new ArrayList<String>();//机型
+        for(String as1: mplane){
+            String s1 = as1.split("/")[0];
+            String ss = as1.split("/")[1];
+            for(String s2: model){
+                List<devupone> list4 = new ArrayList<devupone>();
+                for(devupone d:list3){
+                    if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(s2)&&d.getdevHappennum()>0){
+                        list4.add(d);
+                    }
+                }
+                for(int i=0;i<list4.size();i++){
+                    if(i>0&&list4.get(i).getdevHappennum()>list4.get(i-1).getdevHappennum()*ruledata){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                    if(i>0&&list4.get(i).getdevHappennum()*ruledata<list4.get(i-1).getdevHappennum()){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                }
+            }
+        }
+        List<devupone> listfin = new ArrayList<devupone>();
+        for(int i=0;i<plane1.size();i++){
+            String s1 = plane1.get(i).split("/")[0];
+            String ss = plane1.get(i).split("/")[1];
+            for(devupone d:list3){
+                if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
+                    listfin.add(d);
+                }
+            }
+        }
+        Collections.sort(listfin, stuComparator1);
+        return getDataTable(listfin);
+    }
+
+    /**
+     * 相同故障件型号的不同安装位置中，某种故障模式质量问题数量存在较大差异
+     */
+    @GetMapping("/prochaange3")
+    public TableDataInfo prochaange3()
+    {
+        RuleConstruction ruleConstruction = new RuleConstruction();
+        ruleConstruction.setRule("相同故障件型号的不同安装位置中，某种故障模式质量问题数量存在较大差异");
+        List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
+        float ruledata = Float.parseFloat(listr.get(0).getRuleData());
+        QualityProblem qualityProblem = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
+        List<devupone> list1 = new ArrayList<devupone>();
+        List<String> plane = new ArrayList<String>();
+        List<String> mplane = new ArrayList<String>();
+        List<String> model = new ArrayList<String>();
+        List<String> series = new ArrayList<String>();
+        ProductDesign equipmentManufacturingData51 = new ProductDesign();
+        List<ProductDesign> listing = productDesignService.selectProductDesignList(equipmentManufacturingData51);
+        for(ProductDesign i: listing){
+            if(!series.contains(i.getFrame()+"/"+i.getUpperMiddleLower()+"/"+i.getLeftMiddleRight())){
+                series.add(i.getFrame()+"/"+i.getUpperMiddleLower()+"/"+i.getLeftMiddleRight());
+            }
+        }
+        for(QualityProblem i: list){
+            devupone devup1 = new devupone();
+            devup1.setPlaneType(i.getPlaneType());
+            devup1.setFaultModel(i.getFaultModel());
+            devup1.setPartsName(i.getPartsName());
+            devup1.setPartsModel(i.getPartsModel());
+            devup1.setdevHappennum(1);
+            list1.add(devup1);
+            if(!plane.contains(i.getPlaneType()+"/"+i.getPartsName()+"/"+i.getPartsModel())){
+                plane.add(i.getPlaneType()+"/"+i.getPartsName()+"/"+i.getPartsModel());
+            }
+            if(!mplane.contains(i.getPartsName()+"/"+i.getPartsModel())){
+                mplane.add(i.getPartsName()+"/"+i.getPartsModel());
+            }
+            if(!model.contains(i.getFaultModel())){
+                model.add(i.getFaultModel());
+            }
+        }
+        List<devupone> list2 = new ArrayList<devupone>();
+        for(String as1: plane){
+            String s1 = as1.split("/")[0];
+            String s2 = as1.split("/")[1];
+            String s3 = as1.split("/")[2];
+            String name = "";//时间
+            ProductDesign equipmentManufacturingData5 = new ProductDesign();
+            equipmentManufacturingData5.setPlaneType(s1);
+            equipmentManufacturingData5.setFinishedName(s2);
+            equipmentManufacturingData5.setFinishedModel(s3);
+            List<ProductDesign> listed = productDesignService.selectProductDesignList(equipmentManufacturingData5);
+            if(listed.size()>0){
+                name=listed.get(0).getFrame()+"/"+listed.get(0).getUpperMiddleLower()+"/"+listed.get(0).getLeftMiddleRight();
+                for(devupone d:list1){
+                    if(d.getPlaneType().equals(s1)&&d.getPartsName().equals(s2)&&d.getPartsModel().equals(s3)){
+                        devupone devup2 = new devupone();
+                        devup2.setFaultModel(d.getFaultModel());
+                        devup2.setPlaneType(s1);
+                        devup2.setPartsName(s2);
+                        devup2.setPartsModel(s3);
+                        devup2.setInstallWhere(name);
+                        devup2.setdevHappennum(1);
+                        list2.add(devup2);
+                    }
+                }
+            }
+        }
+        List<devupone> list3 = new ArrayList<devupone>();
+        for(String as1: mplane){
+            String s1 = as1.split("/")[0];
+            String ss = as1.split("/")[1];
+            for(String sss:series){
+                for(String s2: model){
+                    int sa = 0;
+                    for(devupone d:list2){
+                        if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getInstallWhere().equals(sss)&&d.getFaultModel().equals(s2)){
+                            sa++;
+                        }
+                    }
+                    if(sa>0){
+                        devupone devup2 = new devupone();
+                        devup2.setPartsName(s1);
+                        devup2.setPartsModel(ss);
+                        devup2.setInstallWhere(sss);
+                        devup2.setFaultModel(s2);
+                        devup2.setdevHappennum(sa);
+                        list3.add(devup2);
+                    }
+                }
+            }
+        }
+        List<String> model1 = new ArrayList<String>();//故障模式
+        List<String> plane1 = new ArrayList<String>();//机型
+        for(String as1: mplane){
+            String s1 = as1.split("/")[0];
+            String ss = as1.split("/")[1];
+            for(String s2: model){
+                List<devupone> list4 = new ArrayList<devupone>();
+                for(devupone d:list3){
+                    if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(s2)&&d.getdevHappennum()>0){
+                        list4.add(d);
+                    }
+                }
+                for(int i=0;i<list4.size();i++){
+                    if(i>0&&list4.get(i).getdevHappennum()>list4.get(i-1).getdevHappennum()*ruledata){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                    if(i>0&&list4.get(i).getdevHappennum()*ruledata<list4.get(i-1).getdevHappennum()){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                }
+            }
+        }
+        List<devupone> listfin = new ArrayList<devupone>();
+        for(int i=0;i<plane1.size();i++){
+            String s1 = plane1.get(i).split("/")[0];
+            String ss = plane1.get(i).split("/")[1];
+            for(devupone d:list3){
+                if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
+                    listfin.add(d);
+                }
+            }
+        }
+        Collections.sort(listfin, stuComparator1);
+        return getDataTable(listfin);
+    }
+
+    /**
      * 故障件型号技术状态升级时间与质量问题数量变化时间一致或不超过一定范围
      */
     @GetMapping("/prochaange4")
@@ -1022,4 +1281,18 @@ public class ReasonRuleController extends BaseController
         }
         return false;
     }
+
+    Comparator<devupone> stuComparator1 = new Comparator<devupone>() {
+        @Override
+        public int compare(devupone o1, devupone o2) {
+            return o1.getdevHappennum() - o2.getdevHappennum();
+        }
+    };
+
+    Comparator<devuptwo> stuComparator2 = new Comparator<devuptwo>() {
+        @Override
+        public int compare(devuptwo o1, devuptwo o2) {
+            return o1.getdevHappennum() - o2.getdevHappennum();
+        }
+    };
 }

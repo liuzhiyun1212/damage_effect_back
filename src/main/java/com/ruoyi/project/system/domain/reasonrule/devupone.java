@@ -22,6 +22,57 @@ public class devupone {
     /** 装备出厂编号 */
     private String devCode;
 
+    /** 成品件安装方法 */
+    private String installMethod;
+
+    /** 成品件安装方法 */
+    private String installWhere;
+
+    /** 故障件名称 */
+    private String partsName;
+
+    /** 故障件型号 */
+    private String partsModel;
+
+    public void setPartsName(String partsName)
+    {
+        this.partsName = partsName;
+    }
+
+    public String getPartsName()
+    {
+        return partsName;
+    }
+    public void setPartsModel(String partsModel)
+    {
+        this.partsModel = partsModel;
+    }
+
+    public String getPartsModel()
+    {
+        return partsModel;
+    }
+
+    public void setInstallWhere(String installWhere)
+    {
+        this.installWhere = installWhere;
+    }
+
+    public String getInstallWhere()
+    {
+        return installWhere;
+    }
+
+    public void setInstallMethod(String installMethod)
+    {
+        this.installMethod = installMethod;
+    }
+
+    public String getInstallMethod()
+    {
+        return installMethod;
+    }
+
     public void setDevCode(String devCode)
     {
         this.devCode = devCode;
