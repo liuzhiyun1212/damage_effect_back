@@ -30,6 +30,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="upperMiddleLower"    column="upper_middle_lower"    />
         <result property="leftMiddleRight"    column="left_middle_right"    />
         <result property="installMethod"    column="install_method"    />
+<!--        <result property="devCode"    column="dev_code"    />-->
+        <result property="planeType"    column="plane_type"    />
 
     </resultMap>
 
@@ -44,7 +46,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="frame"    column="frame"    />
         <result property="upperMiddleLower"    column="upper_middle_lower"    />
         <result property="leftMiddleRight"    column="left_middle_right"    />
-        <result property="num"    column="count(*)"    />
+        <result property="devCode"    column="dev_code"    />
+        <result property="planeType"    column="plane_type"    />
     </resultMap>
 
     <resultMap type="partsSite" id="partsSiteResult2">
@@ -55,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="upperMiddleLower"    column="upper_middle_lower"    />
         <result property="leftMiddleRight"    column="left_middle_right"    />
         <result property="num"    column="num"    />
+        <result property="planeType"    column="plane_type"    />
     </resultMap>
 
     <resultMap type="install_way" id="install_wayResult">
@@ -68,6 +72,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
 
+
+    <!--4.2.2.11-->
+    <select id="selectPartsSite"  resultMap="partsSiteResult">
+       select
+	q.parts_name AS finished_name,
+	q.parts_model AS finished_model,
+	q.plane_type,
+	dev_code,
+	p.upper_middle_lower,
+	p.left_middle_right,
+	p.frame
+	FROM quality_problem_1 as q, product_design_3 as p
+	where q.parts_model=p.finished_model and q.plane_type=p.plane_type
+    </select>
+
+
+
+
+
     <select id="selectinstallmethod"  resultMap="install_wayResult">
        SELECT finished_name,finished_model,install_method,COUNT(install_method) as num
         from product_design_3
@@ -78,7 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
    <select id="selectPartsSitenum"  resultMap="partsSiteResult">
-       select frame,upper_middle_lower,left_middle_right,COUNT(*) from  product_design_3
+       select frame,upper_middle_lower,left_middle_right,COUNT(*) num from  product_design_3
         where  finished_model in (SELECT parts_model
             FROM quality_problem_1)
         GROUP BY frame,upper_middle_lower,left_middle_right
@@ -86,31 +109,78 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!--4.2.1.12-->
     <select id="selectPartsinstall"  resultMap="Partsinstall">
+      select
+	q.parts_name AS finished_name,
+	q.parts_model AS finished_model,
+	q.plane_type as plane_type,
+	/*q.dev_code as dev_code,*/
+	p.upper_middle_lower as upper_middle_lower,
+	p.left_middle_right as left_middle_right,
+	p.frame as frame,
+	p.install_method as install_method
+	FROM quality_problem_1 as q, product_design_3 as p
+	where q.parts_model=p.finished_model and q.plane_type=p.plane_type
+    </select>
+    <!--<select id="selectPartsinstall"  resultMap="Partsinstall">
       select finished_name,finished_model,frame,upper_middle_lower,left_middle_right,install_method from  product_design_3
         where  finished_model in (SELECT parts_model
             FROM quality_problem_1)
-    </select>
+    </select>-->
 
 
 
-    <select id="selectPartsSite"  resultMap="partsSiteResult">
+  <!--  <select id="selectPartsSite"  resultMap="partsSiteResult">
        select finished_name,finished_model,frame,upper_middle_lower,left_middle_right from  product_design_3
         where  finished_model in (SELECT parts_model
             FROM quality_problem_1)
-    </select>
+    </select>-->
 <!--按故障件分组并统计每个故障件的质量问题数 -->
     <select id="selectPartsqulitynum"  resultMap="partsSiteResult2">
+       SELECT  plane_type,parts_name as finished_name,parts_model as finished_model,COUNT(*) as num
+        from quality_problem_1
+        GROUP BY parts_model,plane_type
+    </select>
+
+    <!--<select id="selectPartsqulitynum"  resultMap="partsSiteResult2">
        SELECT  parts_name as finished_name,parts_model as finished_model,COUNT(*) as num
         from quality_problem_1
         GROUP BY parts_model
-    </select>
+    </select>-->
 
     <!--按故障件分组并统计每个故障件的质量问题数 -->
     <select id="selectPartsinstallnum"  resultMap="partsSiteResult2">
-        select finished_name,finished_model,COUNT(DISTINCT install_method) as num
+SELECT
+	p.plane_type,
+	finished_name,
+	finished_model,
+	install_method,
+	count(*) as num
+FROM
+	product_design_3 as p,quality_problem_1 as q
+WHERE
+	p.plane_type=q.plane_type and p.finished_model=q.parts_model
+GROUP BY
+	finished_model,
+	plane_type,
+	install_method
+/*SELECT
+	plane_type,
+	finished_name,
+	finished_model,
+	install_method,
+	count(*) as num
+FROM
+	product_design_3
+WHERE
+	finished_model IN ( SELECT parts_model FROM quality_problem_1 )
+GROUP BY
+	finished_model,
+	plane_type,
+	install_method*/
+        /*select finished_name,finished_model,COUNT(DISTINCT install_method) as num
         from product_design_3
         where finished_model in (SELECT parts_model from quality_problem_1 )
-        GROUP BY finished_model
+        GROUP BY finished_model*/
     </select>
 
 
@@ -119,7 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectProductDesignVo">
-        select id, plane_type, finished_type, finished_name, finished_model, finished_manufacturer, frame, upper_middle_lower, left_middle_right, install_method, raw_material, spare_parts, modify_time, modify_measures from product_design_3
+        select id, plane_type, finished_type, finished_name, finished_model, finished_manufacturer, frame, upper_middle_lower, left_middle_right, install_method, raw_material, spare_parts from product_design_3
     </sql>
 
     <select id="selectProductDesignList" parameterType="ProductDesign" resultMap="ProductDesignResult">

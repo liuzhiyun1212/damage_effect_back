@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.system.mapper.EquipmentDeploymentData8Mapper">
+<mapper namespace="com.ruoyi.project.system.mapper.EquipmentDeploymentData11Mapper">
     
-    <resultMap type="EquipmentDeploymentData8" id="EquipmentDeploymentData8Result">
+    <resultMap type="EquipmentDeploymentData11" id="EquipmentDeploymentData11Result">
         <result property="id"    column="id"    />
         <result property="planeType"    column="plane_type"    />
         <result property="troops"    column="troops"    />
@@ -12,12 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="deploymentQuantity"    column="deployment_quantity"    />
     </resultMap>
 
-    <sql id="selectEquipmentDeploymentData8Vo">
-        select id, plane_type, troops, deployment_time, deployment_quantity from equipment_deployment_data_8
+    <sql id="selectEquipmentDeploymentData11Vo">
+        select id, plane_type, troops, deployment_time, deployment_quantity from equipment_deployment_data_11
     </sql>
 
-    <select id="selectEquipmentDeploymentData8List" parameterType="EquipmentDeploymentData8" resultMap="EquipmentDeploymentData8Result">
-        <include refid="selectEquipmentDeploymentData8Vo"/>
+    <select id="selectEquipmentDeploymentData11List" parameterType="EquipmentDeploymentData11" resultMap="EquipmentDeploymentData11Result">
+        <include refid="selectEquipmentDeploymentData11Vo"/>
         <where>  
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
             <if test="troops != null  and troops != ''"> and troops = #{troops}</if>
@@ -26,13 +26,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectEquipmentDeploymentData8ById" parameterType="Long" resultMap="EquipmentDeploymentData8Result">
-        <include refid="selectEquipmentDeploymentData8Vo"/>
+    <select id="selectEquipmentDeploymentData11ById" parameterType="Long" resultMap="EquipmentDeploymentData11Result">
+        <include refid="selectEquipmentDeploymentData11Vo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertEquipmentDeploymentData8" parameterType="EquipmentDeploymentData8">
-        insert into equipment_deployment_data_8
+    <insert id="insertEquipmentDeploymentData11" parameterType="EquipmentDeploymentData11">
+        insert into equipment_deployment_data_11
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="planeType != null">plane_type,</if>
@@ -49,8 +49,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateEquipmentDeploymentData8" parameterType="EquipmentDeploymentData8">
-        update equipment_deployment_data_8
+    <update id="updateEquipmentDeploymentData11" parameterType="EquipmentDeploymentData11">
+        update equipment_deployment_data_11
         <trim prefix="SET" suffixOverrides=",">
             <if test="planeType != null">plane_type = #{planeType},</if>
             <if test="troops != null">troops = #{troops},</if>
@@ -60,12 +60,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteEquipmentDeploymentData8ById" parameterType="Long">
-        delete from equipment_deployment_data_8 where id = #{id}
+    <delete id="deleteEquipmentDeploymentData11ById" parameterType="Long">
+        delete from equipment_deployment_data_11 where id = #{id}
     </delete>
 
-    <delete id="deleteEquipmentDeploymentData8ByIds" parameterType="String">
-        delete from equipment_deployment_data_8 where id in 
+    <delete id="deleteEquipmentDeploymentData11ByIds" parameterType="String">
+        delete from equipment_deployment_data_11 where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -8,12 +8,12 @@ import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
- * 8:装备部署数据对象 equipment_deployment_data_8
+ * 8:装备部署数据对象 equipment_deployment_data_11
  * 
  * @author ruoyi
- * @date 2022-11-11
+ * @date 2022-11-18
  */
-public class EquipmentDeploymentData8 extends BaseEntity
+public class EquipmentDeploymentData11 extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
