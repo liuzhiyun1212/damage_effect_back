@@ -30,18 +30,6 @@ public class ReasonRuleController extends BaseController
     private IProductModifyService productModifyService;
 
     @Autowired
-    private IProductCreateService productCreateService;
-
-    @Autowired
-    private IProductModifyDataService productModifyDataService;
-
-    @Autowired
-    private IProductQuantity7Service productQuantity7Service;
-
-    @Autowired
-    private IEquipmentDeploymentData8Service equipmentDeploymentData8Service;
-
-    @Autowired
     private IRuleConstructionService ruleConstructionService;
 
     @Autowired

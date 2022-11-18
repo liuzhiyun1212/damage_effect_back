@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.system.domain.EquipmentDeploymentData8;
-import com.ruoyi.project.system.service.IEquipmentDeploymentData8Service;
+import com.ruoyi.project.system.domain.EquipmentDeploymentData11;
+import com.ruoyi.project.system.service.IEquipmentDeploymentData11Service;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -25,80 +25,80 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * 8:装备部署数据Controller
  * 
  * @author ruoyi
- * @date 2022-11-11
+ * @date 2022-11-18
  */
 @RestController
-@RequestMapping("/system/8")
-public class EquipmentDeploymentData8Controller extends BaseController
+@RequestMapping("/system/11")
+public class EquipmentDeploymentData11Controller extends BaseController
 {
     @Autowired
-    private IEquipmentDeploymentData8Service equipmentDeploymentData8Service;
+    private IEquipmentDeploymentData11Service equipmentDeploymentData11Service;
 
     /**
      * 查询8:装备部署数据列表
      */
-    @PreAuthorize("@ss.hasPermi('system:8:list')")
+    @PreAuthorize("@ss.hasPermi('system:11:list')")
     @GetMapping("/list")
-    public TableDataInfo list(EquipmentDeploymentData8 equipmentDeploymentData8)
+    public TableDataInfo list(EquipmentDeploymentData11 equipmentDeploymentData11)
     {
         startPage();
-        List<EquipmentDeploymentData8> list = equipmentDeploymentData8Service.selectEquipmentDeploymentData8List(equipmentDeploymentData8);
+        List<EquipmentDeploymentData11> list = equipmentDeploymentData11Service.selectEquipmentDeploymentData11List(equipmentDeploymentData11);
         return getDataTable(list);
     }
 
     /**
      * 导出8:装备部署数据列表
      */
-    @PreAuthorize("@ss.hasPermi('system:8:export')")
+    @PreAuthorize("@ss.hasPermi('system:11:export')")
     @Log(title = "8:装备部署数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, EquipmentDeploymentData8 equipmentDeploymentData8)
+    public void export(HttpServletResponse response, EquipmentDeploymentData11 equipmentDeploymentData11)
     {
-        List<EquipmentDeploymentData8> list = equipmentDeploymentData8Service.selectEquipmentDeploymentData8List(equipmentDeploymentData8);
-        ExcelUtil<EquipmentDeploymentData8> util = new ExcelUtil<EquipmentDeploymentData8>(EquipmentDeploymentData8.class);
+        List<EquipmentDeploymentData11> list = equipmentDeploymentData11Service.selectEquipmentDeploymentData11List(equipmentDeploymentData11);
+        ExcelUtil<EquipmentDeploymentData11> util = new ExcelUtil<EquipmentDeploymentData11>(EquipmentDeploymentData11.class);
         util.exportExcel(response, list, "8:装备部署数据数据");
     }
 
     /**
      * 获取8:装备部署数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:8:query')")
+    @PreAuthorize("@ss.hasPermi('system:11:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return success(equipmentDeploymentData8Service.selectEquipmentDeploymentData8ById(id));
+        return success(equipmentDeploymentData11Service.selectEquipmentDeploymentData11ById(id));
     }
 
     /**
      * 新增8:装备部署数据
      */
-    @PreAuthorize("@ss.hasPermi('system:8:add')")
+    @PreAuthorize("@ss.hasPermi('system:11:add')")
     @Log(title = "8:装备部署数据", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EquipmentDeploymentData8 equipmentDeploymentData8)
+    public AjaxResult add(@RequestBody EquipmentDeploymentData11 equipmentDeploymentData11)
     {
-        return toAjax(equipmentDeploymentData8Service.insertEquipmentDeploymentData8(equipmentDeploymentData8));
+        return toAjax(equipmentDeploymentData11Service.insertEquipmentDeploymentData11(equipmentDeploymentData11));
     }
 
     /**
      * 修改8:装备部署数据
      */
-    @PreAuthorize("@ss.hasPermi('system:8:edit')")
+    @PreAuthorize("@ss.hasPermi('system:11:edit')")
     @Log(title = "8:装备部署数据", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EquipmentDeploymentData8 equipmentDeploymentData8)
+    public AjaxResult edit(@RequestBody EquipmentDeploymentData11 equipmentDeploymentData11)
     {
-        return toAjax(equipmentDeploymentData8Service.updateEquipmentDeploymentData8(equipmentDeploymentData8));
+        return toAjax(equipmentDeploymentData11Service.updateEquipmentDeploymentData11(equipmentDeploymentData11));
     }
 
     /**
      * 删除8:装备部署数据
      */
-    @PreAuthorize("@ss.hasPermi('system:8:remove')")
+    @PreAuthorize("@ss.hasPermi('system:11:remove')")
     @Log(title = "8:装备部署数据", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(equipmentDeploymentData8Service.deleteEquipmentDeploymentData8ByIds(ids));
+        return toAjax(equipmentDeploymentData11Service.deleteEquipmentDeploymentData11ByIds(ids));
     }
 }
