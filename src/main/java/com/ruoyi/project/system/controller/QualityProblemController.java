@@ -393,14 +393,19 @@ public class QualityProblemController extends BaseController
     public List<FaultyPartsCount> selectFaultyCount() {
         int allCount = qualityProblemService.selectAllCount();
         int faultyPartsCount = qualityProblemService.selectPartsCount();
-        int average = allCount/faultyPartsCount;
+        float allFloat = (float)allCount;
+        double averageDouble = (allFloat/faultyPartsCount)*0.5;
+
+//        int average =(int)Math.round(averageDouble);
         List<FaultyPartsCount> list = qualityProblemService.selectCountByName();
         List<FaultyPartsCount> list2 = new ArrayList<>();
         for(int i=0;i<list.size();i++){
             FaultyPartsCount faultyCount = list.get(i);
             int count = faultyCount.getPartsCount();
-            faultyCount.setPartsProportion(average);
-            if (count > average){
+            double percentage=((double) count/ averageDouble)*100;
+            String percentage1 = String.format("%.2f",percentage)+"%";
+            faultyCount.setPartsProportion(percentage1);
+            if (count > averageDouble){
                 list2.add(faultyCount);
             }
         }
