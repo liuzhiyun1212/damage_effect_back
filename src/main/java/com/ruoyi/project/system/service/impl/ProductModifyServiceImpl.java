@@ -37,6 +37,10 @@ public class ProductModifyServiceImpl implements IProductModifyService
         return productModifyMapper.selectProductModifyById(id);
     }
 
+    public List<ProductModify> selectProductchange() {
+        return productModifyMapper.selectProductchange();
+    }
+
     /**
      * 查询产品改型数据列表
      *

@@ -48,6 +48,8 @@ public class QualityProblem1Controller extends BaseController
         return getDataTable(list);
     }
 
+
+
     /**
      * 故障模式和个数
      */

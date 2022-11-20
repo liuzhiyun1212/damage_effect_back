@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.ProductModifyMapper">
-    
+
     <resultMap type="ProductModify" id="ProductModifyResult">
         <result property="id"    column="id"    />
         <result property="planeType"    column="plane_type"    />
@@ -14,13 +14,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="modifyMeasures"    column="modify_measures"    />
     </resultMap>
 
+    <resultMap type="ProductModify" id="ProductChangeResult">
+        <result property="productModel"    column="product_model"    />
+        <result property="productName"    column="product_name"    />
+        <result property="modifyTime"    column="modify_time"    />
+    </resultMap>
+
+
+
+
+
     <sql id="selectProductModifyVo">
         select id, plane_type, product_type, product_name, product_model, modify_time, modify_measures from product_modify_4
     </sql>
 
     <select id="selectProductModifyList" parameterType="ProductModify" resultMap="ProductModifyResult">
         <include refid="selectProductModifyVo"/>
-        <where>  
+        <where>
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
             <if test="productType != null  and productType != ''"> and product_type = #{productType}</if>
             <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
@@ -29,12 +39,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="modifyMeasures != null  and modifyMeasures != ''"> and modify_measures = #{modifyMeasures}</if>
         </where>
     </select>
-    
+
     <select id="selectProductModifyById" parameterType="Long" resultMap="ProductModifyResult">
         <include refid="selectProductModifyVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectProductchange"  resultMap="ProductChangeResult">
+       SELECT
+	a.product_model,
+	a.product_name,
+	a.modify_time
+FROM product_modify_4 a ,quality_problem_1 b
+WHERE a.product_name=b.parts_name AND a.product_model=b.parts_model AND b.fault_model IN(SELECT fault_model
+from quality_problem_1
+GROUP BY fault_model
+HAVING COUNT(fault_model)>0.1* (SELECT COUNT(fault_model)
+from quality_problem_1))
+GROUP BY b.parts_model
+    </select>
+
+
+
+
     <insert id="insertProductModify" parameterType="ProductModify" useGeneratedKeys="true" keyProperty="id">
         insert into product_modify_4
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -73,9 +100,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductModifyByIds" parameterType="String">
-        delete from product_modify_4 where id in 
+        delete from product_modify_4 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+
+
+
 </mapper>
