@@ -475,6 +475,7 @@ public class QualityProblemController extends BaseController
         List<String> result = new ArrayList<>();
         int mark=0;
         for (GradeCount str : list) {
+            mark=0;
             for (String g : result) {
                 if (str.getProductMakeGroup().equals(g)) {
                     mark = -1;
@@ -508,7 +509,7 @@ public class QualityProblemController extends BaseController
             }
         }
 //        System.out.println("测试aaaaaaaaa" + l1);
-//        System.out.println("测试aaaaaaaaa" + res);
+        System.out.println("测试aaaaaaaaa" + res);
         return res;
     }
     /**4.2.2.3
@@ -726,6 +727,7 @@ public class QualityProblemController extends BaseController
         List<Sum> res = new ArrayList<>();
         int mark=0;
         for(Environment i: e){
+            mark=0;
             if(i.getEnvironment() == null){
                 i.setEnvironment(" ");
             }
@@ -748,7 +750,7 @@ public class QualityProblemController extends BaseController
                 }
             }
         }
-        System.out.println("测试aaaaaaaaa" + res);
+//        System.out.println("测试aaaaaaaaa" + res);
         return res;
     }
     /**4.2.2.16
@@ -767,6 +769,7 @@ public class QualityProblemController extends BaseController
         List<Sum> res = new ArrayList<>();
         int mark=0;
         for(Environment i: e){
+            mark=0;
             if(i.getEnvironment() == null){
                 i.setEnvironment(" ");
             }

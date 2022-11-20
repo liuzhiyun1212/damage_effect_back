@@ -101,14 +101,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <!--班组统计质量问题总数-->
     <select id="qualitySumByGrade" parameterType="Sum" resultMap="SumResult">
-        SELECT parts_make_group createTime, count(q.title) sum
+         SELECT parts_make_group createTime, count(q.parts_code) sum
         from quality_problem_1 as q, parts_make_num_9 as p
-        WHERE q.parts_name = p.parts_name
-        GROUP BY parts_make_group
+        WHERE q.parts_code = p.parts_code
+				GROUP BY parts_make_group
     </select>
     <!--班组统计产品总数-->
     <select id="productSumByGrade" parameterType="Sum" resultMap="SumResult">
-        	SELECT parts_make_group createTime,count(parts_name) sum
+        	SELECT parts_make_group createTime,count(parts_code) sum
         from parts_make_num_9
         GROUP BY parts_make_group
     </select>
