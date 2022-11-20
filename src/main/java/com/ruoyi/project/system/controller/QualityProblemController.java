@@ -453,7 +453,7 @@ public class QualityProblemController extends BaseController
     }
     /**4.2.2.3
      * @Description 高发故障模式涉及到的故障件的生产班组
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -490,7 +490,7 @@ public class QualityProblemController extends BaseController
     }
     /**4.2.2.3
      * @Description 生产班组统计质量问题总数
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -514,7 +514,7 @@ public class QualityProblemController extends BaseController
     }
     /**4.2.2.3
      * @Description 生产班组统计产品总数
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -594,7 +594,7 @@ public class QualityProblemController extends BaseController
     }
     /**4.2.2.3
      * @Description 故障件生产班组变更
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -616,7 +616,7 @@ public class QualityProblemController extends BaseController
     }
     /**4.2.2.3
      * @Description 时间线图用故障件生产班组变更
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -652,7 +652,87 @@ public class QualityProblemController extends BaseController
             }
             res.add(t1);
         }
-        System.out.println("测试aaaaaaaaa" + res);
+//        System.out.println("测试aaaaaaaaa" + res);
         return res;
     }
+//    使用环境实体
+    static class Environment {
+        private String environment;
+        private String faultModel;
+
+        public String getEnvironment() {
+            return environment;
+        }
+
+        public void setEnvironment(String environment) {
+            this.environment = environment;
+        }
+
+        public String getFaultModel() {
+            return faultModel;
+        }
+
+        public void setFaultModel(String faultModel) {
+            this.faultModel = faultModel;
+        }
+        @Override
+        public String toString() {
+            return "Environment{" +
+                    "environment='" + environment + '\'' +
+                    ", faultModel='" + faultModel + '\'' +
+                    '}';
+        }
+    }
+    /**4.2.2.16
+     * @Description 质量问题高发故障模式涉及到的装备使用环境
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectEnvironment")
+    public List<Environment> selectEnvironment(){
+        QualityProblem q = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        Environment environment = new Environment();
+        List<Environment> res = new ArrayList<>();
+        for(QualityProblem1Controller.ModelCount m: list2){
+            for(QualityProblem i:list){
+                if(i.getFaultModel().equals(m.getFaultModel())){
+                    environment.setEnvironment(i.getEnvironment());
+                    environment.setFaultModel(i.getFaultModel());
+                }
+                res.add(environment);
+            }
+        }
+        System.out.println("测试aaaaaaaaa" + list2);
+        return res;
+    }
+    /**4.2.2.16
+     * @Description 不同使用环境中装备数量
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+//    @GetMapping("/selectDevByEnvironment")
+//    public List<Sum> selectDevByEnvironment(){
+//
+//    }
+    /**4.2.2.16
+     * @Description 不同使用环境中对应质量问题数
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+//    @GetMapping("/selectQualityByEnvironment")
+//    public List<Sum> selectQualityByEnvironment(){
+//
+//    }
 }

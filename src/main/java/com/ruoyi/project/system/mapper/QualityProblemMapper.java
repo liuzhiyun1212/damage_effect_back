@@ -144,18 +144,18 @@ public interface QualityProblemMapper
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<ProductModifyData> selectByGradeChanged();
-    /**4.2.2.3
+    /**4.2.2.16
      * @Description 不同使用环境中装备数量
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> selectDevByEnvironment();
-    /**4.2.2.3
+    /**4.2.2.16
      * @Description 不同使用环境中对应质量问题数
-     * @Author guohuijia
+     * @Author lixn
      * @Date  2022/11/14
      * @Param
      * @Return

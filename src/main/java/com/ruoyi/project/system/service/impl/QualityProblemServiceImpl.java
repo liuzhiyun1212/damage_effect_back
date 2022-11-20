@@ -243,4 +243,14 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.selectByGradeChanged();
     }
 
+    @Override
+    public List<Sum> selectDevByEnvironment() {
+        return qualityProblemMapper.selectDevByEnvironment();
+    }
+
+    @Override
+    public List<Sum> selectQualityByEnvironment() {
+        return qualityProblemMapper.selectQualityByEnvironment();
+    }
+
 }
