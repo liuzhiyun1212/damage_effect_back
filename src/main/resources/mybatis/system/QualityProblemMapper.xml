@@ -73,14 +73,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectQualityProblemVo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
     </sql>
-
-<!--    故障件生产班组变更-->
-    <select id="selectByGradeChanged" resultMap="ProductModifyDataResult">
-        SELECT product_name,modify_time
-        FROM quality_problem_1 as q, product_modify_data_6 as p
-        where q.parts_model = p.product_model and p.modify_type='生产班组变更'
-        GROUP BY modify_time
-        ORDER BY modify_time asc
+    <!--    不同使用环境中装备数量-->
+    <select id="selectDevByEnvironment" resultMap="SumResult">
+        select environment,count(dev_code)
+        from quality_problem_1
+        GROUP BY environment
+    </select>
+<!--    不同使用环境中对应质量问题数-->
+    <select id="selectQualityByEnvironment" resultMap="SumResult">
+        SELECT environment,count(id)
+        from quality_problem_1
+        GROUP BY environment
     </select>
 
 <!--班组、故障件、故障模式-->

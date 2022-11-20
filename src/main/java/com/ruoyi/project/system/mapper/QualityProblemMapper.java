@@ -110,7 +110,7 @@ public interface QualityProblemMapper
     public int selectPartsCount();
     /**4.2.2.3
      * @Description 高发故障模式涉及到的故障件的生产班组
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -119,7 +119,7 @@ public interface QualityProblemMapper
     public List<GradeCount> selectByGradeFaultModel();
     /**4.2.2.3
      * @Description 生产班组统计质量问题总数
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -128,7 +128,7 @@ public interface QualityProblemMapper
     public List<Sum> qualitySumByGrade();
     /**4.2.2.3
      * @Description 生产班组统计产品总数
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
@@ -137,11 +137,29 @@ public interface QualityProblemMapper
     public List<Sum> productSumByGrade();
     /**4.2.2.3
      * @Description 故障件生产班组变更
-     * @Author guohuijia
+     * @Author lixin
      * @Date  2022/11/14
      * @Param
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<ProductModifyData> selectByGradeChanged();
+    /**4.2.2.3
+     * @Description 不同使用环境中装备数量
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectDevByEnvironment();
+    /**4.2.2.3
+     * @Description 不同使用环境中对应质量问题数
+     * @Author guohuijia
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectQualityByEnvironment();
 }
