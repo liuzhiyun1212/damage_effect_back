@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -537,17 +536,8 @@ public class QualityProblemController extends BaseController
         return res;
     }
     static class time1{
-        public String name;
-        public List<Date> list=new ArrayList<>();
-
-        @Override
-        public String toString() {
-            return "time1{" +
-                    "name='" + name + '\'' +
-                    ", list=" + list +
-                    '}';
-        }
-
+        private String name;
+        private List<Date> list=new ArrayList<>();
         public String getName() {
             return name;
         }
@@ -563,18 +553,19 @@ public class QualityProblemController extends BaseController
         public void setList(List<Date> list) {
             this.list = list;
         }
-    }
-    static class timeCount{
-        public String name;
-        public Date time;
 
         @Override
         public String toString() {
-            return "timeCount{" +
+            return "Time1{" +
                     "name='" + name + '\'' +
-                    ", time=" + time +
+                    ", list=" + list +
                     '}';
         }
+    }
+
+    static class timeCount{
+        private String name;
+        private Date time;
 
         public String getName() {
             return name;
@@ -590,6 +581,14 @@ public class QualityProblemController extends BaseController
 
         public void setTime(Date time) {
             this.time = time;
+        }
+
+        @Override
+        public String toString() {
+            return "TimeCount{" +
+                    "name='" + name + '\'' +
+                    ", time=" + time +
+                    '}';
         }
     }
     /**4.2.2.3
@@ -697,18 +696,18 @@ public class QualityProblemController extends BaseController
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
         QualityProblem1 qualityProblem1 = new QualityProblem1();
         List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
-        Environment environment = new Environment();
+
         List<Environment> res = new ArrayList<>();
-        for(QualityProblem1Controller.ModelCount m: list2){
-            for(QualityProblem i:list){
-                if(i.getFaultModel().equals(m.getFaultModel())){
-                    environment.setEnvironment(i.getEnvironment());
+        for(QualityProblem i:list){
+            for(QualityProblem1Controller.ModelCount m: list2){
+                if(m.getFaultModel().equals(i.getFaultModel())){
+                    Environment environment = new Environment();
                     environment.setFaultModel(i.getFaultModel());
+                    environment.setEnvironment(i.getEnvironment());
+                    res.add(environment);
                 }
-                res.add(environment);
             }
         }
-        System.out.println("测试aaaaaaaaa" + list2);
         return res;
     }
     /**4.2.2.16
@@ -719,10 +718,39 @@ public class QualityProblemController extends BaseController
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
-//    @GetMapping("/selectDevByEnvironment")
-//    public List<Sum> selectDevByEnvironment(){
-//
-//    }
+    @GetMapping("/selectDevByEnvironment")
+    public List<Sum> selectDevByEnvironment(){
+        List<String> list = new ArrayList<>();
+        List<Sum> count = qualityProblemService.selectDevByEnvironment();
+        List<Environment> e = selectEnvironment();
+        List<Sum> res = new ArrayList<>();
+        int mark=0;
+        for(Environment i: e){
+            if(i.getEnvironment() == null){
+                i.setEnvironment(" ");
+            }
+            for(String s:list){
+                if(i.getEnvironment().equals(s)){
+                    mark=1;
+                }
+            }
+            if(mark==0){
+                list.add(i.getEnvironment());
+            }
+        }
+        for(Sum s:count){
+            if(s.getQuarter() == null){
+                s.setQuarter(" ");
+            }
+            for(String i:list){
+                if(s.getQuarter().equals(i)){
+                    res.add(s);
+                }
+            }
+        }
+        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
     /**4.2.2.16
      * @Description 不同使用环境中对应质量问题数
      * @Author lixn
@@ -731,8 +759,36 @@ public class QualityProblemController extends BaseController
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
-//    @GetMapping("/selectQualityByEnvironment")
-//    public List<Sum> selectQualityByEnvironment(){
-//
-//    }
+    @GetMapping("/selectQualityByEnvironment")
+    public List<Sum> selectQualityByEnvironment(){
+        List<String> list = new ArrayList<>();
+        List<Sum> count = qualityProblemService.selectQualityByEnvironment();
+        List<Environment> e = selectEnvironment();
+        List<Sum> res = new ArrayList<>();
+        int mark=0;
+        for(Environment i: e){
+            if(i.getEnvironment() == null){
+                i.setEnvironment(" ");
+            }
+            for(String s:list){
+                if(i.getEnvironment().equals(s)){
+                    mark=1;
+                }
+            }
+            if(mark==0){
+                list.add(i.getEnvironment());
+            }
+        }
+        for(Sum s:count){
+            if(s.getQuarter() == null){
+                s.setQuarter(" ");
+            }
+            for(String i:list){
+                if(s.getQuarter().equals(i)){
+                    res.add(s);
+                }
+            }
+        }
+        return res;
+    }
 }

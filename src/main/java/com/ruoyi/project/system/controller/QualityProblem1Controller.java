@@ -78,6 +78,13 @@ public class QualityProblem1Controller extends BaseController
                     ", modelCount=" + modelCount +
                     '}';
         }
+//        @Override
+//        public String toString() {
+//            return "ModelCount{" +
+//                    "faultModel='" + faultModel + '\'' +
+//                    ", modelCount=" + modelCount +
+//                    '}';
+//        }
     }
 
 
