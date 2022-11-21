@@ -41,8 +41,8 @@ public class ReasonRuleController extends BaseController
     @Autowired
     private IEquipmentDeploymentData8Service equipmentDeploymentData8Service;
 
-    @Autowired
-    private IEquipmentUsageData9Service equipmentUsageData9Service;
+  /*  @Autowired
+    private IEquipmentUsageData9Service equipmentUsageData9Service;*/
 
     @Autowired
     private IRuleConstructionService ruleConstructionService;
