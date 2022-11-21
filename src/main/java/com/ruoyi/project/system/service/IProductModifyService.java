@@ -19,6 +19,8 @@ public interface IProductModifyService
      */
     public ProductModify selectProductModifyById(Long id);
 
+
+    public List<ProductModify>  selectProductchange();
     /**
      * 查询产品改型数据列表
      *

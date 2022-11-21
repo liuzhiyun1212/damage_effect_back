@@ -7,17 +7,18 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.PartsTypeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
+import com.ruoyi.project.system.domain.*;
+import com.ruoyi.project.system.service.IQualityProblem1Service;
 import com.ruoyi.project.system.service.IQualityProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * quality_problemController
@@ -31,7 +32,8 @@ public class QualityProblemController extends BaseController
 {
     @Autowired
     private IQualityProblemService qualityProblemService;
-
+    @Autowired
+    private IQualityProblem1Service qualityProblem1Service;
     /**
      * 查询quality_problem列表
      */
@@ -368,17 +370,17 @@ public class QualityProblemController extends BaseController
         List<Sum> list = sumByplaneType(sum);
         List<Sum> list1 = new ArrayList<>();
         int count=0;
-        int average=0;
+        double average=0;
         for(int i=0;i<list.size();i++){
             count += list.get(i).getSum();
         }
         average = count/list.size();
         for(int i=0;i<list.size();i++) {
-            if(list.get(i).getSum() >= average){
+            if(list.get(i).getSum() >= average*0.5){
                 list1.add(list.get(i));
             }
         }
-        System.out.println("机型" + list1);
+//        System.out.println("机型" + list1);
         return list1;
     }
 
@@ -394,14 +396,17 @@ public class QualityProblemController extends BaseController
     public List<FaultyPartsCount> selectFaultyCount() {
         int allCount = qualityProblemService.selectAllCount();
         int faultyPartsCount = qualityProblemService.selectPartsCount();
-        int average = allCount/faultyPartsCount;
+        float allFloat = (float)allCount;
+        double averageDouble = (allFloat/faultyPartsCount)*0.5;
         List<FaultyPartsCount> list = qualityProblemService.selectCountByName();
         List<FaultyPartsCount> list2 = new ArrayList<>();
         for(int i=0;i<list.size();i++){
             FaultyPartsCount faultyCount = list.get(i);
             int count = faultyCount.getPartsCount();
-            faultyCount.setPartsProportion(average);
-            if (count > average){
+            double percentage=((double) count/ averageDouble)*100;
+            String percentage1 = String.format("%.2f",percentage)+"%";
+            faultyCount.setPartsProportion(percentage1);
+            if (count > averageDouble){
                 list2.add(faultyCount);
             }
         }
@@ -419,5 +424,405 @@ public class QualityProblemController extends BaseController
     public List<FaultyPartsCount> selectAllFaulty() {
         List<FaultyPartsCount> list = qualityProblemService.selectCountByName();
         return list;
+    }
+
+    @GetMapping("/selectPartsTypeCount")
+    public List<PartsTypeCount> selectPartsTypeCount() {
+        int allCount = qualityProblemService.selectAllCount();
+        int partsTypeCount = qualityProblemService.selectPartsTypeCount();
+        float allFloat = (float)allCount;
+        double averageDouble = (allFloat/partsTypeCount)*0.5;
+        List<PartsTypeCount> list = qualityProblemService.selectCountByType();
+        List<PartsTypeCount> list2 = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            PartsTypeCount partsTypeCount1 = list.get(i);
+            int count = partsTypeCount1.getPartsCount();
+            double percentage=((double) count/ averageDouble)*100;
+            String percentage1 = String.format("%.2f",percentage)+"%";
+            partsTypeCount1.setPartsProportion(percentage1);
+//            if (count > averageDouble){
+            PartsTypeCount partsTypeCount2 = list.get(0);
+            String count1 = partsTypeCount2.getPartsProportion();
+                list2.add(partsTypeCount1);
+//            }
+        }
+
+        return list2;
+    }
+    @GetMapping("/selectAllType")
+    public List<PartsTypeCount> selectAllType() {
+        List<PartsTypeCount> list = qualityProblemService.selectCountByType();
+        return list;
+    }
+
+
+    public List<QualityProblem1Controller.ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
+    {
+        Set<String> modelName = new HashSet<>();
+        List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+        List<QualityProblem1Controller.ModelCount> listMC = new ArrayList<>();
+
+        int count;
+        for(QualityProblem1 q:list){
+            modelName.add(q.getFaultModel());
+        }
+
+        for (String s:modelName) {
+            count = 0;
+            QualityProblem1Controller.ModelCount modelCount = new QualityProblem1Controller.ModelCount();
+            for (QualityProblem1 q : list) {
+                if (Objects.equals(s, q.getFaultModel())) {
+                    modelCount.setFaultModel(s);
+                    count++;
+                    modelCount.setModelCount(count);
+                }
+            }
+            listMC.add(modelCount);
+        }
+        return listMC;
+    }
+    /**4.2.2.3
+     * @Description 高发故障模式涉及到的故障件的生产班组
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectByGradeFaultModel")
+    public List<String> selectByGradeFaultModel(){
+        List<GradeCount> list = new ArrayList<>();
+        List<GradeCount> list1 = qualityProblemService.selectByGradeFaultModel();
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        for(int i=0;i<list1.size();i++){
+            for(int j=0;j<list2.size();j++){
+                if(list1.get(i).getFaultModel().equals(list2.get(j).getFaultModel())){
+                    list.add(list1.get(i));
+                }
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        int mark=0;
+        for (GradeCount str : list) {
+            mark=0;
+            for (String g : result) {
+                if (str.getProductMakeGroup().equals(g)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                result.add(str.getProductMakeGroup());
+            }
+        }
+//        System.out.println("测试aaaaaaaaa" + result);
+        return result;
+    }
+    /**4.2.2.3
+     * @Description 生产班组统计质量问题总数
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/qualitySumByGrade")
+    public List<Integer> qualitySumByGrade() {
+        List<Sum> l1 = qualityProblemService.qualitySumByGrade();
+        List<String> grade = selectByGradeFaultModel();
+        List<Integer> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:grade){
+                if(i.getQuarter().equals(j)){
+                    res.add(i.getSum());
+                }
+            }
+        }
+//        System.out.println("测试aaaaaaaaa" + l1);
+        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+    /**4.2.2.3
+     * @Description 生产班组统计产品总数
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/productSumByGrade")
+    public List<Integer> productSumByGrade() {
+        List<Sum> l1 = qualityProblemService.productSumByGrade();
+        List<String> grade = selectByGradeFaultModel();
+        List<Integer> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:grade){
+                if(i.getQuarter().equals(j)){
+                    res.add(i.getSum());
+                }
+            }
+        }
+//        System.out.println("测试aaaaaaaaa" + l1);
+//        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+    static class time1{
+        private String name;
+        private List<Date> list=new ArrayList<>();
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public List<Date> getList() {
+            return list;
+        }
+
+        public void setList(List<Date> list) {
+            this.list = list;
+        }
+
+        @Override
+        public String toString() {
+            return "Time1{" +
+                    "name='" + name + '\'' +
+                    ", list=" + list +
+                    '}';
+        }
+    }
+
+    static class timeCount{
+        private String name;
+        private Date time;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Date getTime() {
+            return time;
+        }
+
+        public void setTime(Date time) {
+            this.time = time;
+        }
+
+        @Override
+        public String toString() {
+            return "TimeCount{" +
+                    "name='" + name + '\'' +
+                    ", time=" + time +
+                    '}';
+        }
+    }
+    /**4.2.2.3
+     * @Description 故障件生产班组变更
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectByGradeChanged")
+    public List<timeCount> selectByGradeChanged(){
+        List <ProductModifyData> list = qualityProblemService.selectByGradeChanged();
+        List<timeCount> res = new ArrayList<>();
+        for(ProductModifyData p:list){
+            timeCount t1=new timeCount();
+            t1.setName(p.getProductName());
+            t1.setTime(p.getModifyTime());
+            res.add(t1);
+        }
+//        System.out.println("测试aaaaaaaaa" + res);
+
+        return res;
+    }
+    /**4.2.2.3
+     * @Description 时间线图用故障件生产班组变更
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/timeGradeChanged")
+    public List<time1> timeGradeChanged(){
+        List<String> st = new ArrayList<>();
+        List<String> st1 = new ArrayList<>();
+        List<time1> res = new ArrayList<>();
+        List <ProductModifyData> list = qualityProblemService.selectByGradeChanged();
+        int mark=0;
+        for(ProductModifyData p:list){
+            for(String s:st){
+                if(p.getProductName().equals(s)){
+                    mark=-1;
+                }
+            }
+            if(mark==0){
+                st.add(p.getProductName());
+            }
+        }
+        for(String s:st){
+            time1 t1= new time1();
+            List<Date> t = new ArrayList<>();
+//            t.clear();
+            for(ProductModifyData p:list){
+                if(s.equals(p.getProductName())){
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                }
+            }
+            res.add(t1);
+        }
+//        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+//    使用环境实体
+    static class Environment {
+        private String environment;
+        private String faultModel;
+
+        public String getEnvironment() {
+            return environment;
+        }
+
+        public void setEnvironment(String environment) {
+            this.environment = environment;
+        }
+
+        public String getFaultModel() {
+            return faultModel;
+        }
+
+        public void setFaultModel(String faultModel) {
+            this.faultModel = faultModel;
+        }
+        @Override
+        public String toString() {
+            return "Environment{" +
+                    "environment='" + environment + '\'' +
+                    ", faultModel='" + faultModel + '\'' +
+                    '}';
+        }
+    }
+    /**4.2.2.16
+     * @Description 质量问题高发故障模式涉及到的装备使用环境
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectEnvironment")
+    public List<Environment> selectEnvironment(){
+        QualityProblem q = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+
+        List<Environment> res = new ArrayList<>();
+        for(QualityProblem i:list){
+            for(QualityProblem1Controller.ModelCount m: list2){
+                if(m.getFaultModel().equals(i.getFaultModel())){
+                    Environment environment = new Environment();
+                    environment.setFaultModel(i.getFaultModel());
+                    environment.setEnvironment(i.getEnvironment());
+                    res.add(environment);
+                }
+            }
+        }
+        return res;
+    }
+    /**4.2.2.16
+     * @Description 不同使用环境中装备数量
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectDevByEnvironment")
+    public List<Sum> selectDevByEnvironment(){
+        List<String> list = new ArrayList<>();
+        List<Sum> count = qualityProblemService.selectDevByEnvironment();
+        List<Environment> e = selectEnvironment();
+        List<Sum> res = new ArrayList<>();
+        int mark=0;
+        for(Environment i: e){
+            mark=0;
+            if(i.getEnvironment() == null){
+                i.setEnvironment(" ");
+            }
+            for(String s:list){
+                if(i.getEnvironment().equals(s)){
+                    mark=1;
+                }
+            }
+            if(mark==0){
+                list.add(i.getEnvironment());
+            }
+        }
+        for(Sum s:count){
+            if(s.getQuarter() == null){
+                s.setQuarter(" ");
+            }
+            for(String i:list){
+                if(s.getQuarter().equals(i)){
+                    res.add(s);
+                }
+            }
+        }
+//        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+    /**4.2.2.16
+     * @Description 不同使用环境中对应质量问题数
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectQualityByEnvironment")
+    public List<Sum> selectQualityByEnvironment(){
+        List<String> list = new ArrayList<>();
+        List<Sum> count = qualityProblemService.selectQualityByEnvironment();
+        List<Environment> e = selectEnvironment();
+        List<Sum> res = new ArrayList<>();
+        int mark=0;
+        for(Environment i: e){
+            mark=0;
+            if(i.getEnvironment() == null){
+                i.setEnvironment(" ");
+            }
+            for(String s:list){
+                if(i.getEnvironment().equals(s)){
+                    mark=1;
+                }
+            }
+            if(mark==0){
+                list.add(i.getEnvironment());
+            }
+        }
+        for(Sum s:count){
+            if(s.getQuarter() == null){
+                s.setQuarter(" ");
+            }
+            for(String i:list){
+                if(s.getQuarter().equals(i)){
+                    res.add(s);
+                }
+            }
+        }
+        return res;
     }
 }

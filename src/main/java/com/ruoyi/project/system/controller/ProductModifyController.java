@@ -47,6 +47,19 @@ public class ProductModifyController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('system:modify:list')")
+    @GetMapping("/listProductChange")
+    public List<ProductModify> listProductChange()
+    {
+        List<ProductModify> list = productModifyService.selectProductchange();
+        return list;
+    }
+
+
+
+
+
+
     /**
      * 导出产品改型数据列表
      */
