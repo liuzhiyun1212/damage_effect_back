@@ -9,9 +9,9 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 9：装备使用数据对象 parts_make_num_9
- * 
+ *
  * @author ruoyi
- * @date 2022-11-18
+ * @date 2022-11-21
  */
 public class PartsMakeNum9 extends BaseEntity
 {
@@ -57,110 +57,166 @@ public class PartsMakeNum9 extends BaseEntity
     @Excel(name = "加工设备")
     private String partsMakeQuipment;
 
-    public void setId(Long id) 
+    /** 测量设备 */
+    @Excel(name = "测量设备")
+    private String partsMeasuringQuipment;
+
+    /** 原材料来源 */
+    @Excel(name = "原材料来源")
+    private String rawMaterialPlace;
+
+    /** 零部件来源 */
+    @Excel(name = "零部件来源")
+    private String sparePartsPlace;
+
+    /** 生产工艺 */
+    @Excel(name = "生产工艺")
+    private String partsMakeWorkmanship;
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setPlaneType(String planeType) 
+    public void setPlaneType(String planeType)
     {
         this.planeType = planeType;
     }
 
-    public String getPlaneType() 
+    public String getPlaneType()
     {
         return planeType;
     }
-    public void setPartsName(String partsName) 
+    public void setPartsName(String partsName)
     {
         this.partsName = partsName;
     }
 
-    public String getPartsName() 
+    public String getPartsName()
     {
         return partsName;
     }
-    public void setPartsModel(String partsModel) 
+    public void setPartsModel(String partsModel)
     {
         this.partsModel = partsModel;
     }
 
-    public String getPartsModel() 
+    public String getPartsModel()
     {
         return partsModel;
     }
-    public void setPartsCode(String partsCode) 
+    public void setPartsCode(String partsCode)
     {
         this.partsCode = partsCode;
     }
 
-    public String getPartsCode() 
+    public String getPartsCode()
     {
         return partsCode;
     }
-    public void setPartsFactoryTime(Date partsFactoryTime) 
+    public void setPartsFactoryTime(Date partsFactoryTime)
     {
         this.partsFactoryTime = partsFactoryTime;
     }
 
-    public Date getPartsFactoryTime() 
+    public Date getPartsFactoryTime()
     {
         return partsFactoryTime;
     }
-    public void setPartsManufacture(String partsManufacture) 
+    public void setPartsManufacture(String partsManufacture)
     {
         this.partsManufacture = partsManufacture;
     }
 
-    public String getPartsManufacture() 
+    public String getPartsManufacture()
     {
         return partsManufacture;
     }
-    public void setPartsMakeGroup(String partsMakeGroup) 
+    public void setPartsMakeGroup(String partsMakeGroup)
     {
         this.partsMakeGroup = partsMakeGroup;
     }
 
-    public String getPartsMakeGroup() 
+    public String getPartsMakeGroup()
     {
         return partsMakeGroup;
     }
-    public void setPartsMakePeople(String partsMakePeople) 
+    public void setPartsMakePeople(String partsMakePeople)
     {
         this.partsMakePeople = partsMakePeople;
     }
 
-    public String getPartsMakePeople() 
+    public String getPartsMakePeople()
     {
         return partsMakePeople;
     }
-    public void setPartsMakeQuipment(String partsMakeQuipment) 
+    public void setPartsMakeQuipment(String partsMakeQuipment)
     {
         this.partsMakeQuipment = partsMakeQuipment;
     }
 
-    public String getPartsMakeQuipment() 
+    public String getPartsMakeQuipment()
     {
         return partsMakeQuipment;
+    }
+    public void setPartsMeasuringQuipment(String partsMeasuringQuipment)
+    {
+        this.partsMeasuringQuipment = partsMeasuringQuipment;
+    }
+
+    public String getPartsMeasuringQuipment()
+    {
+        return partsMeasuringQuipment;
+    }
+    public void setRawMaterialPlace(String rawMaterialPlace)
+    {
+        this.rawMaterialPlace = rawMaterialPlace;
+    }
+
+    public String getRawMaterialPlace()
+    {
+        return rawMaterialPlace;
+    }
+    public void setSparePartsPlace(String sparePartsPlace)
+    {
+        this.sparePartsPlace = sparePartsPlace;
+    }
+
+    public String getSparePartsPlace()
+    {
+        return sparePartsPlace;
+    }
+    public void setPartsMakeWorkmanship(String partsMakeWorkmanship)
+    {
+        this.partsMakeWorkmanship = partsMakeWorkmanship;
+    }
+
+    public String getPartsMakeWorkmanship()
+    {
+        return partsMakeWorkmanship;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("planeType", getPlaneType())
-            .append("partsName", getPartsName())
-            .append("partsModel", getPartsModel())
-            .append("partsCode", getPartsCode())
-            .append("partsFactoryTime", getPartsFactoryTime())
-            .append("partsManufacture", getPartsManufacture())
-            .append("partsMakeGroup", getPartsMakeGroup())
-            .append("partsMakePeople", getPartsMakePeople())
-            .append("partsMakeQuipment", getPartsMakeQuipment())
-            .toString();
+                .append("id", getId())
+                .append("planeType", getPlaneType())
+                .append("partsName", getPartsName())
+                .append("partsModel", getPartsModel())
+                .append("partsCode", getPartsCode())
+                .append("partsFactoryTime", getPartsFactoryTime())
+                .append("partsManufacture", getPartsManufacture())
+                .append("partsMakeGroup", getPartsMakeGroup())
+                .append("partsMakePeople", getPartsMakePeople())
+                .append("partsMakeQuipment", getPartsMakeQuipment())
+                .append("partsMeasuringQuipment", getPartsMeasuringQuipment())
+                .append("rawMaterialPlace", getRawMaterialPlace())
+                .append("sparePartsPlace", getSparePartsPlace())
+                .append("partsMakeWorkmanship", getPartsMakeWorkmanship())
+                .toString();
     }
 }
