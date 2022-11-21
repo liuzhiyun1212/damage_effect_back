@@ -1,5 +1,9 @@
 package com.ruoyi.project.system.service;
 
+import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.PartsTypeCount;
+import com.ruoyi.project.system.domain.QualityProblem;
+import com.ruoyi.project.system.domain.Sum;
 import com.ruoyi.project.system.domain.*;
 
 import java.util.List;
@@ -111,6 +115,7 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<FaultyPartsCount> selectCountByName();
+
     /**
      * @Description 统计故障件数量
      * @Author guohuijia
@@ -120,6 +125,11 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public int selectPartsCount();
+
+    public int selectPartsTypeCount();
+
+    public List<PartsTypeCount> selectCountByType();
+
     /**4.2.2.3
      * @Description 高发故障模式涉及到的故障件的生产班组
      * @Author guohuijia
