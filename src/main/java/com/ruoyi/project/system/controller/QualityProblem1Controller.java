@@ -3,7 +3,7 @@ package com.ruoyi.project.system.controller;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Test;
+//import org.junit.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +48,8 @@ public class QualityProblem1Controller extends BaseController
         return getDataTable(list);
     }
 
+
+
     /**
      * 故障模式和个数
      */
@@ -70,6 +72,21 @@ public class QualityProblem1Controller extends BaseController
 
         private String faultModel;
         private int modelCount;
+
+        @Override
+        public String toString() {
+            return "ModelCount{" +
+                    "faultModel='" + faultModel + '\'' +
+                    ", modelCount=" + modelCount +
+                    '}';
+        }
+//        @Override
+//        public String toString() {
+//            return "ModelCount{" +
+//                    "faultModel='" + faultModel + '\'' +
+//                    ", modelCount=" + modelCount +
+//                    '}';
+//        }
     }
 
 

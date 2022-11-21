@@ -25,7 +25,7 @@ public class devupone {
     /** 成品件安装方法 */
     private String installMethod;
 
-    /** 成品件安装方法 */
+    /** 成品件安装位置 */
     private String installWhere;
 
     /** 故障件名称 */
@@ -33,6 +33,32 @@ public class devupone {
 
     /** 故障件型号 */
     private String partsModel;
+
+    /** 制造班组 */
+    private String partsMakeGroup;
+
+    /** 故障件出厂编号 */
+    private String partsCode;
+
+    public void setPartsCode(String partsCode)
+    {
+        this.partsCode = partsCode;
+    }
+
+    public String getPartsCode()
+    {
+        return partsCode;
+    }
+
+    public void setPartsMakeGroup(String partsMakeGroup)
+    {
+        this.partsMakeGroup = partsMakeGroup;
+    }
+
+    public String getPartsMakeGroup()
+    {
+        return partsMakeGroup;
+    }
 
     public void setPartsName(String partsName)
     {

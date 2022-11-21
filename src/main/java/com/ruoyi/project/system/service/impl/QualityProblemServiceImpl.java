@@ -6,6 +6,7 @@ import com.ruoyi.project.system.domain.FaultyPartsCount;
 import com.ruoyi.project.system.domain.PartsTypeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
+import com.ruoyi.project.system.domain.*;
 import com.ruoyi.project.system.mapper.QualityProblemMapper;
 import com.ruoyi.project.system.service.IQualityProblemService;
 import org.slf4j.Logger;
@@ -233,4 +234,34 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     public List<PartsTypeCount> selectCountByType(){
         return qualityProblemMapper.selectCountByType();
     }
+    @Override
+    public List<GradeCount> selectByGradeFaultModel() {
+        return qualityProblemMapper.selectByGradeFaultModel();
+    }
+
+    @Override
+    public List<Sum> qualitySumByGrade() {
+        return qualityProblemMapper.qualitySumByGrade();
+    }
+
+    @Override
+    public List<Sum> productSumByGrade() {
+        return qualityProblemMapper.productSumByGrade();
+    }
+
+    @Override
+    public List<ProductModifyData> selectByGradeChanged() {
+        return qualityProblemMapper.selectByGradeChanged();
+    }
+
+    @Override
+    public List<Sum> selectDevByEnvironment() {
+        return qualityProblemMapper.selectDevByEnvironment();
+    }
+
+    @Override
+    public List<Sum> selectQualityByEnvironment() {
+        return qualityProblemMapper.selectQualityByEnvironment();
+    }
+
 }

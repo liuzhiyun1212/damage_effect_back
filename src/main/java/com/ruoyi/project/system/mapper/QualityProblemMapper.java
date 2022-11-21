@@ -4,6 +4,7 @@ import com.ruoyi.project.system.domain.FaultyPartsCount;
 import com.ruoyi.project.system.domain.PartsTypeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
+import com.ruoyi.project.system.domain.*;
 
 import java.util.List;
 
@@ -114,4 +115,58 @@ public interface QualityProblemMapper
     public int selectPartsTypeCount();
 
     public List<PartsTypeCount> selectCountByType();
+    /**4.2.2.3
+     * @Description 高发故障模式涉及到的故障件的生产班组
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<GradeCount> selectByGradeFaultModel();
+    /**4.2.2.3
+     * @Description 生产班组统计质量问题总数
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> qualitySumByGrade();
+    /**4.2.2.3
+     * @Description 生产班组统计产品总数
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> productSumByGrade();
+    /**4.2.2.3
+     * @Description 故障件生产班组变更
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<ProductModifyData> selectByGradeChanged();
+    /**4.2.2.16
+     * @Description 不同使用环境中装备数量
+     * @Author lixin
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectDevByEnvironment();
+    /**4.2.2.16
+     * @Description 不同使用环境中对应质量问题数
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectQualityByEnvironment();
 }
