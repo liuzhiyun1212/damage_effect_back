@@ -47,6 +47,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="partsModelName" column="parts_model_name"/>
         <result property="partsCount" column="parts_count"/>
     </resultMap>
+    <resultMap type="PartsTypeCount" id="PartsTypeCountResult">
+        <result property="partsType" column="parts_type"/>
+        <result property="partsCount" column="parts_count"/>
+    </resultMap>
 
     <sql id="selectQualityProblemVo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
@@ -241,5 +245,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             COUNT( DISTINCT CONCAT( parts_model, '-', parts_name ) )
         FROM
             quality_problem_1
+    </select>
+
+        <!--    查询有多少种型号-->
+    <select id="selectPartsTypeCount" resultType="int">
+        SELECT
+            COUNT( DISTINCT parts_type ) as count
+        FROM
+            quality_problem_1
+    </select>
+        <!--每种型号有多少个-->
+    <select id="selectCountByType" resultMap="PartsTypeCountResult">
+        SELECT
+            parts_type,COUNT(*) as parts_count
+        FROM
+            quality_problem_1
+        GROUP BY
+            parts_type
     </select>
 </mapper>

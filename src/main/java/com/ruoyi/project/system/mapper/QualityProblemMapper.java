@@ -1,6 +1,7 @@
 package com.ruoyi.project.system.mapper;
 
 import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.PartsTypeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
 
@@ -110,4 +111,7 @@ public interface QualityProblemMapper
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public int selectPartsCount();
+    public int selectPartsTypeCount();
+
+    public List<PartsTypeCount> selectCountByType();
 }

@@ -165,7 +165,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                         tableMap.put("checkCondition", s + "3");
                     } else {
                         String s = (String) tableMap.getOrDefault("checkCondition", "");
-                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        s = StrUtil.isBlank(s)? StrUtil.EMPTY : (s + ",");
                         tableMap.put("checkCondition", s + "3");
                     }
                 }
