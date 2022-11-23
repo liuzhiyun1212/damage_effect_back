@@ -661,6 +661,7 @@ public class QualityProblemController extends BaseController
         List <ProductModifyData> list = qualityProblemService.selectByGradeChanged();
         int mark=0;
         for(ProductModifyData p:list){
+            mark=0;
             for(String s:st){
                 if(p.getProductName().equals(s)){
                     mark=-1;
@@ -822,6 +823,64 @@ public class QualityProblemController extends BaseController
                     res.add(s);
                 }
             }
+        }
+        System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+
+    /**
+     * @Description 4.2.2.6 故障件生产设备变更情况
+     * @Author lvXingFeng
+     */
+    @GetMapping("/selectByProduceDeviceChanged")
+    public List<timeCount> selectByProduceDeviceChanged() {
+        List<ProductModifyData> list = qualityProblemService.selectByProduceDeviceChanged();
+        List<timeCount> res = new ArrayList<>();
+        for (ProductModifyData p : list) {
+            timeCount t1 = new timeCount();
+            t1.setName(p.getProductName());
+            t1.setTime(p.getModifyTime());
+            res.add(t1);
+        }
+//        System.out.println("测试aaaaaaaaa" + res);
+
+        return res;
+    }
+
+    /**
+     * 4.2.2.3
+     *
+     * @Description 时间线图用故障件生产设备变更
+     * @Author lvXingFeng
+     */
+    @GetMapping("/timeProduceDeviceChanged")
+    public List<time1> timeProduceDeviceChanged() {
+        List<String> st = new ArrayList<>();
+        List<String> st1 = new ArrayList<>();
+        List<time1> res = new ArrayList<>();
+        List<ProductModifyData> list = qualityProblemService.selectByProduceDeviceChanged();
+        int mark = 0;
+        for (ProductModifyData p : list) {
+            for (String s : st) {
+                if (p.getProductName().equals(s)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                st.add(p.getProductName());
+            }
+        }
+        for (String s : st) {
+            time1 t1 = new time1();
+            List<Date> t = new ArrayList<>();
+            for (ProductModifyData p : list) {
+                if (s.equals(p.getProductName())) {
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                }
+            }
+            res.add(t1);
         }
         return res;
     }
