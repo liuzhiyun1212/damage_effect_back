@@ -630,6 +630,7 @@ public class QualityProblemController extends BaseController
         List <ProductModifyData> list = qualityProblemService.selectByGradeChanged();
         int mark=0;
         for(ProductModifyData p:list){
+            mark=0;
             for(String s:st){
                 if(p.getProductName().equals(s)){
                     mark=-1;
@@ -792,6 +793,7 @@ public class QualityProblemController extends BaseController
                 }
             }
         }
+        System.out.println("测试aaaaaaaaa" + res);
         return res;
     }
 }
