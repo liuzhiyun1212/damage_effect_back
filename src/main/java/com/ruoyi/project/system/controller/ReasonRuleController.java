@@ -36,8 +36,7 @@ public class ReasonRuleController extends BaseController
     private IPartsMakeNum9Service partsMakeNum9Service;
     private IProductQuantity7Service productQuantity7Service;
 
-    @Autowired
-    private IEquipmentDeploymentData8Service equipmentDeploymentData8Service;
+
 
   /*  @Autowired
     private IEquipmentUsageData9Service equipmentUsageData9Service;*/
