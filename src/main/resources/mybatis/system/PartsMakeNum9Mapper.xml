@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.PartsMakeNum9Mapper">
-    
+
     <resultMap type="PartsMakeNum9" id="PartsMakeNum9Result">
         <result property="id"    column="id"    />
         <result property="planeType"    column="plane_type"    />
@@ -15,15 +15,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="partsMakeGroup"    column="parts_make_group"    />
         <result property="partsMakePeople"    column="parts_make_people"    />
         <result property="partsMakeQuipment"    column="parts_make_quipment"    />
+        <result property="partsMeasuringQuipment"    column="parts_measuring_quipment"    />
+        <result property="rawMaterialPlace"    column="raw_material_place"    />
+        <result property="sparePartsPlace"    column="spare_parts_place"    />
+        <result property="partsMakeWorkmanship"    column="parts_make_workmanship"    />
     </resultMap>
 
     <sql id="selectPartsMakeNum9Vo">
-        select id, plane_type, parts_name, parts_model, parts_code, parts_factory_time, parts_manufacture, parts_make_group, parts_make_people, parts_make_quipment from parts_make_num_9
+        select id, plane_type, parts_name, parts_model, parts_code, parts_factory_time, parts_manufacture, parts_make_group, parts_make_people, parts_make_quipment, parts_measuring_quipment, raw_material_place, spare_parts_place, parts_make_workmanship from parts_make_num_9
     </sql>
 
     <select id="selectPartsMakeNum9List" parameterType="PartsMakeNum9" resultMap="PartsMakeNum9Result">
         <include refid="selectPartsMakeNum9Vo"/>
-        <where>  
+        <where>
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
             <if test="partsName != null  and partsName != ''"> and parts_name like concat('%', #{partsName}, '%')</if>
             <if test="partsModel != null  and partsModel != ''"> and parts_model = #{partsModel}</if>
@@ -33,14 +37,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partsMakeGroup != null  and partsMakeGroup != ''"> and parts_make_group = #{partsMakeGroup}</if>
             <if test="partsMakePeople != null  and partsMakePeople != ''"> and parts_make_people = #{partsMakePeople}</if>
             <if test="partsMakeQuipment != null  and partsMakeQuipment != ''"> and parts_make_quipment = #{partsMakeQuipment}</if>
+            <if test="partsMeasuringQuipment != null  and partsMeasuringQuipment != ''"> and parts_measuring_quipment = #{partsMeasuringQuipment}</if>
+            <if test="rawMaterialPlace != null  and rawMaterialPlace != ''"> and raw_material_place = #{rawMaterialPlace}</if>
+            <if test="sparePartsPlace != null  and sparePartsPlace != ''"> and spare_parts_place = #{sparePartsPlace}</if>
+            <if test="partsMakeWorkmanship != null  and partsMakeWorkmanship != ''"> and parts_make_workmanship = #{partsMakeWorkmanship}</if>
         </where>
     </select>
-    
+
     <select id="selectPartsMakeNum9ById" parameterType="Long" resultMap="PartsMakeNum9Result">
         <include refid="selectPartsMakeNum9Vo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertPartsMakeNum9" parameterType="PartsMakeNum9" useGeneratedKeys="true" keyProperty="id">
         insert into parts_make_num_9
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -53,7 +61,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partsMakeGroup != null">parts_make_group,</if>
             <if test="partsMakePeople != null">parts_make_people,</if>
             <if test="partsMakeQuipment != null">parts_make_quipment,</if>
-         </trim>
+            <if test="partsMeasuringQuipment != null">parts_measuring_quipment,</if>
+            <if test="rawMaterialPlace != null">raw_material_place,</if>
+            <if test="sparePartsPlace != null">spare_parts_place,</if>
+            <if test="partsMakeWorkmanship != null">parts_make_workmanship,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="planeType != null">#{planeType},</if>
             <if test="partsName != null">#{partsName},</if>
@@ -64,7 +76,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partsMakeGroup != null">#{partsMakeGroup},</if>
             <if test="partsMakePeople != null">#{partsMakePeople},</if>
             <if test="partsMakeQuipment != null">#{partsMakeQuipment},</if>
-         </trim>
+            <if test="partsMeasuringQuipment != null">#{partsMeasuringQuipment},</if>
+            <if test="rawMaterialPlace != null">#{rawMaterialPlace},</if>
+            <if test="sparePartsPlace != null">#{sparePartsPlace},</if>
+            <if test="partsMakeWorkmanship != null">#{partsMakeWorkmanship},</if>
+        </trim>
     </insert>
 
     <update id="updatePartsMakeNum9" parameterType="PartsMakeNum9">
@@ -79,6 +95,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partsMakeGroup != null">parts_make_group = #{partsMakeGroup},</if>
             <if test="partsMakePeople != null">parts_make_people = #{partsMakePeople},</if>
             <if test="partsMakeQuipment != null">parts_make_quipment = #{partsMakeQuipment},</if>
+            <if test="partsMeasuringQuipment != null">parts_measuring_quipment = #{partsMeasuringQuipment},</if>
+            <if test="rawMaterialPlace != null">raw_material_place = #{rawMaterialPlace},</if>
+            <if test="sparePartsPlace != null">spare_parts_place = #{sparePartsPlace},</if>
+            <if test="partsMakeWorkmanship != null">parts_make_workmanship = #{partsMakeWorkmanship},</if>
         </trim>
         where id = #{id}
     </update>
@@ -88,7 +108,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePartsMakeNum9ByIds" parameterType="String">
-        delete from parts_make_num_9 where id in 
+        delete from parts_make_num_9 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

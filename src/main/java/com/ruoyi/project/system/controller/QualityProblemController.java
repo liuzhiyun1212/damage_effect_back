@@ -6,6 +6,10 @@ import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.PartsTypeCount;
+import com.ruoyi.project.system.domain.QualityProblem;
+import com.ruoyi.project.system.domain.Sum;
 import com.ruoyi.project.system.domain.*;
 import com.ruoyi.project.system.service.IQualityProblem1Service;
 import com.ruoyi.project.system.service.IQualityProblemService;
@@ -394,8 +398,6 @@ public class QualityProblemController extends BaseController
         int faultyPartsCount = qualityProblemService.selectPartsCount();
         float allFloat = (float)allCount;
         double averageDouble = (allFloat/faultyPartsCount)*0.5;
-
-//        int average =(int)Math.round(averageDouble);
         List<FaultyPartsCount> list = qualityProblemService.selectCountByName();
         List<FaultyPartsCount> list2 = new ArrayList<>();
         for(int i=0;i<list.size();i++){
@@ -421,6 +423,35 @@ public class QualityProblemController extends BaseController
     @GetMapping("/selectAllFaulty")
     public List<FaultyPartsCount> selectAllFaulty() {
         List<FaultyPartsCount> list = qualityProblemService.selectCountByName();
+        return list;
+    }
+
+    @GetMapping("/selectPartsTypeCount")
+    public List<PartsTypeCount> selectPartsTypeCount() {
+        int allCount = qualityProblemService.selectAllCount();
+        int partsTypeCount = qualityProblemService.selectPartsTypeCount();
+        float allFloat = (float)allCount;
+        double averageDouble = (allFloat/partsTypeCount)*0.5;
+        List<PartsTypeCount> list = qualityProblemService.selectCountByType();
+        List<PartsTypeCount> list2 = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            PartsTypeCount partsTypeCount1 = list.get(i);
+            int count = partsTypeCount1.getPartsCount();
+            double percentage=((double) count/ averageDouble)*100;
+            String percentage1 = String.format("%.2f",percentage)+"%";
+            partsTypeCount1.setPartsProportion(percentage1);
+//            if (count > averageDouble){
+            PartsTypeCount partsTypeCount2 = list.get(0);
+            String count1 = partsTypeCount2.getPartsProportion();
+                list2.add(partsTypeCount1);
+//            }
+        }
+
+        return list2;
+    }
+    @GetMapping("/selectAllType")
+    public List<PartsTypeCount> selectAllType() {
+        List<PartsTypeCount> list = qualityProblemService.selectCountByType();
         return list;
     }
 
@@ -794,6 +825,63 @@ public class QualityProblemController extends BaseController
             }
         }
         System.out.println("测试aaaaaaaaa" + res);
+        return res;
+    }
+
+    /**
+     * @Description 4.2.2.6 故障件生产设备变更情况
+     * @Author lvXingFeng
+     */
+    @GetMapping("/selectByProduceDeviceChanged")
+    public List<timeCount> selectByProduceDeviceChanged() {
+        List<ProductModifyData> list = qualityProblemService.selectByProduceDeviceChanged();
+        List<timeCount> res = new ArrayList<>();
+        for (ProductModifyData p : list) {
+            timeCount t1 = new timeCount();
+            t1.setName(p.getProductName());
+            t1.setTime(p.getModifyTime());
+            res.add(t1);
+        }
+//        System.out.println("测试aaaaaaaaa" + res);
+
+        return res;
+    }
+
+    /**
+     * 4.2.2.3
+     *
+     * @Description 时间线图用故障件生产设备变更
+     * @Author lvXingFeng
+     */
+    @GetMapping("/timeProduceDeviceChanged")
+    public List<time1> timeProduceDeviceChanged() {
+        List<String> st = new ArrayList<>();
+        List<String> st1 = new ArrayList<>();
+        List<time1> res = new ArrayList<>();
+        List<ProductModifyData> list = qualityProblemService.selectByProduceDeviceChanged();
+        int mark = 0;
+        for (ProductModifyData p : list) {
+            for (String s : st) {
+                if (p.getProductName().equals(s)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                st.add(p.getProductName());
+            }
+        }
+        for (String s : st) {
+            time1 t1 = new time1();
+            List<Date> t = new ArrayList<>();
+            for (ProductModifyData p : list) {
+                if (s.equals(p.getProductName())) {
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                }
+            }
+            res.add(t1);
+        }
         return res;
     }
 }

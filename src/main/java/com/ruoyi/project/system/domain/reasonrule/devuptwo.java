@@ -10,23 +10,54 @@ public class devuptwo {
 
     private int devHappennum;
 
+    /** 故障模式 */
+    private String faultModel;
+
     /** 型号系列 */
     private String modelSeries;
+
+    /** 能力状态 */
+    private String capabilityStatus;
+
+    /** 装备出厂编号 */
+    private String devCode;
+
+    /** 成品件安装方法 */
+    private String installMethod;
+
+    /** 成品件安装位置 */
+    private String installWhere;
 
     /** 故障件名称 */
     private String partsName;
 
-    /** 故障模式 */
-    private String faultModel;
+    /** 故障件型号 */
+    private String partsModel;
 
-    public void setFaultModel(String faultModel)
+    /** 制造班组 */
+    private String partsMakeGroup;
+
+    /** 故障件出厂编号 */
+    private String partsCode;
+
+    public void setPartsCode(String partsCode)
     {
-        this.faultModel = faultModel;
+        this.partsCode = partsCode;
     }
 
-    public String getFaultModel()
+    public String getPartsCode()
     {
-        return faultModel;
+        return partsCode;
+    }
+
+    public void setPartsMakeGroup(String partsMakeGroup)
+    {
+        this.partsMakeGroup = partsMakeGroup;
+    }
+
+    public String getPartsMakeGroup()
+    {
+        return partsMakeGroup;
     }
 
     public void setPartsName(String partsName)
@@ -37,6 +68,55 @@ public class devuptwo {
     public String getPartsName()
     {
         return partsName;
+    }
+    public void setPartsModel(String partsModel)
+    {
+        this.partsModel = partsModel;
+    }
+
+    public String getPartsModel()
+    {
+        return partsModel;
+    }
+
+    public void setInstallWhere(String installWhere)
+    {
+        this.installWhere = installWhere;
+    }
+
+    public String getInstallWhere()
+    {
+        return installWhere;
+    }
+
+    public void setInstallMethod(String installMethod)
+    {
+        this.installMethod = installMethod;
+    }
+
+    public String getInstallMethod()
+    {
+        return installMethod;
+    }
+
+    public void setDevCode(String devCode)
+    {
+        this.devCode = devCode;
+    }
+
+    public String getDevCode()
+    {
+        return devCode;
+    }
+
+    public void setFaultModel(String faultModel)
+    {
+        this.faultModel = faultModel;
+    }
+
+    public String getFaultModel()
+    {
+        return faultModel;
     }
 
     public void setPlaneType(String planeType)
@@ -77,5 +157,15 @@ public class devuptwo {
     public String getModelSeries()
     {
         return modelSeries;
+    }
+
+    public void setCapabilityStatus(String capabilityStatus)
+    {
+        this.capabilityStatus = capabilityStatus;
+    }
+
+    public String getCapabilityStatus()
+    {
+        return capabilityStatus;
     }
 }

@@ -9,7 +9,6 @@ import cn.hutool.json.JSONObject;
 import com.ruoyi.project.system.domain.AircraftTypeAndTime;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.mapper.AircraftTypeAndTypeMapper;
-import com.ruoyi.project.system.mapper.QualityProblemMapper;
 import com.ruoyi.project.system.service.IAircraftTypeAndTypeService;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,6 @@ import java.util.*;
 public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeService {
     //筛选条件变量的前缀
     public static final String PREFIX_CHECKED_METHOD_NAME = "check";
-    @Autowired
-    private QualityProblemMapper qualityProblemMapper;
 
     @Autowired
     private AircraftTypeAndTypeMapper aircraftTypeAndTypeMapper;
@@ -165,7 +162,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                         tableMap.put("checkCondition", s + "3");
                     } else {
                         String s = (String) tableMap.getOrDefault("checkCondition", "");
-                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        s = StrUtil.isBlank(s)? StrUtil.EMPTY : (s + ",");
                         tableMap.put("checkCondition", s + "3");
                     }
                 }
@@ -357,7 +354,6 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
     public Map getUseIntensityChartData() {
 
         List<AircraftTypeAndTime> list = aircraftTypeAndTypeMapper.selectQuarter();
-        //todo 为什么实体类中的devHappenTime的@JsonFormat不起作用
         //格式化数据
         for (AircraftTypeAndTime item : list) {
             item.setDevHappenTime(DateUtil.date(item.getDevHappenTime()));

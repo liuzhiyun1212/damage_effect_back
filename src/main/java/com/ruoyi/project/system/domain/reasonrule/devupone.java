@@ -25,7 +25,7 @@ public class devupone {
     /** 成品件安装方法 */
     private String installMethod;
 
-    /** 成品件安装方法 */
+    /** 成品件安装位置 */
     private String installWhere;
 
     /** 故障件名称 */
@@ -33,6 +33,104 @@ public class devupone {
 
     /** 故障件型号 */
     private String partsModel;
+
+    /** 制造班组 */
+    private String partsMakeGroup;
+
+    /** 故障件出厂编号 */
+    private String partsCode;
+
+    /** 制造人员 */
+    private String partsMakePeople;
+
+    /** 加工设备 */
+    private String partsMakeQuipment;
+
+    /** 测量设备 */
+    private String partsMeasuringQuipment;
+
+    /** 原材料来源 */
+    private String rawMaterialPlace;
+
+    /** 零部件来源 */
+    private String sparePartsPlace;
+
+    /** 生产工艺 */
+    private String partsMakeWorkmanship;
+
+    public void setPartsMakePeople(String partsMakePeople)
+    {
+        this.partsMakePeople = partsMakePeople;
+    }
+
+    public String getPartsMakePeople()
+    {
+        return partsMakePeople;
+    }
+    public void setPartsMakeQuipment(String partsMakeQuipment)
+    {
+        this.partsMakeQuipment = partsMakeQuipment;
+    }
+
+    public String getPartsMakeQuipment()
+    {
+        return partsMakeQuipment;
+    }
+    public void setPartsMeasuringQuipment(String partsMeasuringQuipment)
+    {
+        this.partsMeasuringQuipment = partsMeasuringQuipment;
+    }
+
+    public String getPartsMeasuringQuipment()
+    {
+        return partsMeasuringQuipment;
+    }
+    public void setRawMaterialPlace(String rawMaterialPlace)
+    {
+        this.rawMaterialPlace = rawMaterialPlace;
+    }
+
+    public String getRawMaterialPlace()
+    {
+        return rawMaterialPlace;
+    }
+    public void setSparePartsPlace(String sparePartsPlace)
+    {
+        this.sparePartsPlace = sparePartsPlace;
+    }
+
+    public String getSparePartsPlace()
+    {
+        return sparePartsPlace;
+    }
+    public void setPartsMakeWorkmanship(String partsMakeWorkmanship) {
+        this.partsMakeWorkmanship = partsMakeWorkmanship;
+    }
+
+    public String getPartsMakeWorkmanship()
+    {
+        return partsMakeWorkmanship;
+    }
+
+    public void setPartsCode(String partsCode)
+    {
+        this.partsCode = partsCode;
+    }
+
+    public String getPartsCode()
+    {
+        return partsCode;
+    }
+
+    public void setPartsMakeGroup(String partsMakeGroup)
+    {
+        this.partsMakeGroup = partsMakeGroup;
+    }
+
+    public String getPartsMakeGroup()
+    {
+        return partsMakeGroup;
+    }
 
     public void setPartsName(String partsName)
     {

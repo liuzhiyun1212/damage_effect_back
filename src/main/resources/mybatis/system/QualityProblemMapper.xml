@@ -51,6 +51,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="partsModelName" column="parts_model_name"/>
         <result property="partsCount" column="parts_count"/>
     </resultMap>
+    <resultMap type="PartsTypeCount" id="PartsTypeCountResult">
+        <result property="partsType" column="parts_type"/>
+        <result property="partsCount" column="parts_count"/>
+    </resultMap>
     <resultMap type="GradeCount" id="GradeCountResult">
         <result property="partsName"    column="parts_name"    />
         <result property="faultModel"    column="fault_model"    />
@@ -90,6 +94,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT product_name,modify_time
         FROM quality_problem_1 as q, product_modify_data_6 as p
         where q.parts_model = p.product_model and p.modify_type='生产班组变更'
+        GROUP BY modify_time
+        ORDER BY modify_time asc
+    </select>
+    <!--    故障件生产设备变更-->
+    <select id="selectByProduceDeviceChanged" resultMap="ProductModifyDataResult">
+        SELECT product_name,modify_time
+        FROM quality_problem_1 as q, product_modify_data_6 as p
+        where q.parts_model = p.product_model and p.modify_type='生产设备变更'
         GROUP BY modify_time
         ORDER BY modify_time asc
     </select>
@@ -301,5 +313,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             COUNT( DISTINCT CONCAT( parts_model, '-', parts_name ) )
         FROM
             quality_problem_1
+    </select>
+
+        <!--    查询有多少种型号-->
+    <select id="selectPartsTypeCount" resultType="int">
+        SELECT
+            COUNT( DISTINCT parts_type ) as count
+        FROM
+            quality_problem_1
+    </select>
+        <!--每种型号有多少个-->
+    <select id="selectCountByType" resultMap="PartsTypeCountResult">
+        SELECT
+            parts_type,COUNT(*) as parts_count
+        FROM
+            quality_problem_1
+        GROUP BY
+            parts_type
     </select>
 </mapper>
