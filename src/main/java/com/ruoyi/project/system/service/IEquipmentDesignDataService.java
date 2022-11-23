@@ -2,6 +2,7 @@ package com.ruoyi.project.system.service;
 
 import java.util.List;
 import com.ruoyi.project.system.domain.EquipmentDesignData;
+import com.ruoyi.project.system.domain.ProductDesign;
 
 /**
  * 装备设计/改型数据Service接口
@@ -58,4 +59,13 @@ public interface IEquipmentDesignDataService
      * @return 结果
      */
     public int deleteEquipmentDesignDataById(Long id);
+    /**
+     * 导入产品设计数据
+     *
+     * @param importDataList 数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    public String importData(List<EquipmentDesignData> importDataList, Boolean isUpdateSupport, String operName);
 }

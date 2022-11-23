@@ -166,6 +166,13 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<ProductModifyData> selectByGradeChanged();
+
+    /**
+     * 4.2.2.6.故障件生产设备变更情况
+     * @return
+     */
+    public List<ProductModifyData> selectByProduceDeviceChanged();
+
     /**4.2.2.16
      * @Description 不同使用环境中装备数量
      * @Author lixin

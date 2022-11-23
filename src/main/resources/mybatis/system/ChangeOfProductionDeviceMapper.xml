@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ChangeOfProductionDeviceMapper">
+    <resultMap type="ChangeOfProductionDevice" id="ChangeOfProductionDeviceResult">
+        <result property="id" column="id"/>
+        <result property="planeType" column="plane_type"/>
+        <result property="partsCode" column="parts_code"/>
+        <result property="partsMakePeople" column="parts_make_people"/>
+        <result property="partsMakeQuipment" column="parts_make_quipment"/>
+    </resultMap>
+
+    <select id="selectProducedList" resultMap="ChangeOfProductionDeviceResult">
+        select id, plane_type, parts_code, parts_make_people, parts_make_quipment
+        from parts_make_num_9
+    </select>
+
+    <select id="selectFaultList" resultMap="ChangeOfProductionDeviceResult">
+        SELECT DISTINCT a.parts_code, b.parts_make_people
+        from quality_problem_1 a
+        INNER JOIN parts_make_num_9 b on a.parts_code = b.parts_code
+    </select>
+
+</mapper>
