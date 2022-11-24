@@ -35,7 +35,7 @@ public class AircraftTypeAndTypeController extends BaseController {
     }
 
     @GetMapping("/aircraftTypeWithTime/getChartData")
-    public R getChartData() {
+    public R getChartData() throws Exception {
         return R.ok(aircraftTypeAndTypeService.getChartData());
     }
 }

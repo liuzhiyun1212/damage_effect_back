@@ -13,7 +13,7 @@ import java.util.Map;
 public interface IAircraftTypeAndTypeService {
     public List getCheckList(AircraftTypeAndTime aircraftTypeAndTime);
 
-    public Map getChartData();
+    public Map getChartData() throws Exception;
 
     public Map getUseIntensityChartData();
 }
