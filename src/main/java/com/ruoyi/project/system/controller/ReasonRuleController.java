@@ -41,115 +41,22 @@ public class ReasonRuleController extends BaseController
     @Autowired
     private IEquipmentManufacturingData5Service equipmentManufacturingData5Service;
 
+    @Autowired
+    private IReasonRuleService reasonRuleService;
+
     /**
      * 不同问题装备型号中，某种故障模式质量问题数量存在较大差异
      */
     @GetMapping("/devup1")
     public TableDataInfo devup1()
     {
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
         RuleConstruction ruleConstruction = new RuleConstruction();
         ruleConstruction.setRule("不同问题装备型号中，某种故障模式质量问题数量存在较大差异");
         List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
         float ruledata = Float.parseFloat(listr.get(0).getRuleData());
-        QualityProblem qualityProblem = new QualityProblem();
-        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
-        EquipmentDesignData equipmentDesignData1 = new EquipmentDesignData();
-        List<EquipmentDesignData> listing = equipmentDesignDataService.selectEquipmentDesignDataList(equipmentDesignData1);
-        List<devupone> list1 = new ArrayList<devupone>();
-        List<String> plane = new ArrayList<String>();//机型
-        List<String> series = new ArrayList<String>();
-        List<String> model = new ArrayList<String>();//故障模式
-        for(EquipmentDesignData i: listing){
-            if(!series.contains(i.getModelSeries())){
-                series.add(i.getModelSeries());
-            }
-        }
-        for(QualityProblem i: list){
-            devupone devup1 = new devupone();
-            devup1.setDevHappenTime(simpleDateFormat.format(i.getDevHappenTime()));
-            devup1.setPlaneType(i.getPlaneType());
-            devup1.setFaultModel(i.getFaultModel());
-            devup1.setdevHappennum(1);
-            boolean iffind = false;
-            for(EquipmentDesignData ii: listing){
-                if(ii.getPlaneType().equals(i.getPlaneType())){
-                    devup1.setModelSeries(ii.getModelSeries());
-                    iffind = true;
-                    break;
-                }
-            }
-            if(iffind==false){
-                for(String ii: series){
-                    int ai = ii.length();
-                    String s = i.getPlaneType().substring(0,ai);
-                    if(s.equals(ii)){
-                        devup1.setModelSeries(s);
-                    }
-                }
-            }
-            list1.add(devup1);
-            if(!plane.contains(i.getPlaneType())){
-                plane.add(i.getPlaneType());
-            }
-            if(!model.contains(i.getFaultModel())){
-                model.add(i.getFaultModel());
-            }
-        }
-        List<devupone> list2 = new ArrayList<devupone>();
-        int max = 0;
-        for(String s1: series){
-            List<String> name = new ArrayList<String>();//时间
-            EquipmentDesignData equipmentDesignData = new EquipmentDesignData();
-            equipmentDesignData.setModelSeries(s1);
-            List<EquipmentDesignData> listed = equipmentDesignDataService.selectEquipmentDesignDataList(equipmentDesignData);
-            HashMap<String, String> Sites = new HashMap<String, String>();
-            for(int ii=0;ii<listed.size();ii++){
-                name.add(simpleDateFormat.format(listed.get(ii).getRemodelDate()));
-                Sites.put(listed.get(ii).getPlaneType(),simpleDateFormat.format(listed.get(ii).getRemodelDate()));
-            }
-            Collections.sort(name);
-            for(devupone d:list1){
-                if(d.getModelSeries().equals(s1)){
-                    devupone devup2 = new devupone();
-                    devup2.setFaultModel(d.getFaultModel());
-                    int a1 = name.indexOf(Sites.get(d.getPlaneType()));
-                    devup2.setDevHappenTime(String.valueOf(a1));
-                    devup2.setPlaneType(d.getPlaneType());
-                    devup2.setModelSeries(s1);
-                    devup2.setdevHappennum(1);
-                    list2.add(devup2);
-                }
-            }
-            if(name.size()>max){
-                max= name.size();
-            }
-        }
-        List<devupone> list3 = new ArrayList<devupone>();
-        for(String s1: series){
-            for(String s2: model){
-                for(int a2=0;a2<max+1;a2++){
-                    String aa2 = String.valueOf(a2);
-                    int sa = 0;
-                    String aa3 = "";
-                    for(devupone d:list2){
-                        if(d.getModelSeries().equals(s1)&&d.getDevHappenTime().equals(aa2)&&d.getFaultModel().equals(s2)){
-                            sa++;
-                            aa3 = d.getPlaneType();
-                        }
-                    }
-                    if(sa>0){
-                        devupone devup2 = new devupone();
-                        devup2.setDevHappenTime(aa2);
-                        devup2.setFaultModel(s2);
-                        devup2.setModelSeries(s1);
-                        devup2.setPlaneType(aa3);
-                        devup2.setdevHappennum(sa);
-                        list3.add(devup2);
-                    }
-                }
-            }
-        }
+        List<String> series = reasonRuleService.selectSeries();
+        List<String> model = reasonRuleService.selectFaultModel();//故障模式
+        List<devupone> list3 = reasonRuleService.selectDevUpOne();
         List<String> model1 = new ArrayList<String>();//故障模式
         List<String> series1 = new ArrayList<String>();//机型
         for(String s1: series){
@@ -189,108 +96,11 @@ public class ReasonRuleController extends BaseController
     @GetMapping("/devup2")
     public TableDataInfo devup2()
     {
-        QualityProblem qualityProblem = new QualityProblem();
-        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
-        EquipmentDesignData equipmentDesignData1 = new EquipmentDesignData();
-        List<EquipmentDesignData> listing = equipmentDesignDataService.selectEquipmentDesignDataList(equipmentDesignData1);
-        List<devuptwo> list1 = new ArrayList<devuptwo>();
-        List<devuptwo> list2 = new ArrayList<devuptwo>();
-        List<String> name = new ArrayList<String>();//时间
-        List<String> series = new ArrayList<String>();//机型
-        List<String> plane = new ArrayList<String>();//机型
-        HashMap<String, String> Sites = new HashMap<String, String>();
-        for(EquipmentDesignData i: listing){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(i.getRemodelDate());
-            int a = calendar.get(Calendar.MONTH)+1;
-            if(a>0&&a<4){
-                a=1;
-            } else if(a>3&&a<7){
-                a=2;
-            } else if(a>6&&a<10){
-                a=3;
-            } else if(a>9&&a<13){
-                a=4;
-            }
-            String s1 = calendar.get(Calendar.YEAR)+"-"+a;
-            String s2 = i.getModelSeries();
-            String s3 = i.getPlaneType();
-            Sites.put(s2+s1,s3);
-            if(!series.contains(i.getModelSeries())){
-                series.add(i.getModelSeries());
-            }
-        }
-        for(QualityProblem i: list){
-            devuptwo devup1 = new devuptwo();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(i.getDevHappenTime());
-            int a = calendar.get(Calendar.MONTH)+1;
-            if(a>0&&a<4){
-                a=1;
-            } else if(a>3&&a<7){
-                a=2;
-            } else if(a>6&&a<10){
-                a=3;
-            } else if(a>9&&a<13){
-                a=4;
-            }
-            devup1.setDevHappenTime(calendar.get(Calendar.YEAR)+"-"+a);
-            devup1.setPlaneType(i.getPlaneType());
-            devup1.setdevHappennum(1);
-            boolean iffind = false;
-            String s2 = "";
-            for(EquipmentDesignData ii: listing){
-                if(ii.getPlaneType().equals(i.getPlaneType())){
-                    devup1.setModelSeries(ii.getModelSeries());
-                    iffind = true;
-                    s2 = ii.getModelSeries();
-                    break;
-                }
-            }
-            if(iffind==false){
-                for(String ii: series){
-                    int ai = ii.length();
-                    String s = i.getPlaneType().substring(0,ai);
-                    if(s.equals(ii)){
-                        devup1.setModelSeries(s);
-                        s2 = ii;
-                    }
-                }
-            }
-            String s1 = calendar.get(Calendar.YEAR)+"-"+a;
-            String s3 = i.getPlaneType();
-            Sites.put(s2+s1,s3);
-            list1.add(devup1);
-            if(!name.contains(calendar.get(Calendar.YEAR)+"-"+a)){
-                name.add(calendar.get(Calendar.YEAR)+"-"+a);
-            }
-            if(!plane.contains(i.getPlaneType())){
-                plane.add(i.getPlaneType());
-            }
-        }
-        Collections.sort(name);
-        for(String s1: series){
-            for(String s2: name){
-                String s3 = Sites.get(s1+s2);
-                int sa = 0;
-                for(devuptwo d:list1){
-                    if(d.getDevHappenTime().equals(s2)&&d.getModelSeries().equals(s1)){
-                        sa++;
-                    }
-                }
-                if(sa>0){
-                    devuptwo devup2 = new devuptwo();
-                    devup2.setDevHappenTime(s2);
-                    devup2.setPlaneType(s3);
-                    devup2.setModelSeries(s1);
-                    devup2.setdevHappennum(sa);
-                    list2.add(devup2);
-                }
-            }
-        }
-        List<String> name1 = new ArrayList<String>();//时间
-        List<String> plane1 = new ArrayList<String>();//机型
-        List<String> series1 = new ArrayList<String>();//机型
+        List<devuptwo> list2 = reasonRuleService.selectDevUpTwo();
+        List<String> series = reasonRuleService.selectSeries();
+        List<String> name1 = new ArrayList<String>();
+        List<String> plane1 = new ArrayList<String>();
+        List<String> series1 = new ArrayList<String>();
         for(String s1: series){
             List<devuptwo> list3 = new ArrayList<devuptwo>();
             for(devuptwo d:list2){
@@ -413,9 +223,9 @@ public class ReasonRuleController extends BaseController
         QualityProblem qualityProblem = new QualityProblem();
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(qualityProblem);
         List<devupone> list1 = new ArrayList<devupone>();
-        List<String> plane = new ArrayList<String>();
+        List<String> plane = reasonRuleService.selectPlane();
         List<String> mplane = new ArrayList<String>();
-        List<String> model = new ArrayList<String>();
+        List<String> model = reasonRuleService.selectFaultModel();//故障模式
         List<String> series = new ArrayList<String>();
         EquipmentManufacturingData5 equipmentManufacturingData51 = new EquipmentManufacturingData5();
         List<EquipmentManufacturingData5> listing = equipmentManufacturingData5Service.selectEquipmentManufacturingData5List(equipmentManufacturingData51);
@@ -433,14 +243,8 @@ public class ReasonRuleController extends BaseController
             devup1.setDevCode(i.getDevCode());
             devup1.setdevHappennum(1);
             list1.add(devup1);
-            if(!plane.contains(i.getPlaneType())){
-                plane.add(i.getPlaneType());
-            }
             if(!mplane.contains(i.getPlaneType()+";"+i.getDevCode())){
                 mplane.add(i.getPlaneType()+";"+i.getDevCode());
-            }
-            if(!model.contains(i.getFaultModel())){
-                model.add(i.getFaultModel());
             }
         }
         List<devupone> list2 = new ArrayList<devupone>();
