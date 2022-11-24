@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.ruoyi.project.system.domain.AircraftTypeAndTime;
@@ -46,13 +47,16 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
             map.put(DateUtil.year(item.getDevHappenTime()) + "-" + item.getQuarter() + "-" + item.getPlaneType(), item);
         }
         //没有数据的赋零
-        for (AircraftTypeAndTime item : list) {
-            setBlankData(map, list.get(0).getDevHappenTime(), list.get(list.size() - 1).getDevHappenTime(), item);
-        }
+//        for (AircraftTypeAndTime item : list) {
+//            setBlankData(map, list.get(0).getDevHappenTime(), list.get(list.size() - 1).getDevHappenTime(), item);
+//        }
         List<AircraftTypeAndTime> numList = new ArrayList(map.values());
 
         //按机型方式分类
         Map typeNumMap = spliteByAircraft(numList);
+
+//        //todo 去除数量为0的值
+//        Map notBlankTypeNumMap = removeBlankTypeNum(typeNumMap);
 
         List<Map<String, Object>> tempList = new ArrayList();
         switch (aircraftTypeAndTime.getCheckedMethodName()) {
@@ -117,6 +121,16 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
         }
         return typeMap;
+    }
+
+    /**
+     * 除去数量为0的值
+     * @param typeNumMap
+     * @return
+     */
+    JSONObject removeBlankTypeNum(Map typeNumMap){
+
+        return null;
     }
 
     List allCheck(Map<String, List<AircraftTypeAndTime>> typeMap, AircraftTypeAndTime paramObj) {
@@ -361,7 +375,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         return removeBlankItem(jsonObject);
     }
 
-    //TODO 去除空值
+    //去除空值
     JSONObject removeBlankItem(JSONObject jsonObject) throws Exception {
         if (CollectionUtil.isEmpty((Iterable<?>) jsonObject)) {
             throw new Exception("数据不能为空");
@@ -404,7 +418,6 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
         //去重
         resXList = (List) resXList.stream().distinct().collect(Collectors.toList());
-
         JSONObject resObj = new JSONObject();
         resObj.set("xdata", resXList)
                 .set("list", ylist);
@@ -412,8 +425,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
     }
 
     @Override
-    public Map getUseIntensityChartData() {
-
+    public Map getUseIntensityChartData() throws Exception {
         List<AircraftTypeAndTime> list = aircraftTypeAndTypeMapper.selectQuarter();
         //格式化数据
         for (AircraftTypeAndTime item : list) {
@@ -465,10 +477,10 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
         List<AircraftTypeAndTime> resList = new ArrayList(distinctNameMap.values());
 
-        HashMap<Object, Object> resultMap = MapUtil.newHashMap();
-        resultMap.put("xdata", xData);
-        resultMap.put("list", resList);
-        return resultMap;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.set("xdata", xData)
+                .set("list", resList);
+        return removeBlankItem(jsonObject);
     }
 
     List getXData(List<AircraftTypeAndTime> typeList) {
@@ -492,12 +504,16 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
     /**
      * 较上一时间增加或减少50%以上，该时间为质量问题发生故障件变化时间
+     * 不能为零
      *
      * @param preVal
      * @param val
      * @return
      */
     boolean isChange50Percent(double preVal, double val) {
+        if (0 == preVal || 0 == val) {
+            return false;
+        }
         return getChangeRangeNonnegative(preVal, val) > 0.5;
     }
 
@@ -520,6 +536,9 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
     }
 
     boolean isChange20PercentTwoTime(double prePreVal, double preVal, double val) {
+        if (0 == prePreVal || 0 == preVal || 0 == val) {
+            return false;
+        }
         if (getChangeRange(prePreVal, preVal) > 0.2 && getChangeRange(preVal, val) > 0.2) {
             return true;
         } else if (getChangeRange(prePreVal, preVal) < -0.2 && getChangeRange(preVal, val) < -0.2) {
@@ -544,6 +563,9 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
      * @return
      */
     boolean isMonotonicVariation(double firstNum, double secondNum, double thirdnum, double fourthNum) {
+        if(firstNum==0||secondNum==0||thirdnum==0||fourthNum==0){
+            return false;
+        }
         if (firstNum - secondNum >= 0 && secondNum - thirdnum >= 0 && thirdnum - fourthNum >= 0) {
             return true;
         } else if (firstNum - secondNum <= 0 && secondNum - thirdnum <= 0 && thirdnum - fourthNum <= 0) {
