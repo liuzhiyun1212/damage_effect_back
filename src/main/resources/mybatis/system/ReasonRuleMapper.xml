@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ReasonRuleMapper">
+
+    <resultMap type="devupone" id="ruleDevUpOneResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="planeType"    column="plane_type"    />
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="modelSeries"    column="model_series"    />
+    </resultMap>
+
+    <resultMap type="devuptwo" id="ruleDevUpTwoResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="planeType"    column="plane_type"    />
+        <result property="devHappennum" column="sum"/>
+        <result property="modelSeries"    column="model_series"    />
+    </resultMap>
+
+    <select id="selectDevUpOne" resultMap="ruleDevUpOneResult">
+        SELECT
+            model_series,quality_problem_1.plane_type,CONCAT(year(remodel_date),'-',QUARTER(remodel_date)) createTime, fault_model,count(*) sum
+        FROM
+            quality_problem_1,equipment_design_data
+        WHERE
+            quality_problem_1.plane_type=equipment_design_data.plane_type
+        GROUP BY
+            plane_type,model_series, fault_model
+        order by createTime
+    </select>
+
+    <select id="selectDevUpTwo" resultMap="ruleDevUpTwoResult">
+        SELECT
+            model_series,quality_problem_1.plane_type,CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime,count(*) sum
+        FROM
+            quality_problem_1,equipment_design_data
+        WHERE
+            quality_problem_1.plane_type=equipment_design_data.plane_type
+        GROUP BY
+            createTime,model_series
+        order by createTime
+    </select>
+
+    <select id="selectSeries" resultType="String">
+        SELECT
+            model_series
+        FROM
+            equipment_design_data
+        GROUP BY
+            model_series
+    </select>
+
+    <select id="selectPlane" resultType="String">
+        SELECT
+            plane_type
+        FROM
+            quality_problem_1
+        GROUP BY
+            plane_type
+    </select>
+
+    <select id="selectFaultModel" resultType="String">
+        SELECT
+            fault_model
+        FROM
+            quality_problem_1
+        GROUP BY
+            fault_model
+    </select>
+
+    <select id="selectTime" resultType="String">
+        SELECT
+            CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime
+        FROM
+            quality_problem_1
+        GROUP BY
+            createTime
+        order by createTime
+    </select>
+
+</mapper>
