@@ -134,7 +134,7 @@ public class ProductDesignController extends BaseController
 }
 
     @GetMapping("/getana_install_way")
-    public List<install_way2> ana_install_way(){
+    public List<install_way2> ana_install_way(ProductDesign productDesign){
 
         List<partsSite> listins = productDesignService.selectPartsinstallnum();  //按照机型和故障附件型号、故障件名称分组统计质量问题数
         List<install_way2> list = new ArrayList<>();
@@ -142,7 +142,11 @@ public class ProductDesignController extends BaseController
         int length =listins.size();
         double avrage = 0;
         for(partsSite p :listins){
-            sum+=p.getNum();
+            if(sum==null){
+                sum=p.getNum();
+            }else{
+                sum+=p.getNum();
+            }
         }
         avrage = sum.doubleValue()/(double)length*0.5;
         for(partsSite p :listins){
@@ -152,6 +156,8 @@ public class ProductDesignController extends BaseController
                 ins.setFinishedModel(p.getFinishedModel());
                 ins.setFinishedName(p.getFinishedName());
                 ins.setFrame(p.getFrame());
+                ins.setInstallMethod(p.getInstallMethod());
+                ins.setNum(p.getNum());
                 ins.setLeftMiddleRight(p.getLeftMiddleRight());
                 ins.setUpperMiddleLower(p.getUpperMiddleLower());
                 ins.setPlaneType(p.getPlaneType());
@@ -159,7 +165,13 @@ public class ProductDesignController extends BaseController
                 list.add(ins);
             }
         }
-
+//        List<ProductDesign> listall = productDesignService.selectProductDesignList(productDesign);
+//        for(ProductDesign p : listall){
+//            for(install_way2 i : list){
+//                if(p.getPlaneType().equals(i.getPlaneType())&&p.getFinishedModel(i.getFinishedModel())&&)
+//            }
+//
+//        }
 
         /*List<partsSite> listqua = productDesignService.selectPartsqulitynum();  //统计机型和故障附件型号、故障件名称、安装方法分组后的数量
         List<partsSite> listins = productDesignService.selectPartsinstallnum();  //按照机型和故障附件型号、故障件名称分组统计质量问题数
@@ -244,6 +256,16 @@ public class ProductDesignController extends BaseController
         private double LeftMiddleRight;
         private double UpperMiddleLower;
         private double Frame;
+
+        public Long getNum() {
+            return num;
+        }
+
+        public void setNum(Long num) {
+            this.num = num;
+        }
+
+        private  Long num;
         private String finishedName;
         private String finishedModel;
         private String installMethod;

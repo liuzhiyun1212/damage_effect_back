@@ -31,7 +31,7 @@ public class UseIntensityController extends BaseController {
     }
 
     @GetMapping("/useIntensity/getChartData")
-    public R getUseIntensityChartData() {
+    public R getUseIntensityChartData() throws Exception {
         return R.ok(aircraftTypeAndTypeService.getUseIntensityChartData());
     }
 }
