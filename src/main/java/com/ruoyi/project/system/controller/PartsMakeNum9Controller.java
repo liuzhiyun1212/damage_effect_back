@@ -118,7 +118,6 @@ public class PartsMakeNum9Controller extends BaseController
         }
         return  listqua;
     }
-
     //对数据9中的产品制造人员进行处理
     public List<String>  get_all_person(PartsMakeNum9 partsMakeNum9){
         List<PartsMakeNum9> list = partsMakeNum9Service.selectPartsMakeNum9List(partsMakeNum9);
@@ -144,7 +143,8 @@ public class PartsMakeNum9Controller extends BaseController
     @GetMapping("/Countqua")
     public List<person_quailty_num> Countqua(QualityProblem1 qualityProblem1,PartsMakeNum9 partsMakeNum9){
         List<PartsMakeNum9> list = partsMakeNum9Service.selectPartsMakeNum9List(partsMakeNum9);
-        List<QualityProblem1> list2 = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+       // List<QualityProblem1> list3 = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+        List<QualityProblem1> list2 = get_high_qua(qualityProblem1);
         List<String> person = get_all_person(partsMakeNum9);
         List<person_quailty_num> person_quailty_num = new ArrayList<>();
         for(String s : person){
