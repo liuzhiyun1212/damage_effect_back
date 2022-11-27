@@ -27,6 +27,8 @@ public interface ReasonRuleMapper {
 
     public List<devupone> selectProMakeDevOne();
 
+    public List<devupone> selectProMeasuringDevOne();
+
     public List<devuptwo> selectMakeLine();
 
     public List<String> selectSeries();
@@ -46,6 +48,8 @@ public interface ReasonRuleMapper {
     public List<String> selectPartsMakePeople();
 
     public List<String> selectPartsMakeQuipment();
+
+    public List<String> selectPartsMeasuringQuipment();
 
     public List<String> selectPP();
 }
