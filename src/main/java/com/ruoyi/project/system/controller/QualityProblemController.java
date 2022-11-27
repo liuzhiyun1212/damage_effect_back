@@ -236,8 +236,8 @@ public class QualityProblemController extends BaseController
             if(obj.getQuarter()!=null){
                 list.add(obj);
             }
-
         }
+        Collections.reverse(list);
         return list;
     }
     /**
@@ -294,8 +294,8 @@ public class QualityProblemController extends BaseController
             if(obj.getQuarter()!=null){
                 list.add(obj);
             }
-
         }
+        Collections.reverse(list);
         return list;
     }
 
@@ -1047,5 +1047,152 @@ public class QualityProblemController extends BaseController
             res.add(t1);
         }
         return res;
+    }
+    /**4.2.1.6
+     * @Description  质量问题故障模式随时间变化情况
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/faultModelByQuarter")
+    public List<Sum> faultModelByQuarter(){
+        List<Sum> list = new ArrayList<>();
+
+        List<Sum> listall = qualityProblemService.faultModelByQuarter();
+        int mark=0;
+        for(int i=0;i<listall.size();i++) {
+            mark=0;
+            Sum obj = new Sum();
+            if(i-1 >=0){
+                if (listall.get(i).getSum() < listall.get(i - 1).getSum() / 2 || listall.get(i).getSum() > listall.get(i - 1).getSum() * 1.5) {
+                    mark = 1;
+                    obj.setQuarter(listall.get(i).getQuarter());
+                    obj.setSum(listall.get(i).getSum());
+                    obj.setCondition("1");
+                }
+            }
+            if(i+2<listall.size()){
+                if ((listall.get(i).getSum() * 1.2 < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 1.2 < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() * 0.8 > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 0.8 > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,2");
+                        mark=12;
+                    } else if (mark == 0) {
+                        mark = 2;
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("2");
+                    }
+                }
+                if ((listall.get(i).getSum() < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,3");
+                    } else if (mark == 0) {
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("3");
+                    } else if (mark == 12) {
+                        obj.setCondition("1,2,3");
+                    }
+                    else if (mark == 2) {
+                        obj.setCondition("2,3");
+                    }
+                }
+            }
+            if(obj.getQuarter()!=null){
+                list.add(obj);
+            }
+
+        }
+        System.out.println("测试aaaaaaaaa" + list);
+        Collections.reverse(list);
+        return list;
+    }
+    @GetMapping("/faultModelByYear")
+    public List<Sum> faultModelByYear(){
+        List<Sum> list = new ArrayList<>();
+        List<Sum> listall = qualityProblemService.faultModelByYear();
+        int mark=0;
+        for(int i=0;i<listall.size();i++) {
+            mark=0;
+            Sum obj = new Sum();
+            if(i-1 >=0){
+                if (listall.get(i).getSum() < listall.get(i - 1).getSum() / 2 || listall.get(i).getSum() > listall.get(i - 1).getSum() * 1.5) {
+                    mark = 1;
+                    obj.setQuarter(listall.get(i).getQuarter());
+                    obj.setSum(listall.get(i).getSum());
+                    obj.setCondition("1");
+                }
+            }
+            if(i+2<listall.size()){
+                if ((listall.get(i).getSum() * 1.2 < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 1.2 < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() * 0.8 > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() * 0.8 > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,2");
+                        mark=12;
+                    } else if (mark == 0) {
+                        mark = 2;
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("2");
+                    }
+                }
+                if ((listall.get(i).getSum() < listall.get(i + 1).getSum() && listall.get(i + 1).getSum() < listall.get(i + 2).getSum()) ||
+                        (listall.get(i).getSum() > listall.get(i + 1).getSum() && listall.get(i + 1).getSum() > listall.get(i + 2).getSum())) {
+                    if (mark == 1) {
+                        obj.setCondition("1,3");
+                    } else if (mark == 0) {
+                        obj.setQuarter(listall.get(i).getQuarter());
+                        obj.setSum(listall.get(i).getSum());
+                        obj.setCondition("3");
+                    } else if (mark == 12) {
+                        obj.setCondition("1,2,3");
+                    }
+                    else if (mark == 2) {
+                        obj.setCondition("2,3");
+                    }
+                }
+            }
+            if(obj.getQuarter()!=null){
+                list.add(obj);
+            }
+
+        }
+        System.out.println("测试vvvvvvvvvvvv" + list);
+        Collections.reverse(list);
+        return list;
+    }
+//    质量问题故障模式季度总数
+    @GetMapping("/faultModelByQuarterSum")
+    public List<Sum> faultModelByQuarterSum(Sum sum) {
+        List<Sum> list = qualityProblemService.faultModelByQuarter();
+
+        List<Sum> list1=faultModelByQuarter();
+        for(int i=0;i<list.size();i++){
+            for(int j=0;j<list1.size();j++){
+                if(list.get(i).getQuarter().equals(list1.get(j).getQuarter())){
+                    list.get(i).setCondition(list1.get(j).getCondition());
+                }
+            }
+        }
+        return list;
+    }
+    //    质量问题故障模式年度总数
+    @GetMapping("/faultModelByYearSum")
+    public List<Sum> faultModelByYearSum(Sum sum){
+        List<Sum> list = qualityProblemService.faultModelByYear();
+//        Collections.reverse(list);
+        List<Sum> list1=faultModelByYear();
+        for(int i=0;i<list.size();i++){
+            for(int j=0;j<list1.size();j++){
+                if(list.get(i).getQuarter().equals(list1.get(j).getQuarter())){
+                    list.get(i).setCondition(list1.get(j).getCondition());
+                }
+            }
+        }
+        return list;
     }
 }

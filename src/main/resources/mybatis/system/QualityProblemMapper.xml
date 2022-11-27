@@ -90,6 +90,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectQualityProblemVo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
     </sql>
+    <!--    质量问题故障模式随时间变化情况-->
+    <select id="faultModelByQuarter" resultMap="SumResult">
+        SELECT CONCAT(year(dev_happen_time),'年',QUARTER(dev_happen_time),'季度') createTime, count(DISTINCT fault_model) sum
+        from quality_problem_1
+        GROUP BY createTime
+        order by year(dev_happen_time) asc
+    </select>
+    <select id="faultModelByYear" resultMap="SumResult">
+        SELECT
+    CONCAT(year(dev_happen_time),'年') createTime,count(DISTINCT fault_model) sum
+        FROM
+            quality_problem_1
+        GROUP BY
+            year(dev_happen_time)
+        order by year(dev_happen_time) asc
+    </select>
     <!--    (根据dev_use_time)不同状态装备的故障件数量-->
     <select id="selectTroubleByState1" resultMap="SumResult">
         select elt(interval(dev_use_time,0,300,1200),"新出厂","稳定期","装备到寿") as createTime ,count(DISTINCT parts_code) sum
@@ -173,7 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             quality_problem_1
         GROUP BY
             createTime
-        order by year(dev_happen_time) desc
+        order by year(dev_happen_time) asc
     </select>
 <!--    年份统计-->
     <select id="yearHappenSum" parameterType="Sum" resultMap="SumResult">
@@ -183,7 +199,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             quality_problem_1
         GROUP BY
             year(dev_happen_time)
-        order by year(dev_happen_time) desc
+        order by year(dev_happen_time) asc
     </select>
 
     <!--返回所有故障件名称和型号-->

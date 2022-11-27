@@ -208,4 +208,15 @@ public interface QualityProblemMapper
     public List<DevState> selectState1();
 //    (根据dev_repaired)不同状态故障模式
     public List<DevState> selectState2();
+    /**4.2.1.6
+     * @Description  质量问题故障模式随时间变化情况
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> faultModelByQuarter();
+    public List<Sum> faultModelByYear();
+
 }

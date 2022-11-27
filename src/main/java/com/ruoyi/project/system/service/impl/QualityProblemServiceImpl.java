@@ -299,4 +299,14 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.selectState2();
     }
 
+    @Override
+    public List<Sum> faultModelByQuarter() {
+        return qualityProblemMapper.faultModelByQuarter();
+    }
+
+    @Override
+    public List<Sum> faultModelByYear() {
+        return qualityProblemMapper.faultModelByYear();
+    }
+
 }
