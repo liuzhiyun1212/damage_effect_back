@@ -7,6 +7,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="quarter" column="createTime"/>
         <result property="sum" column="sum"/>
     </resultMap>
+    <resultMap type="Sum" id="StateSumResult">
+        <result property="quarter" column="createTime"/>
+        <result property="sum" column="sum"/>
+    </resultMap>
+<!--装备状态-->
+    <resultMap type="DevState" id="DevStateResult">
+        <result property="partsModel" column="fault_model"/>
+        <result property="state" column="state"/>
+    </resultMap>
     <resultMap type="ProductModifyData" id="ProductModifyDataResult">
         <result property="productName"    column="product_name"    />
         <result property="modifyTime"    column="modify_time"    />
@@ -71,12 +80,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="partsMakeGroup"    column="parts_make_group"    />
         <result property="partsMakePeople"    column="parts_make_people"    />
         <result property="partsMakeQuipment"    column="parts_make_quipment"    />
+        <result property="partsMeasuringQuipment"    column="parts_measuring_quipment"    />
+        <result property="rawMaterialPlace"    column="raw_material_place"    />
+        <result property="sparePartsPlace"    column="spare_parts_place"    />
+        <result property="partsMakeWorkmanship"    column="parts_make_workmanship"    />
     </resultMap>
-<!--    生产表-->
 
+<!--    生产表-->
     <sql id="selectQualityProblemVo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
     </sql>
+    <!--    (根据dev_use_time)不同状态装备的故障件数量-->
+    <select id="selectTroubleByState1" resultMap="SumResult">
+        select elt(interval(dev_use_time,0,300,1200),"新出厂","稳定期","装备到寿") as createTime ,count(DISTINCT parts_code) sum
+        from quality_problem_1 where dev_repaired='否' group by createTime;
+    </select>
+    <select id="selectTroubleByState2" resultMap="SumResult">
+        SELECT dev_repaired createTime ,count(DISTINCT parts_code) sum
+        from quality_problem_1 where dev_repaired='是' GROUP BY dev_repaired
+    </select>
+    <!--    (根据dev_repaired)不同状态装备的质量问题数量-->
+    <select id="selectQualityByState1" resultMap="SumResult">
+        select elt(interval(dev_use_time,0,300,1200),"新出厂","稳定期","装备到寿") as createTime ,count(id) sum
+        from quality_problem_1 where dev_repaired='否' group by createTime;
+    </select>
+    <select id="selectQualityByState2" resultMap="SumResult">
+        SELECT dev_repaired createTime ,count(id) sum
+        from quality_problem_1 where dev_repaired='是' GROUP BY dev_repaired
+    </select>
+    <!--    (根据dev_use_time)不同状态故障模式-->
+    <select id="selectState1" resultMap="DevStateResult">
+        SELECT fault_model,elt(interval(dev_use_time,0,300,1200),"新出厂","稳定期","装备到寿") as state
+        from quality_problem_1 where dev_repaired='否'
+    </select>
+    <!--    (根据dev_repaired)不同状态故障模式-->
+    <select id="selectState2" resultMap="DevStateResult">
+        SELECT fault_model,dev_repaired as state
+        from quality_problem_1 where dev_repaired='是'
+    </select>
     <!--    不同使用环境中装备数量-->
     <select id="selectDevByEnvironment" resultMap="SumResult">
         select environment createTime, count(DISTINCT dev_code) sum

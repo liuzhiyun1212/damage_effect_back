@@ -380,7 +380,6 @@ public class QualityProblemController extends BaseController
                 list1.add(list.get(i));
             }
         }
-//        System.out.println("机型" + list1);
         return list1;
     }
 
@@ -481,6 +480,170 @@ public class QualityProblemController extends BaseController
         }
         return listMC;
     }
+
+    /**4.2.2.16
+     * @Description  (根据dev_use_time)不同状态故障模式
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectState1")
+    public List<String> selectState1(){
+        List<DevState> devState = qualityProblemService.selectState1();
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        List<String> list3=new ArrayList<>();
+        int mark=0;
+        for(DevState d:devState){
+            for(QualityProblem1Controller.ModelCount m:list2){
+                if(d.getPartsModel().equals(m.getFaultModel())){
+                    list3.add(d.getState());
+                }
+            }
+        }
+        List<String> res=new ArrayList<>();
+        for(String s:list3){
+            mark=0;
+            for(String i:res){
+                if(s.equals(i)){
+                    mark=-1;
+                }
+            }
+            if(mark==0){
+                res.add(s);
+            }
+        }
+//        System.out.println("测试状态" + res);
+        return res;
+    }
+    /**4.2.2.16
+     * @Description  (根据dev_repaired)不同状态统计质量总数
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectQualityByState1")
+    public List<Sum> selectQualityByState1(){
+        List<Sum> list1 = qualityProblemService.selectQualityByState1();
+        List<String> s1 = selectState1();
+        List<Sum> res = new ArrayList<>();
+        for(Sum i:list1){
+            for(String j:s1){
+                if(i.getQuarter() == null){
+                    continue;
+                }
+                if(i.getQuarter().equals(j)){
+                    res.add(i);
+                }
+            }
+        }
+        List<Sum> qualitySum = selectQualityByState2();
+        for(Sum s:qualitySum){
+            res.add(s);
+        }
+        return res;
+    }
+    /**4.2.2.16
+     * @Description  (根据dev_repaired是否大修过)不同状态质量总数
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+//    @GetMapping("/selectQualityByState2")
+    public List<Sum> selectQualityByState2(){
+        List<Sum> list1=qualityProblemService.selectQualityByState2();
+        QualityProblem q = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        String s="";
+        List<Sum> res = new ArrayList<>();
+        for(QualityProblem i:list){
+            if(i.getDevRepaired() == null){
+                continue;
+            }
+            for(QualityProblem1Controller.ModelCount m: list2){
+                if(m.getFaultModel().equals(i.getFaultModel()) && i.getDevRepaired().equals("是")){
+                    s="大修过";
+                }
+            }
+        }
+        for(Sum i:list1){
+            if(i.getQuarter().equals("是")){
+                Sum sum = new Sum();
+                sum.setQuarter("大修过");
+                sum.setSum(i.getSum());
+                res.add(sum);
+            }
+        }
+        return res;
+    }
+    /**4.2.2.16
+     * @Description (根据dev_use_time)不同状态装备的故障件数量
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectTroubleByState1")
+    public List<Sum> selectTroubleByState1(){
+        List<Sum> list1 = qualityProblemService.selectTroubleByState1();
+        List<String> s1 = selectState1();
+        List<Sum> res = new ArrayList<>();
+        for(Sum i:list1){
+            for(String j:s1){
+                if(i.getQuarter() == null){
+                    continue;
+                }
+                if(i.getQuarter().equals(j)){
+                    res.add(i);
+                }
+            }
+        }
+        List<Sum> troubleSum = selectTroubleByState2();
+        for(Sum s:troubleSum){
+            res.add(s);
+        }
+//        System.out.println("测试状态" + res);
+        return res;
+    }
+    @GetMapping("/selectTroubleByState2")
+    public List<Sum> selectTroubleByState2(){
+        List<Sum> list1 = qualityProblemService.selectTroubleByState2();
+        QualityProblem q = new QualityProblem();
+        List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        String s="";
+        List<Sum> res = new ArrayList<>();
+        for(QualityProblem i:list){
+            if(i.getDevRepaired() == null){
+                continue;
+            }
+            for(QualityProblem1Controller.ModelCount m: list2){
+                if(m.getFaultModel().equals(i.getFaultModel()) && i.getDevRepaired().equals("是")){
+                    s="大修过";
+                }
+            }
+        }
+        for(Sum i:list1){
+            if(i.getQuarter().equals("是")){
+                Sum sum = new Sum();
+                sum.setQuarter("大修过");
+                sum.setSum(i.getSum());
+                res.add(sum);
+            }
+        }
+        return res;
+
+    }
     /**4.2.2.3
      * @Description 高发故障模式涉及到的故障件的生产班组
      * @Author lixin
@@ -530,7 +693,8 @@ public class QualityProblemController extends BaseController
     @GetMapping("/qualitySumByGrade")
     public List<Integer> qualitySumByGrade() {
         List<Sum> l1 = qualityProblemService.qualitySumByGrade();
-        List<String> grade = selectByGradeFaultModel();
+        List<String> grade = new ArrayList<>();
+               grade = selectByGradeFaultModel();
         List<Integer> res = new ArrayList<>();
         for(Sum i:l1){
             for(String j:grade){
@@ -540,7 +704,7 @@ public class QualityProblemController extends BaseController
             }
         }
 //        System.out.println("测试aaaaaaaaa" + l1);
-        System.out.println("测试aaaaaaaaa" + res);
+        System.out.println("测试bbbbbbbbbb" + res);
         return res;
     }
     /**4.2.2.3
