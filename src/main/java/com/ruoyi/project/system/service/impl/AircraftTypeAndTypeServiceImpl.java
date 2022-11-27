@@ -59,7 +59,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         //按机型方式分类
         Map typeNumMap = spliteByAircraft(numList);
 
-//        //todo 去除数量为0的值
+//        // 去除数量为0的值
 //        Map notBlankTypeNumMap = removeBlankTypeNum(typeNumMap);
 
         List<Map<String, Object>> tempList = new ArrayList();
@@ -128,6 +128,44 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
     }
 
     /**
+     * 按机型方式分成多个数组，每个数组保存同一机型的数量情况，并对数组按故障发生时间排序
+     *
+     * @param list 包含所有机型的数量情况
+     * @return
+     */
+    Map spliteByUseData(List<UseData> list) {
+        //保存“机型-数组”关系。数组中保存多个包含故障数的实体类
+        HashMap<String, List> typeMap = MapUtil.newHashMap();
+        for (UseData item : list) {
+            List numlist = typeMap.getOrDefault(item.getPlaneType(), Lists.newArrayList());
+            numlist.add(item);
+            typeMap.put(item.getPlaneType(), numlist);
+        }
+
+        Iterator<Map.Entry<String, List>> iterator = typeMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, List> next = iterator.next();
+            List<UseData> typeList = next.getValue();
+            //按照时间顺序排序
+            typeList.sort((o1, o2) -> {
+                if (o1.getDate().getTime() - o2.getDate().getTime() > 0) {
+                    return 1;
+                } else if (o1.getDate().getTime() - o2.getDate().getTime() == 0 && Long.parseLong(o1.getQuarter()) - Long.parseLong(o2.getQuarter()) > 0) {
+                    return 1;
+                } else if (o1.getDate().getTime() - o2.getDate().getTime() < 0) {
+                    return -1;
+                } else if (o1.getDate().getTime() - o2.getDate().getTime() == 0 && Long.parseLong(o1.getQuarter()) - Long.parseLong(o2.getQuarter()) < 0) {
+                    return -1;
+                } else
+                    return 0;
+            });
+
+        }
+        return typeMap;
+    }
+
+
+    /**
      * 除去数量为0的值
      *
      * @param typeNumMap
@@ -163,7 +201,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                     if (tableMap.isEmpty()) {
                         tableMap.put("aircraftType", numList.get(i).getPlaneType());
                         tableMap.put("changeRange", "第一次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 2).getNum(), numList.get(i - 1).getNum())) + ",第二次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 1).getNum(), numList.get(i).getNum())));
-                        tableMap.put("eldTime", DateUtil.year(numList.get(i - 2).getDevHappenTime()) + "年第" + numList.get(i - 1).getQuarter() + "季度");
+                        tableMap.put("eldTime", DateUtil.year(numList.get(i - 2).getDevHappenTime()) + "年第" + numList.get(i - 2).getQuarter() + "季度");
                         tableMap.put("eldTimeNum", numList.get(i - 2).getNum());
                         tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
                         tableMap.put("recentTimeNum", numList.get(i).getNum());
@@ -186,6 +224,72 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                         tableMap.put("eldTimeNum", numList.get(i - 3).getNum());
                         tableMap.put("recentTime", DateUtil.year(numList.get(i).getDevHappenTime()) + "年第" + numList.get(i).getQuarter() + "季度");
                         tableMap.put("recentTimeNum", numList.get(i).getNum());
+                        //去掉指定前缀
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "3");
+                    } else {
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "3");
+                    }
+                }
+                if (!CollectionUtil.isEmpty(tableMap)) {
+                    resList.add(tableMap);
+                }
+            }
+        }
+        return resList;
+    }
+
+    List allCheckUseData(Map<String, List<UseData>> typeMap, AircraftTypeAndTime paramObj){
+        List resList = Lists.newArrayList();
+        Iterator<Map.Entry<String, List<UseData>>> iterator = typeMap.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<UseData>> next = iterator.next();
+            String key = next.getKey();
+            List<UseData> numList = next.getValue();
+            //计算符合三个条件的
+            for (int i = 1; i < numList.size(); i++) {
+                HashMap<String, Object> tableMap = MapUtil.newHashMap();
+                if (isChange50Percent(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                    tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                    tableMap.put("changeRange", wrapChangeRange(getChangeRangeNonnegative(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())));
+                    tableMap.put("eldTime", DateUtil.year(numList.get(i - 1).getDate()) + "年第" + DateUtil.quarter(numList.get(i - 1).getDate()) + "季度");
+                    tableMap.put("eldTimeNum", numList.get(i - 1).getFlightHours());
+                    tableMap.put("recentTime", DateUtil.year(numList.get(i).getDate()) + "年第" + DateUtil.quarter(numList.get(i).getDate()) + "季度");
+                    tableMap.put("recentTimeNum", numList.get(i).getFlightHours());
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", "1");
+                }
+                if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                    if (tableMap.isEmpty()) {
+                        tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                        tableMap.put("changeRange", "第一次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours())) + ",第二次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())));
+                        tableMap.put("eldTime", DateUtil.year(numList.get(i - 2).getDate()) + "年第" + DateUtil.quarter(numList.get(i - 2).getDate()) + "季度");
+                        tableMap.put("eldTimeNum", numList.get(i - 2).getFlightHours());
+                        tableMap.put("recentTime", DateUtil.year(numList.get(i).getDate()) + "年第" + numList.get(i).getQuarter() + "季度");
+                        tableMap.put("recentTimeNum", numList.get(i).getFlightHours());
+                        //去掉指定前缀
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "2");
+                    } else {
+                        //去掉指定前缀
+                        String s = (String) tableMap.getOrDefault("checkCondition", "");
+                        s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
+                        tableMap.put("checkCondition", s + "2");
+                    }
+                }
+                if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getFlightHours(), numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                    if (tableMap.isEmpty()) {
+                        tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                        tableMap.put("changeRange", "");
+                        tableMap.put("eldTime", DateUtil.year(numList.get(i - 3).getDate()) + "年第" + DateUtil.quarter(numList.get(i - 3).getDate()) + "季度");
+                        tableMap.put("eldTimeNum", numList.get(i - 3).getFlightHours());
+                        tableMap.put("recentTime", DateUtil.year(numList.get(i).getDate()) + "年第" + DateUtil.quarter(numList.get(i).getDate()) + "季度");
+                        tableMap.put("recentTimeNum", numList.get(i).getFlightHours());
                         //去掉指定前缀
                         String s = (String) tableMap.getOrDefault("checkCondition", "");
                         s = StrUtil.isBlank(s) ? StrUtil.EMPTY : (s + ",");
@@ -248,6 +352,43 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         return resList;
     }
 
+    List check1UseData(Map<String, List<UseData>> typeMap, AircraftTypeAndTime paramObj) {
+        List resList = Lists.newArrayList();
+        Iterator<Map.Entry<String, List<UseData>>> iterator = typeMap.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<UseData>> next = iterator.next();
+            String key = next.getKey();
+            List<UseData> numList = next.getValue();
+            //计算较上一时间增加或减少50%以上
+            for (int i = 1; i < numList.size(); i++) {
+                if (isChange50Percent(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                    HashMap<String, Object> tableMap = MapUtil.newHashMap();
+                    tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                    tableMap.put("changeRange", wrapChangeRange(getChangeRangeNonnegative(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())));
+                    tableMap.put("eldTime", DateUtil.year(numList.get(i - 1).getDate()) + "年第" + DateUtil.quarter(numList.get(i - 1).getDate()) + "季度");
+                    tableMap.put("eldTimeNum", numList.get(i - 1).getFlightHours());
+                    tableMap.put("recentTime", DateUtil.year(numList.get(i).getDate()) + "年第" + DateUtil.quarter(numList.get(i).getDate()) + "季度");
+                    tableMap.put("recentTimeNum", numList.get(i).getFlightHours());
+
+                    String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
+                    //是否符合条件2
+                    if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                        checkCondition = checkCondition + ",2";
+                    }
+                    //是否符合条件3
+                    if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getFlightHours(), numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                        checkCondition = checkCondition + ",3";
+                    }
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", checkCondition);
+                    resList.add(tableMap);
+                }
+            }
+        }
+        return resList;
+    }
+
     List check2(Map<String, List<AircraftTypeAndTime>> typeMap, AircraftTypeAndTime paramObj) {
         List resList = Lists.newArrayList();
         Iterator<Map.Entry<String, List<AircraftTypeAndTime>>> iterator = typeMap.entrySet().iterator();
@@ -274,6 +415,43 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                     }
                     //是否符合条件3
                     if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getNum(), numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",3";
+                    }
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", checkCondition);
+                    resList.add(tableMap);
+                }
+            }
+        }
+        return resList;
+    }
+
+    List check2UseData(Map<String, List<UseData>> typeMap, AircraftTypeAndTime paramObj) {
+        List resList = Lists.newArrayList();
+        Iterator<Map.Entry<String, List<UseData>>> iterator = typeMap.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<UseData>> next = iterator.next();
+            String key = next.getKey();
+            List<UseData> numList = next.getValue();
+            //连续两个时间段增加或减少20%以上
+            for (int i = 2; i < numList.size(); i++) {
+                if (isChange20PercentTwoTime(numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                    HashMap<String, Object> tableMap = MapUtil.newHashMap();
+                    tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                    tableMap.put("changeRange", "第一次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours())) + ",第二次变化幅度：" + wrapChangeRange(getChangeRange(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())));
+                    tableMap.put("eldTime", DateUtil.year(numList.get(i - 2).getDate()) + "年第" + DateUtil.quarter(numList.get(i - 2).getDate()) + "季度");
+                    tableMap.put("eldTimeNum", numList.get(i - 2).getFlightHours());
+                    tableMap.put("recentTime", DateUtil.year(numList.get(i).getDate()) + "年第" + DateUtil.quarter(numList.get(i).getDate()) + "季度");
+                    tableMap.put("recentTimeNum", numList.get(i).getFlightHours());
+
+                    String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
+                    //是否符合条件1
+                    if (isChange50Percent(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                        checkCondition = "1," + checkCondition;
+                    }
+                    //是否符合条件3
+                    if (i >= 3 && isMonotonicVariation(numList.get(i - 3).getFlightHours(), numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
                         checkCondition = checkCondition + ",3";
                     }
                     //去掉指定前缀
@@ -312,6 +490,44 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
                     }
                     //是否符合条件2
                     if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getNum(), numList.get(i - 1).getNum(), numList.get(i).getNum())) {
+                        checkCondition = checkCondition + ",2";
+                    }
+                    //去掉指定前缀
+                    tableMap.put("checkCondition", checkCondition);
+                    resList.add(tableMap);
+                }
+            }
+        }
+        return resList;
+    }
+
+    List check3UseData(Map<String, List<UseData>> typeMap, AircraftTypeAndTime paramObj) {
+        List resList = Lists.newArrayList();
+        Iterator<Map.Entry<String, List<UseData>>> iterator = typeMap.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, List<UseData>> next = iterator.next();
+            String key = next.getKey();
+            List<UseData> numList = next.getValue();
+
+            //连续三个时间段呈单调变化趋势
+            for (int i = 3; i < numList.size(); i++) {
+                if (isMonotonicVariation(numList.get(i - 3).getFlightHours(), numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                    HashMap<String, Object> tableMap = MapUtil.newHashMap();
+                    tableMap.put("aircraftType", numList.get(i).getPlaneType());
+                    tableMap.put("changeRange", "");
+                    tableMap.put("eldTime", DateUtil.year(numList.get(i - 3).getDate()) + "年第" + numList.get(i - 3).getQuarter() + "季度");
+                    tableMap.put("eldTimeNum", numList.get(i - 3).getFlightHours());
+                    tableMap.put("recentTime", DateUtil.year(numList.get(i).getDate()) + "年第" + numList.get(i).getQuarter() + "季度");
+                    tableMap.put("recentTimeNum", numList.get(i).getFlightHours());
+
+                    String checkCondition = StrUtil.removePrefix(paramObj.getCheckedMethodName(), PREFIX_CHECKED_METHOD_NAME);
+                    //是否符合条件1
+                    if (isChange50Percent(numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
+                        checkCondition = "1," + checkCondition;
+                    }
+                    //是否符合条件2
+                    if (i >= 2 && isChange20PercentTwoTime(numList.get(i - 2).getFlightHours(), numList.get(i - 1).getFlightHours(), numList.get(i).getFlightHours())) {
                         checkCondition = checkCondition + ",2";
                     }
                     //去掉指定前缀
@@ -481,7 +697,51 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
 
     @Override
     public List getUseIntensityCheckList(AircraftTypeAndTime aircraftTypeAndTime) {
-        return null;
+        List<UseData> list = aircraftTypeAndTypeMapper.selectUseTime();
+        //格式化数据
+        for (UseData item : list) {
+            item.setDate(DateUtil.date(item.getDate()));
+        }
+        HashMap<String, UseData> map = MapUtil.newHashMap();
+        //合并季度相同的
+        for (int i = 0; i < list.size(); i++) {
+            UseData item = list.get(i);
+            //统计某一时间段的数量
+            item.setFlightHours(map.getOrDefault(DateUtil.year(item.getDate()) + "-" + DateUtil.quarter(item.getDate()) + "-" + item.getPlaneType(), new UseData()).getFlightHours() + item.getFlightHours());
+            map.put(DateUtil.year(item.getDate()) + "-" + DateUtil.quarter(item.getDate()) + "-" + item.getPlaneType(), item);
+        }
+
+        List<UseData> useDataList = new ArrayList(map.values());
+
+        //按机型方式分类
+        Map typeNumMap = spliteByUseData(useDataList);
+
+        List<Map<String, Object>> tempList = new ArrayList();
+        switch (aircraftTypeAndTime.getCheckedMethodName()) {
+            case "allCheck":
+                tempList = allCheckUseData(typeNumMap, aircraftTypeAndTime);
+                break;
+            case "check1":
+                tempList = check1UseData(typeNumMap, aircraftTypeAndTime);
+                break;
+            case "check2":
+                tempList = check2UseData(typeNumMap, aircraftTypeAndTime);
+                break;
+            case "check3":
+                tempList = check3UseData(typeNumMap, aircraftTypeAndTime);
+                break;
+        }
+
+        List resList = Lists.newArrayList();
+        for (Map mapItem : tempList) {
+            Long eldTimeNum = (Long) mapItem.getOrDefault("eldTimeNum", 0);
+            Long recentTimeNum = (Long) mapItem.getOrDefault("recentTimeNum", 0);
+            if (0 == eldTimeNum || 0 == recentTimeNum) {
+                continue;
+            }
+            resList.add(mapItem);
+        }
+        return resList;
     }
 
     @Override
@@ -526,8 +786,8 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
             resMap.put("type", "line");
             resMap.put("data", useDataList);
 //            resMap.put("stack", "Total");
-            resMap.put("areaStyle", new JSONObject());
-            resMap.put("emphasis", new JSONObject().append("focus", "series"));
+//            resMap.put("areaStyle", new JSONObject());
+//            resMap.put("emphasis", new JSONObject().append("focus", "series"));
             //添加到list中的是不同机型的map
             distinctNameMap.put(item.getPlaneType(), resMap);
         }

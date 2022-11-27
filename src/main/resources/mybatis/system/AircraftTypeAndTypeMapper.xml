@@ -38,6 +38,7 @@
         <result property="planeType" column="plane_type"/>
         <result property="troops" column="troops"/>
         <result property="flightHours" column="flight_hours"/>
+        <result property="quarter" column="quarter"/>
     </resultMap>
 
     <select id="selectQuarter" resultMap="AircraftTypeAndTypeResult">
@@ -47,7 +48,7 @@
     </select>
 
     <select id="selectUseTime" resultMap="UseDataResult">
-        select id, date, plane_type, troops, flight_hours
+        select id, date, QUARTER(date) as quarter, plane_type, troops, flight_hours
         from equipment_use_data_12
         where plane_type
             in (select DISTINCT plane_type
