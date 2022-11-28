@@ -12,26 +12,22 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.EquipmentDesignDataMapper;
 import com.ruoyi.project.system.domain.EquipmentDesignData;
 import com.ruoyi.project.system.service.IEquipmentDesignDataService;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * 装备设计/改型数据Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
 @Service
-public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataService 
+public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataService
 {
     @Autowired
     private EquipmentDesignDataMapper equipmentDesignDataMapper;
 
     /**
      * 查询装备设计/改型数据
-     * 
+     *
      * @param id 装备设计/改型数据主键
      * @return 装备设计/改型数据
      */
@@ -43,7 +39,7 @@ public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataServi
 
     /**
      * 查询装备设计/改型数据列表
-     * 
+     *
      * @param equipmentDesignData 装备设计/改型数据
      * @return 装备设计/改型数据
      */
@@ -55,7 +51,7 @@ public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataServi
 
     /**
      * 新增装备设计/改型数据
-     * 
+     *
      * @param equipmentDesignData 装备设计/改型数据
      * @return 结果
      */
@@ -67,7 +63,7 @@ public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataServi
 
     /**
      * 修改装备设计/改型数据
-     * 
+     *
      * @param equipmentDesignData 装备设计/改型数据
      * @return 结果
      */
@@ -79,7 +75,7 @@ public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataServi
 
     /**
      * 批量删除装备设计/改型数据
-     * 
+     *
      * @param ids 需要删除的装备设计/改型数据主键
      * @return 结果
      */
@@ -91,7 +87,7 @@ public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataServi
 
     /**
      * 删除装备设计/改型数据信息
-     * 
+     *
      * @param id 装备设计/改型数据主键
      * @return 结果
      */
