@@ -218,5 +218,15 @@ public interface QualityProblemMapper
      */
     public List<Sum> faultModelByQuarter();
     public List<Sum> faultModelByYear();
+    /**4.2.1.6
+     * @Description      4.2.1.7质量问题发生地理环境
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> sumByEnvironment();
+
 
 }

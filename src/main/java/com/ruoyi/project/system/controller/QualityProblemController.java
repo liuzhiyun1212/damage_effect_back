@@ -347,7 +347,7 @@ public class QualityProblemController extends BaseController
         return list3;
     }
     /**
-     * 质量问题涉及到的机型
+     * 4.2.1.2 质量问题涉及到的机型
      *
      * @param
      * @return 统计结果
@@ -355,12 +355,12 @@ public class QualityProblemController extends BaseController
     @GetMapping("/sumByplaneType")
     public List<Sum> sumByplaneType(Sum sum) {
         List<Sum> list = qualityProblemService.sumByplaneType(sum);
-        System.out.println("机型" + list);
+//        System.out.println("机型" + list);
 //        System.out.println("aaaaaaaaaaaa" + list);
         return list;
     }
     /**
-     * 筛选若某机型质量问题发生数大于质量问题机型平均发生数50%
+     * 4.2.1.2筛选若某机型质量问题发生数大于质量问题机型平均发生数50%
      *
      * @param
      * @return 统计结果
@@ -376,13 +376,51 @@ public class QualityProblemController extends BaseController
         }
         average = count/list.size();
         for(int i=0;i<list.size();i++) {
-            if(list.get(i).getSum() >= average*0.5){
+            if(list.get(i).getSum() > average*0.5){
                 list1.add(list.get(i));
             }
         }
         return list1;
     }
-
+    /**4.2.1.6
+     * @Description      4.2.1.7质量问题发生地理环境
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/sumByEnvironment")
+    public List<Sum> sumByEnvironment(){
+        List<Sum> list = qualityProblemService.sumByEnvironment();
+        return list;
+    }
+    /**4.2.1.6
+     * @Description      4.2.1.7删选发生地理环境质量问题发生数大于平均发生互50%
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/highSumByEnvironment")
+    public List<Sum> highSumByEnvironment(){
+        List<Sum> list = sumByEnvironment();
+        List<Sum> list1 = new ArrayList<>();
+        int count=0;
+        double average=0;
+        for(int i=0;i<list.size();i++){
+            count += list.get(i).getSum();
+        }
+        average = count/list.size();
+        for(int i=0;i<list.size();i++) {
+            if(list.get(i).getSum() > average*0.5){
+                list1.add(list.get(i));
+            }
+        }
+        System.out.println("发生地理环境" + list1);
+        return list1;
+    }
     /**
      * @Description 统计爆发故障件的型号-名称及数量
      * @Author guohuijia

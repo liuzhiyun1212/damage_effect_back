@@ -7,10 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="quarter" column="createTime"/>
         <result property="sum" column="sum"/>
     </resultMap>
-    <resultMap type="Sum" id="StateSumResult">
-        <result property="quarter" column="createTime"/>
-        <result property="sum" column="sum"/>
-    </resultMap>
+
+
 <!--装备状态-->
     <resultMap type="DevState" id="DevStateResult">
         <result property="partsModel" column="fault_model"/>
@@ -28,6 +26,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="Sum" id="SumPlaneTypeResult">
         <result property="quarter" column="plane_type"/>
+        <result property="sum" column="count(*)"/>
+    </resultMap>
+    <resultMap type="Sum" id="SumEnvironment">
+        <result property="quarter" column="environment"/>
         <result property="sum" column="count(*)"/>
     </resultMap>
     <resultMap type="QualityProblem" id="QualityProblemResult">
@@ -209,7 +211,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-<!--   质量问题涉及到的机型 -->
+<!--   4.2.1.2质量问题涉及到的机型 -->
     <select id="sumByplaneType" parameterType="Sum" resultMap="SumPlaneTypeResult">
         SELECT
             plane_type,count(*)
@@ -218,6 +220,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 GROUP BY
                     plane_type
                 ORDER BY count(*) asc
+    </select>
+    <!--   4.2.1.7质量问题发生地理环境 -->
+    <select id="sumByEnvironment" resultMap="SumEnvironment">
+        SELECT environment,count(*)
+        from quality_problem_1
+        GROUP BY environment
     </select>
     <select id="selectQualityProblemList" parameterType="QualityProblem" resultMap="QualityProblemResult">
         <include refid="selectQualityProblemVo"/>

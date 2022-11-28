@@ -309,4 +309,9 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.faultModelByYear();
     }
 
+    @Override
+    public List<Sum> sumByEnvironment() {
+        return qualityProblemMapper.sumByEnvironment();
+    }
+
 }
