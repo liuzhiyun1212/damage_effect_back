@@ -176,4 +176,36 @@ public interface QualityProblemMapper
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> selectQualityByEnvironment();
+    /**4.2.2.16
+     * @Description (根据dev_use_time)不同状态装备的故障件数量
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectTroubleByState1();
+    public List<Sum> selectTroubleByState2();
+    /**4.2.2.16
+     * @Description (根据dev_repaired)不同状态装备的质量问题数量
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectQualityByState1();
+    public List<Sum> selectQualityByState2();
+
+    /**4.2.2.16
+     * @Description  (根据dev_use_time)不同状态故障模式
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<DevState> selectState1();
+//    (根据dev_repaired)不同状态故障模式
+    public List<DevState> selectState2();
 }
