@@ -19,6 +19,77 @@
         <result property="modelSeries"    column="model_series"    />
     </resultMap>
 
+    <resultMap type="devuptwo" id="ruleDevCapUpTwoResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="planeType"    column="plane_type"    />
+        <result property="devHappennum" column="sum"/>
+    </resultMap>
+
+    <resultMap type="devuptwo" id="ruleProChangeOneResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="planeType"    column="parts_model"    />
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleProChangeTwoResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="installMethod" column="install_method"/>
+        <result property="partsModel"    column="parts_model"    />
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleProChangeThreeResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="installWhere" column="installWhere"/>
+        <result property="partsModel"    column="parts_model"    />
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devuptwo" id="ruleProChangeFourResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="devHappennum" column="sum"/>
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleProTeamOneResult">
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsMakeGroup"    column="parts_make_group"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleProPersonOneResult">
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsMakePeople"    column="parts_make_people"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleProMakeDevOneResult">
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsMakeQuipment"    column="parts_make_quipment"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleProMeasuringDevOneResult">
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsMeasuringQuipment"    column="parts_measuring_quipment"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
     <select id="selectDevUpOne" resultMap="ruleDevUpOneResult">
         SELECT
             model_series,quality_problem_1.plane_type,CONCAT(year(remodel_date),'-',QUARTER(remodel_date)) createTime, fault_model,count(*) sum
@@ -33,13 +104,163 @@
 
     <select id="selectDevUpTwo" resultMap="ruleDevUpTwoResult">
         SELECT
-            model_series,quality_problem_1.plane_type,CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime,count(*) sum
+            model_series,CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime,count(*) sum
         FROM
             quality_problem_1,equipment_design_data
         WHERE
             quality_problem_1.plane_type=equipment_design_data.plane_type
         GROUP BY
             createTime,model_series
+        order by createTime
+    </select>
+
+    <select id="selectDevCapUpTwo" resultMap="ruleDevCapUpTwoResult">
+        SELECT
+            quality_problem_1.plane_type,CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime,count(*) sum
+        FROM
+            quality_problem_1,equipment_design_data
+        WHERE
+            quality_problem_1.plane_type=equipment_design_data.plane_type
+        GROUP BY
+            createTime,quality_problem_1.plane_type
+        order by createTime
+    </select>
+
+    <select id="selectProChangeOne" resultMap="ruleProChangeOneResult">
+        SELECT
+            parts_name,parts_model,CONCAT(year(modify_time),'-',QUARTER(modify_time)) createTime, fault_model,count(*) sum
+        FROM
+            quality_problem_1,product_modify_4
+        WHERE
+            quality_problem_1.parts_model = product_modify_4.product_model
+        GROUP BY
+            parts_name,parts_model, fault_model
+        order by createTime
+    </select>
+
+    <select id="selectProChangeTwo" resultMap="ruleProChangeTwoResult">
+        SELECT
+            parts_name,parts_model,install_method, fault_model,count(*) sum,CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime
+        FROM
+            quality_problem_1,product_design_3
+        WHERE
+            quality_problem_1.plane_type = product_design_3.plane_type and
+            quality_problem_1.parts_name = product_design_3.finished_name and
+            quality_problem_1.parts_model = product_design_3.finished_model
+        GROUP BY
+            parts_name,parts_model, fault_model,install_method
+        order by createTime
+    </select>
+
+    <select id="selectProChangeThree" resultMap="ruleProChangeThreeResult">
+        SELECT
+            parts_name,parts_model,CONCAT(frame,'/',upper_middle_lower,'/',left_middle_right) installWhere, fault_model,count(*) sum,CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime
+        FROM
+            quality_problem_1,product_design_3
+        WHERE
+            quality_problem_1.plane_type = product_design_3.plane_type and
+            quality_problem_1.parts_name = product_design_3.finished_name and
+            quality_problem_1.parts_model = product_design_3.finished_model
+        GROUP BY
+            parts_name,parts_model, fault_model,installWhere
+        order by createTime
+    </select>
+
+    <select id="selectProChangeFour" resultMap="ruleProChangeFourResult">
+        SELECT
+            parts_name,count(*) sum,CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime
+        FROM
+            quality_problem_1,product_modify_4
+        WHERE
+            quality_problem_1.parts_name = product_modify_4.product_name and
+            quality_problem_1.parts_model = product_modify_4.product_model
+        GROUP BY
+            parts_name,createTime
+        order by createTime
+    </select>
+
+    <select id="selectProTeamOne" resultMap="ruleProTeamOneResult">
+        SELECT
+            quality_problem_1.parts_name,
+            quality_problem_1.parts_model,
+            parts_make_group,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1,parts_make_num_9
+        WHERE
+            quality_problem_1.plane_type = parts_make_num_9.plane_type and
+            quality_problem_1.parts_name = parts_make_num_9.parts_name and
+            quality_problem_1.parts_model = parts_make_num_9.parts_model and
+            quality_problem_1.parts_code = parts_make_num_9.parts_code
+        GROUP BY
+            parts_name,parts_model, fault_model,parts_make_group
+    </select>
+
+    <select id="selectProPersonOne" resultMap="ruleProPersonOneResult">
+        SELECT
+            quality_problem_1.parts_name,
+            quality_problem_1.parts_model,
+            parts_make_people,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1,parts_make_num_9
+        WHERE
+            quality_problem_1.plane_type = parts_make_num_9.plane_type and
+            quality_problem_1.parts_name = parts_make_num_9.parts_name and
+            quality_problem_1.parts_model = parts_make_num_9.parts_model and
+            quality_problem_1.parts_code = parts_make_num_9.parts_code
+        GROUP BY
+            parts_name,parts_model, fault_model,parts_make_people
+    </select>
+
+    <select id="selectProMakeDevOne" resultMap="ruleProMakeDevOneResult">
+        SELECT
+            quality_problem_1.parts_name,
+            quality_problem_1.parts_model,
+            parts_make_quipment,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1,parts_make_num_9
+        WHERE
+            quality_problem_1.plane_type = parts_make_num_9.plane_type and
+            quality_problem_1.parts_name = parts_make_num_9.parts_name and
+            quality_problem_1.parts_model = parts_make_num_9.parts_model and
+            quality_problem_1.parts_code = parts_make_num_9.parts_code
+        GROUP BY
+            parts_name,parts_model, fault_model,parts_make_quipment
+    </select>
+
+    <select id="selectProMeasuringDevOne" resultMap="ruleProMeasuringDevOneResult">
+        SELECT
+            quality_problem_1.parts_name,
+            quality_problem_1.parts_model,
+            parts_measuring_quipment,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1,parts_make_num_9
+        WHERE
+            quality_problem_1.plane_type = parts_make_num_9.plane_type and
+            quality_problem_1.parts_name = parts_make_num_9.parts_name and
+            quality_problem_1.parts_model = parts_make_num_9.parts_model and
+            quality_problem_1.parts_code = parts_make_num_9.parts_code
+        GROUP BY
+            parts_name,parts_model, fault_model,parts_measuring_quipment
+    </select>
+
+    <select id="selectMakeLine" resultMap="ruleProChangeFourResult">
+        SELECT
+            parts_name,
+            parts_model,
+            CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime,
+            count(*) sum
+        FROM
+            quality_problem_1
+        GROUP BY
+            parts_name,parts_model,createTime
         order by createTime
     </select>
 
@@ -70,14 +291,77 @@
             fault_model
     </select>
 
-    <select id="selectTime" resultType="String">
+    <select id="selectPartsName" resultType="String">
         SELECT
-            CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime
+            parts_name
+        FROM
+            quality_problem_1
+        GROUP BY
+            parts_name
+    </select>
+
+    <select id="selectCapabilityStatus" resultType="String">
+        SELECT
+            capability_status
+        FROM
+            equipment_manufacturing_data5
+        GROUP BY
+            capability_status
+        order by capability_status
+    </select>
+
+    <select id="selectMPlane" resultType="String">
+        SELECT
+            CONCAT(plane_type,';',dev_code) createTime
         FROM
             quality_problem_1
         GROUP BY
             createTime
-        order by createTime
+    </select>
+
+    <select id="selectPP" resultType="String">
+        SELECT
+            CONCAT(parts_name,'/',parts_model) createTime
+        FROM
+            quality_problem_1
+        GROUP BY
+            createTime
+    </select>
+
+    <select id="selectPartsMakeGroup" resultType="String">
+        SELECT
+            parts_make_group
+        FROM
+            parts_make_num_9
+        GROUP BY
+            parts_make_group
+    </select>
+
+    <select id="selectPartsMakePeople" resultType="String">
+        SELECT
+            parts_make_people
+        FROM
+            parts_make_num_9
+        GROUP BY
+            parts_make_people
+    </select>
+
+    <select id="selectPartsMakeQuipment" resultType="String">
+        SELECT
+            parts_make_quipment
+        FROM
+            parts_make_num_9
+        GROUP BY
+            parts_make_quipment
+    </select>
+
+    <select id="selectPartsMeasuringQuipment" resultType="String">
+        SELECT
+            parts_measuring_quipment
+        FROM
+            parts_make_num_9
+        GROUP BY
+            parts_measuring_quipment
     </select>
 
 </mapper>
