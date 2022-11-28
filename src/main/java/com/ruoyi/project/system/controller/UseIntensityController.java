@@ -26,7 +26,7 @@ public class UseIntensityController extends BaseController {
     @GetMapping("/useIntensity/getCheckList")
     public TableDataInfo getUseIntensityCheckList(AircraftTypeAndTime aircraftTypeAndTime) {
         List<AircraftTypeAndTime> list;
-        list = aircraftTypeAndTypeService.getCheckList(aircraftTypeAndTime);
+        list = aircraftTypeAndTypeService.getUseIntensityCheckList(aircraftTypeAndTime);
         return getDataTable(list);
     }
 

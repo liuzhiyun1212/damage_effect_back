@@ -2,6 +2,8 @@ package com.ruoyi.project.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.project.system.domain.ProductQuantity7;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 8:装备部署数据Controller
@@ -100,5 +103,32 @@ public class EquipmentDeploymentData11Controller extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(equipmentDeploymentData11Service.deleteEquipmentDeploymentData11ByIds(ids));
+    }
+    /**
+     * 导入产品改型列表
+     */
+    @Log(title = "装备部署", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<EquipmentDeploymentData11> util = new ExcelUtil<EquipmentDeploymentData11>(EquipmentDeploymentData11.class);
+        List<EquipmentDeploymentData11> importDataList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = equipmentDeploymentData11Service.importData(importDataList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+    /**
+     * @Description 下载导入装备部署模板
+     * @Author guohuijia
+     * @Date  2022/11/13
+     * @Param [response]
+     * @Return void
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<EquipmentDeploymentData11> util = new ExcelUtil<EquipmentDeploymentData11>(EquipmentDeploymentData11.class);
+        util.importTemplateExcel(response, "装备部署数据");
     }
 }

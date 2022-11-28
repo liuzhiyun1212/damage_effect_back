@@ -3,6 +3,7 @@ package com.ruoyi.project.system.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.project.system.domain.ProductModify;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 装备设计/改型数据Controller
@@ -102,5 +104,32 @@ public class EquipmentDesignDataController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(equipmentDesignDataService.deleteEquipmentDesignDataByIds(ids));
+    }
+    /**
+     * 导入产品改型列表
+     */
+    @Log(title = "装备设计/改型", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<EquipmentDesignData> util = new ExcelUtil<EquipmentDesignData>(EquipmentDesignData.class);
+        List<EquipmentDesignData> importDataList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = equipmentDesignDataService.importData(importDataList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+    /**
+     * @Description 下载导入产品改型模板
+     * @Author guohuijia
+     * @Date  2022/11/13
+     * @Param [response]
+     * @Return void
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<EquipmentDesignData> util = new ExcelUtil<EquipmentDesignData>(EquipmentDesignData.class);
+        util.importTemplateExcel(response, "产品改型数据");
     }
 }

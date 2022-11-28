@@ -15,5 +15,7 @@ public interface IAircraftTypeAndTypeService {
 
     public Map getChartData() throws Exception;
 
+    public List getUseIntensityCheckList(AircraftTypeAndTime aircraftTypeAndTime);
+
     public Map getUseIntensityChartData() throws Exception;
 }

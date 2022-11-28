@@ -61,8 +61,7 @@ public class SysDeptController extends BaseController
      * 根据部门编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:dept:query')")
-    @GetMapping(value = "/{deptId}")
-    public AjaxResult getInfo(@PathVariable Long deptId)
+    @GetMapping(value = "/{deptId}")    public AjaxResult getInfo(@PathVariable Long deptId)
     {
         deptService.checkDeptDataScope(deptId);
         return success(deptService.selectDeptById(deptId));
