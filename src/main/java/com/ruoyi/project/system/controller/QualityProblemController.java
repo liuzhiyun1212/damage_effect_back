@@ -355,7 +355,7 @@ public class QualityProblemController extends BaseController
     @GetMapping("/sumByplaneType")
     public List<Sum> sumByplaneType(Sum sum) {
         List<Sum> list = qualityProblemService.sumByplaneType(sum);
-        System.out.println("机型" + list);
+     //   System.out.println("机型" + list);
 //        System.out.println("aaaaaaaaaaaa" + list);
         return list;
     }
@@ -540,7 +540,7 @@ public class QualityProblemController extends BaseController
             }
         }
 //        System.out.println("测试aaaaaaaaa" + l1);
-        System.out.println("测试aaaaaaaaa" + res);
+  //      System.out.println("测试aaaaaaaaa" + res);
         return res;
     }
     /**4.2.2.3
