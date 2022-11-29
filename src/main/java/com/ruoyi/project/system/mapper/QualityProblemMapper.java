@@ -227,6 +227,16 @@ public interface QualityProblemMapper
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> sumByEnvironment();
+    /**4.2.1.10
+     * @Description      4.2.1.10故障件名称随时间变化情况
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> nameAndModelByYear();
+    public List<Sum> nameAndModelByQuarter();
 
 
 }

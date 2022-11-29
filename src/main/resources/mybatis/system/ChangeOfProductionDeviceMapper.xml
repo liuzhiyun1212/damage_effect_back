@@ -17,7 +17,7 @@
     </select>
 
     <select id="selectFaultList" resultMap="ChangeOfProductionDeviceResult">
-        SELECT DISTINCT a.parts_code, b.parts_make_people
+        SELECT DISTINCT a.parts_code, b.parts_make_people, b.parts_make_quipment
         from quality_problem_1 a
         INNER JOIN parts_make_num_9 b on a.parts_code = b.parts_code
     </select>
