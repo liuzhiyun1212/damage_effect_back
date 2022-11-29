@@ -173,7 +173,7 @@ public interface IQualityProblemService
      */
     public List<ProductModifyData> selectByProduceDeviceChanged();
 
-    /**4.2.2.16
+    /**4.2.2.17
      * @Description 不同使用环境中装备数量
      * @Author lixin
      * @Date  2022/11/14
@@ -182,7 +182,7 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> selectDevByEnvironment();
-    /**4.2.2.16
+    /**4.2.2.17
      * @Description 不同使用环境中对应质量问题数
      * @Author lixin
      * @Date  2022/11/14
@@ -191,4 +191,64 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> selectQualityByEnvironment();
+    /**4.2.2.16
+     * @Description (根据dev_use_time)不同状态装备的故障件数量
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectTroubleByState1();
+    public List<Sum> selectTroubleByState2();
+    /**4.2.2.16
+     * @Description (根据dev_repaired)不同状态装备的质量问题数量
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectQualityByState1();
+    public List<Sum> selectQualityByState2();
+    /**4.2.2.16
+     * @Description  (根据dev_use_time)不同状态故障模式
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<DevState> selectState1();
+    //    (根据dev_repaired)不同状态故障模式
+    public List<DevState> selectState2();
+    /**4.2.1.6
+     * @Description  质量问题故障模式随时间变化情况
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> faultModelByQuarter();
+    public List<Sum> faultModelByYear();
+    /**4.2.1.6
+     * @Description      4.2.1.7质量问题发生地理环境
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> sumByEnvironment();
+    /**4.2.1.10
+     * @Description      4.2.1.10故障件名称随时间变化情况
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> nameAndModelByYear();
+    public List<Sum> nameAndModelByQuarter();
 }

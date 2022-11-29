@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.ProductModifyDataMapper">
-    
+
     <resultMap type="ProductModifyData" id="ProductModifyDataResult">
         <result property="id"    column="id"    />
         <result property="productName"    column="product_name"    />
@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectProductModifyDataList" parameterType="ProductModifyData" resultMap="ProductModifyDataResult">
         <include refid="selectProductModifyDataVo"/>
-        <where>  
+        <where>
             <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
             <if test="productModel != null  and productModel != ''"> and product_model = #{productModel}</if>
             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
@@ -27,12 +27,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="modifyMethod != null  and modifyMethod != ''"> and modify_method = #{modifyMethod}</if>
         </where>
     </select>
-    
+
+   <!-- <select id="selectPeoplechange"  resultMap="ProductModifyDataResult">
+            <include refid="selectProductModifyDataVo"/>
+            <where>
+                <if test="productName != null  and productName != ''"> and product_name = #{productName}</if>
+                <if test="productModel != null  and productModel != ''"> and product_model = #{productModel}</if>
+                <if test="modifyType != null  and modifyType != ''"> and modifyType = "生产人员发生变更"</if>
+                <if test="modifyMethod != null  and modifyMethod != ''"> and modifyMethod = #{modifyMethod}</if>
+            </where>
+    </select>-->
+
     <select id="selectProductModifyDataById" parameterType="Long" resultMap="ProductModifyDataResult">
         <include refid="selectProductModifyDataVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertProductModifyData" parameterType="ProductModifyData" useGeneratedKeys="true" keyProperty="id">
         insert into product_modify_data_6
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -68,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductModifyDataByIds" parameterType="String">
-        delete from product_modify_data_6 where id in 
+        delete from product_modify_data_6 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

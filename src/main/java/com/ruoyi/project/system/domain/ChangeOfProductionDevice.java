@@ -18,6 +18,8 @@ public class ChangeOfProductionDevice {
     private List partsFaultPeopleList;
     private String partsMakeQuipment;
     private List partsMakeQuipmentList;
+    //生产故障设备的加工设备列表
+    private List partsFaultQuipmentList;
 
     public String getId() {
         return id;
@@ -81,5 +83,13 @@ public class ChangeOfProductionDevice {
 
     public void setPartsFaultPeopleList(List partsFaultPeopleList) {
         this.partsFaultPeopleList = partsFaultPeopleList;
+    }
+
+    public List getPartsFaultQuipmentList() {
+        return partsFaultQuipmentList;
+    }
+
+    public void setPartsFaultQuipmentList(List partsFaultQuipmentList) {
+        this.partsFaultQuipmentList = partsFaultQuipmentList;
     }
 }

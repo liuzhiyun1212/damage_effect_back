@@ -269,4 +269,59 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.selectQualityByEnvironment();
     }
 
+    @Override
+    public List<Sum> selectTroubleByState1() {
+        return qualityProblemMapper.selectTroubleByState1();
+    }
+
+    @Override
+    public List<Sum> selectTroubleByState2() {
+        return qualityProblemMapper.selectTroubleByState2();
+    }
+
+    @Override
+    public List<Sum> selectQualityByState1() {
+        return qualityProblemMapper.selectQualityByState1();
+    }
+
+    @Override
+    public List<Sum> selectQualityByState2() {
+        return qualityProblemMapper.selectQualityByState2();
+    }
+
+    @Override
+    public List<DevState> selectState1() {
+        return qualityProblemMapper.selectState1();
+    }
+
+    @Override
+    public List<DevState> selectState2() {
+        return qualityProblemMapper.selectState2();
+    }
+
+    @Override
+    public List<Sum> faultModelByQuarter() {
+        return qualityProblemMapper.faultModelByQuarter();
+    }
+
+    @Override
+    public List<Sum> faultModelByYear() {
+        return qualityProblemMapper.faultModelByYear();
+    }
+
+    @Override
+    public List<Sum> sumByEnvironment() {
+        return qualityProblemMapper.sumByEnvironment();
+    }
+
+    @Override
+    public List<Sum> nameAndModelByYear() {
+        return qualityProblemMapper.nameAndModelByYear();
+    }
+
+    @Override
+    public List<Sum> nameAndModelByQuarter() {
+        return qualityProblemMapper.nameAndModelByQuarter();
+    }
+
 }
