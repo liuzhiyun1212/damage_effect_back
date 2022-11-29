@@ -2,6 +2,7 @@ package com.ruoyi.project.system.service;
 
 import java.util.List;
 import com.ruoyi.project.system.domain.PartsMakeNum9;
+import com.ruoyi.project.system.domain.ProductQuantity7;
 
 /**
  * 9：装备使用数据Service接口
@@ -58,4 +59,13 @@ public interface IPartsMakeNum9Service
      * @return 结果
      */
     public int deletePartsMakeNum9ById(Long id);
+    /**
+     * 导入产品设计数据
+     *
+     * @param importDataList 数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    public String importData(List<PartsMakeNum9> importDataList, Boolean isUpdateSupport, String operName);
 }
