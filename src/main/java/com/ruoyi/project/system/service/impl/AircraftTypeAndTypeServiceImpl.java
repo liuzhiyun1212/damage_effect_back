@@ -907,9 +907,9 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
         if (firstNum == 0 || secondNum == 0 || thirdnum == 0 || fourthNum == 0) {
             return false;
         }
-        if (firstNum - secondNum >= 0 && secondNum - thirdnum >= 0 && thirdnum - fourthNum >= 0) {
+        if (firstNum - secondNum > 0 && secondNum - thirdnum > 0 && thirdnum - fourthNum > 0) {
             return true;
-        } else if (firstNum - secondNum <= 0 && secondNum - thirdnum <= 0 && thirdnum - fourthNum <= 0) {
+        } else if (firstNum - secondNum < 0 && secondNum - thirdnum < 0 && thirdnum - fourthNum < 0) {
             return true;
         }
         return false;

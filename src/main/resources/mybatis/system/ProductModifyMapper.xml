@@ -56,7 +56,8 @@ from quality_problem_1
 GROUP BY fault_model
 HAVING COUNT(fault_model)>0.1* (SELECT COUNT(fault_model)
 from quality_problem_1))
-GROUP BY b.parts_model
+GROUP BY a.modify_time
+ORDER BY a.modify_time
     </select>
 
 

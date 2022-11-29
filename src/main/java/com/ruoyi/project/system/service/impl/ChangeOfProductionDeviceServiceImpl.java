@@ -9,10 +9,7 @@ import com.ruoyi.project.system.service.IChangeOfProductionDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: lvXingFeng
@@ -30,15 +27,18 @@ public class ChangeOfProductionDeviceServiceImpl implements IChangeOfProductionD
         List<ChangeOfProductionDevice> producedList = changeOfProductionDeviceMapper.selectProducedList();
 
         //人员-生产设备数
-        HashMap<String, Integer> makeWorkerMap = MapUtil.newHashMap();
+        HashMap<String, Integer> makeEquipmentMap = MapUtil.newHashMap();
 
         //统计人员生产数
         for (ChangeOfProductionDevice item : producedList) {
-            List<String> partsMakePeopleList = new JSONArray(item.getPartsMakePeople()).toList(String.class);
-            for (String name : partsMakePeopleList) {
-                makeWorkerMap.put(name, 1 + makeWorkerMap.getOrDefault(name, 0));
+            String partsMakeQuipment = item.getPartsMakeQuipment();
+            partsMakeQuipment = partsMakeQuipment.replace("[","").replace("]","");
+            String[] splitStr = partsMakeQuipment.split(",");
+            List<String> partsMakeEquipmentList = Arrays.asList(splitStr);
+            for (String name : partsMakeEquipmentList) {
+                makeEquipmentMap.put(name, 1 + makeEquipmentMap.getOrDefault(name, 0));
             }
-            item.setPartsMakePeopleList(partsMakePeopleList);
+            item.setPartsMakeQuipmentList(partsMakeEquipmentList);
         }
 
         //人员生产故障设备列表
@@ -47,11 +47,14 @@ public class ChangeOfProductionDeviceServiceImpl implements IChangeOfProductionD
         HashMap<String, Integer> faultWorkerMap = MapUtil.newHashMap();
         //统计人员生产故障数
         for (ChangeOfProductionDevice item : faultList) {
-            List<String> partsFaultPeopleList = new JSONArray(item.getPartsMakePeople()).toList(String.class);
-            for (String name : partsFaultPeopleList) {
+            String partsMakeQuipment = item.getPartsMakeQuipment();
+            partsMakeQuipment = partsMakeQuipment.replace("[","").replace("]","");
+            String[] splitStr = partsMakeQuipment.split(",");
+            List<String> partsFaultEquipmentList =Arrays.asList(splitStr);
+            for (String name : partsFaultEquipmentList) {
                 faultWorkerMap.put(name, 1 + faultWorkerMap.getOrDefault(name, 0));
             }
-            item.setPartsFaultPeopleList(partsFaultPeopleList);
+            item.setPartsFaultQuipmentList(partsFaultEquipmentList);
         }
 
         //包装返回值
@@ -59,18 +62,18 @@ public class ChangeOfProductionDeviceServiceImpl implements IChangeOfProductionD
         JSONObject faultNumObj = new JSONObject();
         JSONArray produceNumArray = new JSONArray();
         JSONArray faultNumArray = new JSONArray();
-        JSONArray workerNameArray = new JSONArray();
+        JSONArray equipmentNameArray = new JSONArray();
 
         //生产人员名称和生产数量要一一对应
-        Iterator<String> makeWorkerMapIterator = makeWorkerMap.keySet().iterator();
-        while (makeWorkerMapIterator.hasNext()) {
-            String workerName = makeWorkerMapIterator.next();
+        Iterator<String> makeEquipmentMapIterator = makeEquipmentMap.keySet().iterator();
+        while (makeEquipmentMapIterator.hasNext()) {
+            String equipmentName = makeEquipmentMapIterator.next();
             //工人名列表
-            workerNameArray.put(workerName);
+            equipmentNameArray.put(equipmentName);
 
             //根据工人放对应生产数\故障数
-            produceNumArray.put(makeWorkerMap.get(workerName));
-            faultNumArray.put(faultWorkerMap.get(workerName));
+            produceNumArray.put(makeEquipmentMap.get(equipmentName));
+            faultNumArray.put(faultWorkerMap.get(equipmentName));
         }
         produceNumObj
                 .set("name", "设备生产数")
@@ -88,7 +91,7 @@ public class ChangeOfProductionDeviceServiceImpl implements IChangeOfProductionD
                 .set("data", faultNumArray);
 
         return new JSONObject()
-                .set("workerNameArray", workerNameArray)
+                .set("equipmentNameArray", equipmentNameArray)
                 .set("produceNumObj", produceNumObj)
                 .set("faultNumObj", faultNumObj);
     }

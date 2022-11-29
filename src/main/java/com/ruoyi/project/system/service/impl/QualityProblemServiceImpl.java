@@ -314,4 +314,14 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.sumByEnvironment();
     }
 
+    @Override
+    public List<Sum> nameAndModelByYear() {
+        return qualityProblemMapper.nameAndModelByYear();
+    }
+
+    @Override
+    public List<Sum> nameAndModelByQuarter() {
+        return qualityProblemMapper.nameAndModelByQuarter();
+    }
+
 }
