@@ -108,6 +108,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             year(dev_happen_time)
         order by year(dev_happen_time) asc
     </select>
+    <!--    4.2.1.10质量问题名称随时间变化情况-->
+    <select id="nameAndModelByYear" resultMap="SumResult">
+           SELECT COUNT( DISTINCT CONCAT( parts_model, '-', parts_name ) ) sum,    CONCAT(year(dev_happen_time),'年') createTime
+        FROM
+            quality_problem_1
+        GROUP BY
+            createTime
+    </select>
+    <select id="nameAndModelByQuarter" resultMap="SumResult">
+        SELECT COUNT( DISTINCT CONCAT( parts_model, '-', parts_name ) ) sum,    CONCAT(year(dev_happen_time),'年',QUARTER(dev_happen_time),'季度') createTime
+        FROM
+            quality_problem_1
+        GROUP BY
+            createTime
+    </select>
     <!--    (根据dev_use_time)不同状态装备的故障件数量-->
     <select id="selectTroubleByState1" resultMap="SumResult">
         select elt(interval(dev_use_time,0,300,1200),"新出厂","稳定期","装备到寿") as createTime ,count(DISTINCT parts_code) sum
