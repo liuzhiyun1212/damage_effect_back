@@ -1,29 +1,24 @@
 package com.ruoyi.project.system.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.system.domain.EquipmentManufacturingData5;
-import com.ruoyi.project.system.service.IEquipmentManufacturingData5Service;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.system.domain.EquipmentManufacturingData5;
+import com.ruoyi.project.system.service.IEquipmentManufacturingData5Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 【请填写功能名称】Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-11-16
  */
@@ -100,5 +95,34 @@ public class EquipmentManufacturingData5Controller extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(equipmentManufacturingData5Service.deleteEquipmentManufacturingData5ByIds(ids));
+    }
+
+
+    /**
+     * 导入产品制造数据
+     */
+    @Log(title = "产品制造", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<EquipmentManufacturingData5> util = new ExcelUtil<EquipmentManufacturingData5>(EquipmentManufacturingData5.class);
+        List<EquipmentManufacturingData5> importDataList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = equipmentManufacturingData5Service.importData(importDataList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+    /**
+     * @Description 下载导入模板
+     * @Author guohuijia
+     * @Date  2022/11/24
+     * @Param [response]
+     * @Return void
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<EquipmentManufacturingData5> util = new ExcelUtil<EquipmentManufacturingData5>(EquipmentManufacturingData5.class);
+        util.importTemplateExcel(response, "产品制造数据");
     }
 }
