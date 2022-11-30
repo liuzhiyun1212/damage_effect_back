@@ -7,8 +7,8 @@ spring:
             # 主库数据源
             master:
                 url: jdbc:mysql://47.99.65.198:3306/quality_control_data?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: issme211@
+                username: dlut
+                password: dlut211@
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
