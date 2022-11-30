@@ -137,6 +137,13 @@ public class ReasonRuleController extends BaseController
         List<String> name2 = new ArrayList<String>();//时间
         List<String> series2 = new ArrayList<String>();//时间
         for(int i=0;i<series1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getModelSeries().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             EquipmentDesignData equipmentDesignData = new EquipmentDesignData();
             equipmentDesignData.setModelSeries(series1.get(i));
             List<EquipmentDesignData> listed = equipmentDesignDataService.selectEquipmentDesignDataList(equipmentDesignData);
@@ -155,6 +162,9 @@ public class ReasonRuleController extends BaseController
                 }
                 String ss = calendar.get(Calendar.YEAR)+"-"+a;
                 if(halfyear(name1.get(i),ss)){
+                    if(time.indexOf(ss)==t-1){
+                        continue;
+                    }
                     name2.add(ss);
                     series2.add(series1.get(i));
                 }
@@ -394,6 +404,13 @@ public class ReasonRuleController extends BaseController
         List<String> plane2 = new ArrayList<String>();//机型
         List<String> name2 = new ArrayList<String>();//时间
         for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(plane1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             EquipmentManufacturingData5 equipmentManufacturingData5 = new EquipmentManufacturingData5();
             equipmentManufacturingData5.setPlaneType(plane1.get(i));
             equipmentManufacturingData5.setType("能力提升");
@@ -414,6 +431,9 @@ public class ReasonRuleController extends BaseController
                     }
                     String ss = calendar.get(Calendar.YEAR)+"-"+a;
                     if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
                         plane2.add(plane1.get(i));
                         name2.add(ss);
                     }
@@ -650,6 +670,13 @@ public class ReasonRuleController extends BaseController
         List<String> name2 = new ArrayList<String>();//时间
         List<String> series2 = new ArrayList<String>();//时间
         for(int i=0;i<series1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             ProductModify equipmentDesignData = new ProductModify();
             equipmentDesignData.setProductName(series1.get(i));
             List<ProductModify> listed = productModifyService.selectProductModifyList(equipmentDesignData);
@@ -668,6 +695,9 @@ public class ReasonRuleController extends BaseController
                 }
                 String ss = calendar.get(Calendar.YEAR)+"-"+a;
                 if(halfyear(name1.get(i),ss)){
+                    if(time.indexOf(ss)==t-1){
+                        continue;
+                    }
                     name2.add(ss);
                     series2.add(series1.get(i));
                 }
@@ -820,6 +850,13 @@ public class ReasonRuleController extends BaseController
         List<String> series2 = new ArrayList<String>();
         List<String> name2 = new ArrayList<String>();
         for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(plane1.get(i))&&d.getPartsModel().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             ProductModifyData equipmentManufacturingData5 = new ProductModifyData();
             equipmentManufacturingData5.setProductName(plane1.get(i));
             equipmentManufacturingData5.setProductModel(series1.get(i));
@@ -841,6 +878,9 @@ public class ReasonRuleController extends BaseController
                     }
                     String ss = calendar.get(Calendar.YEAR)+"-"+a;
                     if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
                         plane2.add(plane1.get(i));
                         series2.add(series1.get(i));
                         name2.add(ss);
@@ -1003,6 +1043,13 @@ public class ReasonRuleController extends BaseController
         List<String> name2 = new ArrayList<String>();
         List<String> type2 = new ArrayList<String>();
         for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(plane1.get(i))&&d.getPartsModel().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             ProductModifyData equipmentManufacturingData5 = new ProductModifyData();
             equipmentManufacturingData5.setProductName(plane1.get(i));
             equipmentManufacturingData5.setProductModel(series1.get(i));
@@ -1024,6 +1071,9 @@ public class ReasonRuleController extends BaseController
                     }
                     String ss = calendar.get(Calendar.YEAR)+"-"+a;
                     if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
                         plane2.add(plane1.get(i));
                         series2.add(series1.get(i));
                         name2.add(ss);
@@ -1188,6 +1238,13 @@ public class ReasonRuleController extends BaseController
         List<String> series2 = new ArrayList<String>();
         List<String> name2 = new ArrayList<String>();
         for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(plane1.get(i))&&d.getPartsModel().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             ProductModifyData equipmentManufacturingData5 = new ProductModifyData();
             equipmentManufacturingData5.setProductName(plane1.get(i));
             equipmentManufacturingData5.setProductModel(series1.get(i));
@@ -1210,6 +1267,9 @@ public class ReasonRuleController extends BaseController
                     }
                     String ss = calendar.get(Calendar.YEAR)+"-"+a;
                     if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
                         plane2.add(plane1.get(i));
                         series2.add(series1.get(i));
                         name2.add(ss);
@@ -1318,6 +1378,13 @@ public class ReasonRuleController extends BaseController
         List<String> series2 = new ArrayList<String>();
         List<String> name2 = new ArrayList<String>();
         for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(plane1.get(i))&&d.getPartsModel().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             ProductModifyData equipmentManufacturingData5 = new ProductModifyData();
             equipmentManufacturingData5.setProductName(plane1.get(i));
             equipmentManufacturingData5.setProductModel(series1.get(i));
@@ -1340,6 +1407,9 @@ public class ReasonRuleController extends BaseController
                     }
                     String ss = calendar.get(Calendar.YEAR)+"-"+a;
                     if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
                         plane2.add(plane1.get(i));
                         series2.add(series1.get(i));
                         name2.add(ss);
@@ -1501,6 +1571,13 @@ public class ReasonRuleController extends BaseController
         List<String> series2 = new ArrayList<String>();
         List<String> name2 = new ArrayList<String>();
         for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(plane1.get(i))&&d.getPartsModel().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             ProductModifyData equipmentManufacturingData5 = new ProductModifyData();
             equipmentManufacturingData5.setProductName(plane1.get(i));
             equipmentManufacturingData5.setProductModel(series1.get(i));
@@ -1523,6 +1600,9 @@ public class ReasonRuleController extends BaseController
                     }
                     String ss = calendar.get(Calendar.YEAR)+"-"+a;
                     if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
                         plane2.add(plane1.get(i));
                         series2.add(series1.get(i));
                         name2.add(ss);
@@ -1631,6 +1711,13 @@ public class ReasonRuleController extends BaseController
         List<String> series2 = new ArrayList<String>();
         List<String> name2 = new ArrayList<String>();
         for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(plane1.get(i))&&d.getPartsModel().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
             ProductModifyData equipmentManufacturingData5 = new ProductModifyData();
             equipmentManufacturingData5.setProductName(plane1.get(i));
             equipmentManufacturingData5.setProductModel(series1.get(i));
@@ -1653,6 +1740,9 @@ public class ReasonRuleController extends BaseController
                     }
                     String ss = calendar.get(Calendar.YEAR)+"-"+a;
                     if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
                         plane2.add(plane1.get(i));
                         series2.add(series1.get(i));
                         name2.add(ss);
