@@ -153,15 +153,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <!--    不同使用环境中装备数量-->
     <select id="selectDevByEnvironment" resultMap="SumResult">
-        select environment createTime, count(DISTINCT dev_code) sum
+                select environment createTime, count(DISTINCT dev_code) sum
         from quality_problem_1 as q
         GROUP BY environment
+				ORDER BY environment
     </select>
 <!--    不同使用环境中对应质量问题数-->
     <select id="selectQualityByEnvironment" resultMap="SumResult">
-        SELECT environment createTime,count(id) sum
+				SELECT environment createTime,count(id) sum
         from quality_problem_1
         GROUP BY environment
+				ORDER BY environment
     </select>
     <!--    故障件生产班组变更-->
     <select id="selectByGradeChanged" resultMap="ProductModifyDataResult">
@@ -187,7 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <!--班组统计质量问题总数-->
     <select id="qualitySumByGrade" parameterType="Sum" resultMap="SumResult">
-         SELECT parts_make_group createTime, count(q.parts_code) sum
+         SELECT parts_make_group createTime, count(q.id) sum
         from quality_problem_1 as q, parts_make_num_9 as p
         WHERE q.parts_code = p.parts_code
 				GROUP BY parts_make_group
@@ -410,5 +412,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             quality_problem_1
         GROUP BY
             parts_type
+    </select>
+<!--    4.2.2.10  装备生产工艺变更情况————查询生产工艺的质量问题总数-->
+    <select id="selectQualityByMakeWorkmanship" resultMap="SumResult">
+        SELECT parts_make_workmanship createTime, count(q.id) sum
+        from quality_problem_1 as q, parts_make_num_9 as p
+        WHERE q.parts_code = p.parts_code
+				GROUP BY parts_make_workmanship
+				ORDER BY parts_make_workmanship
+    </select>
+    <!--    4.2.2.10  装备生产工艺变更情况————查询生产工艺的产品总数-->
+    <select id="selectProductByMakeWorkmanship" resultMap="SumResult">
+SELECT parts_make_workmanship createTime,count(DISTINCT parts_code) sum
+        from parts_make_num_9
+        GROUP BY parts_make_workmanship
+				ORDER BY parts_make_workmanship
     </select>
 </mapper>

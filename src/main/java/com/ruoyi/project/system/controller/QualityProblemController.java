@@ -11,6 +11,7 @@ import com.ruoyi.project.system.domain.PartsTypeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
 import com.ruoyi.project.system.domain.*;
+import com.ruoyi.project.system.service.IPartsMakeNum9Service;
 import com.ruoyi.project.system.service.IQualityProblem1Service;
 import com.ruoyi.project.system.service.IQualityProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class QualityProblemController extends BaseController
     private IQualityProblemService qualityProblemService;
     @Autowired
     private IQualityProblem1Service qualityProblem1Service;
+    @Autowired
+    private IPartsMakeNum9Service partsMakeNum9Service;
     /**
      * 查询quality_problem列表
      */
@@ -732,15 +735,15 @@ public class QualityProblemController extends BaseController
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @GetMapping("/qualitySumByGrade")
-    public List<Integer> qualitySumByGrade() {
+    public List<Sum> qualitySumByGrade() {
         List<Sum> l1 = qualityProblemService.qualitySumByGrade();
         List<String> grade = new ArrayList<>();
                grade = selectByGradeFaultModel();
-        List<Integer> res = new ArrayList<>();
+        List<Sum> res = new ArrayList<>();
         for(Sum i:l1){
             for(String j:grade){
                 if(i.getQuarter().equals(j)){
-                    res.add(i.getSum());
+                    res.add(i);
                 }
             }
         }
@@ -757,19 +760,19 @@ public class QualityProblemController extends BaseController
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @GetMapping("/productSumByGrade")
-    public List<Integer> productSumByGrade() {
+    public List<Sum> productSumByGrade() {
         List<Sum> l1 = qualityProblemService.productSumByGrade();
         List<String> grade = selectByGradeFaultModel();
-        List<Integer> res = new ArrayList<>();
+        List<Sum> res = new ArrayList<>();
         for(Sum i:l1){
             for(String j:grade){
                 if(i.getQuarter().equals(j)){
-                    res.add(i.getSum());
+                    res.add(i);
                 }
             }
         }
 //        System.out.println("测试aaaaaaaaa" + l1);
-//        System.out.println("测试aaaaaaaaa" + res);
+//        System.out.println("测试xxxxxxxxx" + res);
         return res;
     }
     static class time1{
@@ -1376,5 +1379,133 @@ public class QualityProblemController extends BaseController
         }
 //        System.out.println("测试vvvvvvvvvvvv" + list);
         return list;
+    }
+    /**4.2.2.10
+     * @Description     装备生产工艺变更情况————查询故障件和生产工艺
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+//    高发故障模式的故障件和生产工艺实体
+    static class FaultModelMake {
+        private String faultModel;
+        private String partsMakeWorkmanship;
+
+        public String getFaultModel() {
+            return faultModel;
+        }
+
+        public void setFaultModel(String faultModel) {
+            this.faultModel = faultModel;
+        }
+
+        public String getPartsMakeWorkmanship() {
+            return partsMakeWorkmanship;
+        }
+
+        public void setPartsMakeWorkmanship(String partsMakeWorkmanship) {
+            this.partsMakeWorkmanship = partsMakeWorkmanship;
+        }
+
+        @Override
+        public String toString() {
+            return "FaultModelMake{" +
+                    "faultModel='" + faultModel + '\'' +
+                    ", partsMakeWorkmanship='" + partsMakeWorkmanship + '\'' +
+                    '}';
+        }
+    }
+    @GetMapping("/selectByFaultModelMake")
+    public List<String> selectByFaultModelMake(){
+        QualityProblem q = new QualityProblem();
+        List<QualityProblem> list1 = qualityProblemService.selectQualityProblemList(q);
+        PartsMakeNum9 p =new PartsMakeNum9();
+        List<PartsMakeNum9> list2=partsMakeNum9Service.selectPartsMakeNum9List(p);
+        List<FaultModelMake> list = new ArrayList<>();
+        for(QualityProblem i:list1){
+            for(PartsMakeNum9 j:list2){
+                if(i.getPartsCode().equals(j.getPartsCode())){
+                    FaultModelMake f = new FaultModelMake();
+                    f.setFaultModel(i.getFaultModel());
+                    f.setPartsMakeWorkmanship(j.getPartsMakeWorkmanship());
+                    list.add(f);
+                }
+            }
+        }
+        List<FaultModelMake> list3 = new ArrayList<>();
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list4 = faultStatistics(qualityProblem1);
+        for(int i=0;i<list.size();i++){
+            for(int j=0;j<list4.size();j++){
+                if(list.get(i).getFaultModel().equals(list4.get(j).getFaultModel())){
+                    list3.add(list.get(i));
+                }
+            }
+        }
+        List<String> res = new ArrayList<>();
+        int mark=0;
+        for (FaultModelMake str : list3) {
+            mark=0;
+            for (String g : res) {
+                if (str.getPartsMakeWorkmanship().equals(g)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                res.add(str.getPartsMakeWorkmanship());
+            }
+        }
+//        System.out.println("测试vvvvvvvvvvvv" + res);
+        return res;
+    }
+    /**4.2.2.10  装备生产工艺变更情况————查询生产工艺的质量问题总数
+     * @Description
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectQualityByMakeWorkmanship")
+    public List<Sum> selectQualityByMakeWorkmanship(){
+        List<Sum> l1 = qualityProblemService.selectQualityByMakeWorkmanship();
+        List<String> makeWorkmanship = new ArrayList<>();
+        makeWorkmanship = selectByFaultModelMake();
+        List<Sum> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:makeWorkmanship){
+                if(i.getQuarter().equals(j)){
+                    res.add(i);
+                }
+            }
+        }
+        System.out.println("测试vvvvvvvvvvvv" + res);
+        return res;
+    }
+    /**4.2.2.10  装备生产工艺变更情况————查询生产工艺的产品总数
+     * @Description
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectProductByMakeWorkmanship")
+    public List<Sum> selectProductByMakeWorkmanship(){
+        List<Sum> l1 = qualityProblemService.selectProductByMakeWorkmanship();
+        List<String> makeWorkmanship = new ArrayList<>();
+        makeWorkmanship = selectByFaultModelMake();
+        List<Sum> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:makeWorkmanship){
+                if(i.getQuarter().equals(j)){
+                    res.add(i);
+                }
+            }
+        }
+        System.out.println("测试vvvvvvvvvvvv" + res);
+        return res;
     }
 }

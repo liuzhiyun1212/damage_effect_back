@@ -324,4 +324,14 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.nameAndModelByQuarter();
     }
 
+    @Override
+    public List<Sum> selectQualityByMakeWorkmanship() {
+        return qualityProblemMapper.selectQualityByMakeWorkmanship();
+    }
+
+    @Override
+    public List<Sum> selectProductByMakeWorkmanship() {
+        return qualityProblemMapper.selectProductByMakeWorkmanship();
+    }
+
 }
