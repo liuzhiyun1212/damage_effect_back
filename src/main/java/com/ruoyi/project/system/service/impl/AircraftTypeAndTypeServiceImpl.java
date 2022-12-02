@@ -581,6 +581,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
             resMap.put("name", item.getPlaneType());
             resMap.put("type", "line");
             resMap.put("data", numList2);
+            resMap.put("smooth", true);
             //添加到list中的是不同机型的map
             distinctNameMap.put(item.getPlaneType(), resMap);
         }
@@ -785,6 +786,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
             resMap.put("name", item.getPlaneType());
             resMap.put("type", "line");
             resMap.put("data", useDataList);
+            resMap.put("smooth", true);
 //            resMap.put("stack", "Total");
 //            resMap.put("areaStyle", new JSONObject());
 //            resMap.put("emphasis", new JSONObject().append("focus", "series"));
