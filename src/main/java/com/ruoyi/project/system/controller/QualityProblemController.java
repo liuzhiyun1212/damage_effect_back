@@ -1047,13 +1047,11 @@ public class QualityProblemController extends BaseController
             t1.setTime(p.getModifyTime());
             res.add(t1);
         }
-//        System.out.println("测试aaaaaaaaa" + res);
-
         return res;
     }
 
     /**
-     * 4.2.2.3
+     * 4.2.2.6
      *
      * @Description 时间线图用故障件生产设备变更
      * @Author lvXingFeng
