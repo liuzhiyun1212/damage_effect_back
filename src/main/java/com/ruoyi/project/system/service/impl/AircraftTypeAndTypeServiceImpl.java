@@ -542,7 +542,6 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
     @Override
     public Map getChartData() throws Exception {
         List<AircraftTypeAndTime> list = aircraftTypeAndTypeMapper.selectQuarter();
-        //todo 为什么实体类中的devHappenTime的@JsonFormat不起作用
         //格式化数据
         for (AircraftTypeAndTime item : list) {
             item.setDevHappenTime(DateUtil.date(item.getDevHappenTime()));
