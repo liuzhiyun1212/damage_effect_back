@@ -1090,6 +1090,61 @@ public class QualityProblemController extends BaseController
         }
         return res;
     }
+
+    /**
+     * @Description 4.2.2.7 故障件测量设备变更情况
+     * @Author lvXingFeng
+     */
+    @GetMapping("/selectByMeasuringDeviceChanged")
+    public List<timeCount> selectByMeasuringDeviceChanged() {
+        List<ProductModifyData> list = qualityProblemService.selectByMeasuringDeviceChanged();
+        List<timeCount> res = new ArrayList<>();
+        for (ProductModifyData p : list) {
+            timeCount t1 = new timeCount();
+            t1.setName(p.getProductName());
+            t1.setTime(p.getModifyTime());
+            res.add(t1);
+        }
+        return res;
+    }
+
+    /**
+     * 4.2.2.7
+     *
+     * @Description 时间线图用故障件测量设备变更
+     * @Author lvXingFeng
+     */
+    @GetMapping("/timeMeasuringDeviceChanged")
+    public List<time1> timeMeasuringDeviceChanged() {
+        List<String> st = new ArrayList<>();
+        List<time1> res = new ArrayList<>();
+        List<ProductModifyData> list = qualityProblemService.selectByMeasuringDeviceChanged();
+        int mark = 0;
+        for (ProductModifyData p : list) {
+            for (String s : st) {
+                if (p.getProductName().equals(s)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                st.add(p.getProductName());
+            }
+        }
+        for (String s : st) {
+            time1 t1 = new time1();
+            List<Date> t = new ArrayList<>();
+            for (ProductModifyData p : list) {
+                if (s.equals(p.getProductName())) {
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                }
+            }
+            res.add(t1);
+        }
+        return res;
+    }
+
     /**4.2.1.6
      * @Description  质量问题故障模式随时间变化情况
      * @Author lixn

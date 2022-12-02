@@ -173,6 +173,12 @@ public interface IQualityProblemService
      */
     public List<ProductModifyData> selectByProduceDeviceChanged();
 
+    /**
+     * 4.2.2.7.故障件测量设备变更情况
+     * @return
+     */
+    public List<ProductModifyData> selectByMeasuringDeviceChanged();
+
     /**4.2.2.17
      * @Description 不同使用环境中装备数量
      * @Author lixin

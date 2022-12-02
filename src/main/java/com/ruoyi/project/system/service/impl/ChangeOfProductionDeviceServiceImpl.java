@@ -22,17 +22,17 @@ public class ChangeOfProductionDeviceServiceImpl implements IChangeOfProductionD
     private ChangeOfProductionDeviceMapper changeOfProductionDeviceMapper;
 
     @Override
-    public JSONObject getChartData() {
-        //人员生产设备列表
+    public JSONObject getProductionDeviceChartList() {
+        //生产设备列表
         List<ChangeOfProductionDevice> producedList = changeOfProductionDeviceMapper.selectProducedList();
 
-        //人员-生产设备数
+        //设备-生产设备数
         HashMap<String, Integer> makeEquipmentMap = MapUtil.newHashMap();
 
-        //统计人员生产数
+        //统计生产设备的生产数
         for (ChangeOfProductionDevice item : producedList) {
             String partsMakeQuipment = item.getPartsMakeQuipment();
-            partsMakeQuipment = partsMakeQuipment.replace("[","").replace("]","");
+            partsMakeQuipment = partsMakeQuipment.replace("[", "").replace("]", "");
             String[] splitStr = partsMakeQuipment.split(",");
             List<String> partsMakeEquipmentList = Arrays.asList(splitStr);
             for (String name : partsMakeEquipmentList) {
@@ -41,16 +41,16 @@ public class ChangeOfProductionDeviceServiceImpl implements IChangeOfProductionD
             item.setPartsMakeQuipmentList(partsMakeEquipmentList);
         }
 
-        //人员生产故障设备列表
+        //生产设备的生产故障设备列表
         List<ChangeOfProductionDevice> faultList = changeOfProductionDeviceMapper.selectFaultList();
-        //人员-生产设备故障数
+        //生产设备-生产设备故障数
         HashMap<String, Integer> faultWorkerMap = MapUtil.newHashMap();
-        //统计人员生产故障数
+        //统计生产设备生产故障数
         for (ChangeOfProductionDevice item : faultList) {
             String partsMakeQuipment = item.getPartsMakeQuipment();
-            partsMakeQuipment = partsMakeQuipment.replace("[","").replace("]","");
+            partsMakeQuipment = partsMakeQuipment.replace("[", "").replace("]", "");
             String[] splitStr = partsMakeQuipment.split(",");
-            List<String> partsFaultEquipmentList =Arrays.asList(splitStr);
+            List<String> partsFaultEquipmentList = Arrays.asList(splitStr);
             for (String name : partsFaultEquipmentList) {
                 faultWorkerMap.put(name, 1 + faultWorkerMap.getOrDefault(name, 0));
             }
@@ -64,19 +64,94 @@ public class ChangeOfProductionDeviceServiceImpl implements IChangeOfProductionD
         JSONArray faultNumArray = new JSONArray();
         JSONArray equipmentNameArray = new JSONArray();
 
-        //生产人员名称和生产数量要一一对应
+        //生产设备名称和生产数量要一一对应
         Iterator<String> makeEquipmentMapIterator = makeEquipmentMap.keySet().iterator();
         while (makeEquipmentMapIterator.hasNext()) {
             String equipmentName = makeEquipmentMapIterator.next();
-            //工人名列表
+            //设备名列表
             equipmentNameArray.put(equipmentName);
 
-            //根据工人放对应生产数\故障数
+            //根据生产设备放对应生产数\故障数
             produceNumArray.put(makeEquipmentMap.get(equipmentName));
             faultNumArray.put(faultWorkerMap.get(equipmentName));
         }
         produceNumObj
                 .set("name", "设备生产数")
+                .set("type", "bar")
+                .set("stack", "total")
+                .set("label", new JSONObject().set("show", true))
+                .set("emphasis", new JSONObject().set("focus", "series"))
+                .set("data", produceNumArray);
+        faultNumObj
+                .set("name", "故障发生数")
+                .set("type", "bar")
+                .set("stack", "total")
+                .set("label", new JSONObject().append("show", true))
+                .set("emphasis", new JSONObject().append("focus", "series"))
+                .set("data", faultNumArray);
+
+        return new JSONObject()
+                .set("equipmentNameArray", equipmentNameArray)
+                .set("produceNumObj", produceNumObj)
+                .set("faultNumObj", faultNumObj);
+    }
+
+    @Override
+    public JSONObject getMeasuringDeviceChartList() {
+        //测量设备列表
+        List<ChangeOfProductionDevice> measuringDeviceList = changeOfProductionDeviceMapper.selectMeasuringDeviceList();
+
+        //设备-测量设备数
+        HashMap<String, Integer> measuringEquipmentMap = MapUtil.newHashMap();
+
+        //统计测量设备的检测数
+        for (ChangeOfProductionDevice item : measuringDeviceList) {
+            String partsMeasuringQuipment = item.getPartsMeasuringQuipment();
+            partsMeasuringQuipment = partsMeasuringQuipment.replace("[", "").replace("]", "");
+            String[] splitStr = partsMeasuringQuipment.split(",");
+            List<String> partsMeasuringEquipmentList = Arrays.asList(splitStr);
+            for (String name : partsMeasuringEquipmentList) {
+                measuringEquipmentMap.put(name, 1 + measuringEquipmentMap.getOrDefault(name, 0));
+            }
+            item.setPartsMakeQuipmentList(partsMeasuringEquipmentList);
+        }
+
+        //测量设备的测量故障设备列表
+        List<ChangeOfProductionDevice> faultList = changeOfProductionDeviceMapper.selectFaultList();
+        //测量设备-测量设备故障数
+        HashMap<String, Integer> faultWorkerMap = MapUtil.newHashMap();
+        //统计测量设备测量故障数
+        for (ChangeOfProductionDevice item : faultList) {
+            String partsMakeQuipment = item.getPartsMakeQuipment();
+            partsMakeQuipment = partsMakeQuipment.replace("[", "").replace("]", "");
+            String[] splitStr = partsMakeQuipment.split(",");
+            List<String> partsFaultEquipmentList = Arrays.asList(splitStr);
+            for (String name : partsFaultEquipmentList) {
+                faultWorkerMap.put(name, 1 + faultWorkerMap.getOrDefault(name, 0));
+            }
+            item.setPartsFaultQuipmentList(partsFaultEquipmentList);
+        }
+
+        //包装返回值
+        JSONObject produceNumObj = new JSONObject();
+        JSONObject faultNumObj = new JSONObject();
+        JSONArray produceNumArray = new JSONArray();
+        JSONArray faultNumArray = new JSONArray();
+        JSONArray equipmentNameArray = new JSONArray();
+
+        //测量设备名称和测量数量要一一对应
+        Iterator<String> makeEquipmentMapIterator = measuringEquipmentMap.keySet().iterator();
+        while (makeEquipmentMapIterator.hasNext()) {
+            String equipmentName = makeEquipmentMapIterator.next();
+            //设备名列表
+            equipmentNameArray.put(equipmentName);
+
+            //根据测量设备放对应测量数\故障数
+            produceNumArray.put(measuringEquipmentMap.get(equipmentName));
+            faultNumArray.put(faultWorkerMap.get(equipmentName));
+        }
+        produceNumObj
+                .set("name", "设备测量数")
                 .set("type", "bar")
                 .set("stack", "total")
                 .set("label", new JSONObject().set("show", true))
