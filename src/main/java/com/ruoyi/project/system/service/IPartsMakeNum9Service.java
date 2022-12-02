@@ -1,28 +1,34 @@
 package com.ruoyi.project.system.service;
 
 import java.util.List;
+
+import com.ruoyi.project.system.domain.CountQuality;
 import com.ruoyi.project.system.domain.PartsMakeNum9;
 import com.ruoyi.project.system.domain.ProductQuantity7;
 
 /**
  * 9：装备使用数据Service接口
- * 
+ *
  * @author ruoyi
  * @date 2022-11-18
  */
-public interface IPartsMakeNum9Service 
+public interface IPartsMakeNum9Service
 {
     /**
      * 查询9：装备使用数据
-     * 
+     *
      * @param id 9：装备使用数据主键
      * @return 9：装备使用数据
      */
     public PartsMakeNum9 selectPartsMakeNum9ById(Long id);
 
+    public List<CountQuality> selectNumFaultQuality();
+
+    public List<CountQuality> selectNumFault();
+
     /**
      * 查询9：装备使用数据列表
-     * 
+     *
      * @param partsMakeNum9 9：装备使用数据
      * @return 9：装备使用数据集合
      */
@@ -30,7 +36,7 @@ public interface IPartsMakeNum9Service
 
     /**
      * 新增9：装备使用数据
-     * 
+     *
      * @param partsMakeNum9 9：装备使用数据
      * @return 结果
      */
@@ -38,7 +44,7 @@ public interface IPartsMakeNum9Service
 
     /**
      * 修改9：装备使用数据
-     * 
+     *
      * @param partsMakeNum9 9：装备使用数据
      * @return 结果
      */
@@ -46,7 +52,7 @@ public interface IPartsMakeNum9Service
 
     /**
      * 批量删除9：装备使用数据
-     * 
+     *
      * @param ids 需要删除的9：装备使用数据主键集合
      * @return 结果
      */
@@ -54,7 +60,7 @@ public interface IPartsMakeNum9Service
 
     /**
      * 删除9：装备使用数据信息
-     * 
+     *
      * @param id 9：装备使用数据主键
      * @return 结果
      */

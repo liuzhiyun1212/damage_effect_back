@@ -21,6 +21,13 @@
         <result property="partsMakeWorkmanship"    column="parts_make_workmanship"    />
     </resultMap>
 
+
+    <resultMap id="NumFaultQuality" type="CountQuality">
+        <result property="partsName"    column="parts_name"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsNum" column="count(*)"/>
+    </resultMap>
+
     <sql id="selectPartsMakeNum9Vo">
         select id, plane_type, parts_name, parts_model, parts_code, parts_factory_time, parts_manufacture, parts_make_group, parts_make_people, parts_make_quipment, parts_measuring_quipment, raw_material_place, spare_parts_place, parts_make_workmanship from parts_make_num_9
     </sql>
@@ -48,6 +55,29 @@
         <include refid="selectPartsMakeNum9Vo"/>
         where id = #{id}
     </select>
+
+    <select id="selectNumFaultQuality" resultMap="NumFaultQuality">
+        SELECT parts_name,parts_model,count(*)
+        FROM parts_make_num_9 b
+        WHERE (b.parts_name,b.parts_model) in
+        (SELECT parts_name,parts_model
+        FROM quality_problem_1
+        GROUP BY parts_name,parts_model)
+        GROUP BY b.parts_name,b.parts_model
+    </select>
+
+    <select id="selectNumFault" resultMap="NumFaultQuality">
+        SELECT
+            parts_name,
+            parts_model,
+            count(*)
+        FROM
+            parts_make_num_9 b
+        GROUP BY
+            b.parts_name,
+            b.parts_model
+    </select>
+
 
     <insert id="insertPartsMakeNum9" parameterType="PartsMakeNum9" useGeneratedKeys="true" keyProperty="id">
         insert into parts_make_num_9
