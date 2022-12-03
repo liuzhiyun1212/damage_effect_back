@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.system.mapper.PartsMakeNum9Mapper">
-
-    <resultMap type="PartsMakeNum9" id="PartsMakeNum9Result">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.PartsRepairNum13Mapper">
+    
+    <resultMap type="PartsRepairNum13" id="PartsRepairNum13Result">
         <result property="id"    column="id"    />
         <result property="planeType"    column="plane_type"    />
         <result property="partsName"    column="parts_name"    />
@@ -12,75 +12,45 @@
         <result property="partsCode"    column="parts_code"    />
         <result property="partsFactoryTime"    column="parts_factory_time"    />
         <result property="partsManufacture"    column="parts_manufacture"    />
-        <result property="partsMakeGroup"    column="parts_make_group"    />
-        <result property="partsMakePeople"    column="parts_make_people"    />
-        <result property="partsMakeQuipment"    column="parts_make_quipment"    />
+        <result property="partsRepairGroup"    column="parts_repair_group"    />
+        <result property="partsRepairPeople"    column="parts_repair_people"    />
+        <result property="partsRepairQuipment"    column="parts_repair_quipment"    />
         <result property="partsMeasuringQuipment"    column="parts_measuring_quipment"    />
         <result property="rawMaterialPlace"    column="raw_material_place"    />
         <result property="sparePartsPlace"    column="spare_parts_place"    />
         <result property="partsMakeWorkmanship"    column="parts_make_workmanship"    />
     </resultMap>
 
-
-    <resultMap id="NumFaultQuality" type="CountQuality">
-        <result property="partsName"    column="parts_name"    />
-        <result property="partsModel"    column="parts_model"    />
-        <result property="partsNum" column="count(*)"/>
-    </resultMap>
-
-    <sql id="selectPartsMakeNum9Vo">
-        select id, plane_type, parts_name, parts_model, parts_code, parts_factory_time, parts_manufacture, parts_make_group, parts_make_people, parts_make_quipment, parts_measuring_quipment, raw_material_place, spare_parts_place, parts_make_workmanship from parts_make_num_9
+    <sql id="selectPartsRepairNum13Vo">
+        select id, plane_type, parts_name, parts_model, parts_code, parts_factory_time, parts_manufacture, parts_repair_group, parts_repair_people, parts_repair_quipment, parts_measuring_quipment, raw_material_place, spare_parts_place, parts_make_workmanship from parts_repair_num_13
     </sql>
 
-    <select id="selectPartsMakeNum9List" parameterType="PartsMakeNum9" resultMap="PartsMakeNum9Result">
-        <include refid="selectPartsMakeNum9Vo"/>
-        <where>
+    <select id="selectPartsRepairNum13List" parameterType="PartsRepairNum13" resultMap="PartsRepairNum13Result">
+        <include refid="selectPartsRepairNum13Vo"/>
+        <where>  
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
             <if test="partsName != null  and partsName != ''"> and parts_name like concat('%', #{partsName}, '%')</if>
             <if test="partsModel != null  and partsModel != ''"> and parts_model = #{partsModel}</if>
             <if test="partsCode != null  and partsCode != ''"> and parts_code = #{partsCode}</if>
             <if test="partsFactoryTime != null "> and parts_factory_time = #{partsFactoryTime}</if>
             <if test="partsManufacture != null  and partsManufacture != ''"> and parts_manufacture = #{partsManufacture}</if>
-            <if test="partsMakeGroup != null  and partsMakeGroup != ''"> and parts_make_group = #{partsMakeGroup}</if>
-            <if test="partsMakePeople != null  and partsMakePeople != ''"> and parts_make_people = #{partsMakePeople}</if>
-            <if test="partsMakeQuipment != null  and partsMakeQuipment != ''"> and parts_make_quipment = #{partsMakeQuipment}</if>
+            <if test="partsRepairGroup != null  and partsRepairGroup != ''"> and parts_repair_group = #{partsRepairGroup}</if>
+            <if test="partsRepairPeople != null  and partsRepairPeople != ''"> and parts_repair_people = #{partsRepairPeople}</if>
+            <if test="partsRepairQuipment != null  and partsRepairQuipment != ''"> and parts_repair_quipment = #{partsRepairQuipment}</if>
             <if test="partsMeasuringQuipment != null  and partsMeasuringQuipment != ''"> and parts_measuring_quipment = #{partsMeasuringQuipment}</if>
             <if test="rawMaterialPlace != null  and rawMaterialPlace != ''"> and raw_material_place = #{rawMaterialPlace}</if>
             <if test="sparePartsPlace != null  and sparePartsPlace != ''"> and spare_parts_place = #{sparePartsPlace}</if>
             <if test="partsMakeWorkmanship != null  and partsMakeWorkmanship != ''"> and parts_make_workmanship = #{partsMakeWorkmanship}</if>
         </where>
     </select>
-
-    <select id="selectPartsMakeNum9ById" parameterType="Long" resultMap="PartsMakeNum9Result">
-        <include refid="selectPartsMakeNum9Vo"/>
+    
+    <select id="selectPartsRepairNum13ById" parameterType="Long" resultMap="PartsRepairNum13Result">
+        <include refid="selectPartsRepairNum13Vo"/>
         where id = #{id}
     </select>
-
-    <select id="selectNumFaultQuality" resultMap="NumFaultQuality">
-        SELECT parts_name,parts_model,count(*)
-        FROM parts_make_num_9 b
-        WHERE (b.parts_name,b.parts_model) in
-        (SELECT parts_name,parts_model
-        FROM quality_problem_1
-        GROUP BY parts_name,parts_model)
-        GROUP BY b.parts_name,b.parts_model
-    </select>
-
-    <select id="selectNumFault" resultMap="NumFaultQuality">
-        SELECT
-            parts_name,
-            parts_model,
-            count(*)
-        FROM
-            parts_make_num_9 b
-        GROUP BY
-            b.parts_name,
-            b.parts_model
-    </select>
-
-
-    <insert id="insertPartsMakeNum9" parameterType="PartsMakeNum9" useGeneratedKeys="true" keyProperty="id">
-        insert into parts_make_num_9
+        
+    <insert id="insertPartsRepairNum13" parameterType="PartsRepairNum13" useGeneratedKeys="true" keyProperty="id">
+        insert into parts_repair_num_13
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="planeType != null">plane_type,</if>
             <if test="partsName != null">parts_name,</if>
@@ -88,14 +58,14 @@
             <if test="partsCode != null">parts_code,</if>
             <if test="partsFactoryTime != null">parts_factory_time,</if>
             <if test="partsManufacture != null">parts_manufacture,</if>
-            <if test="partsMakeGroup != null">parts_make_group,</if>
-            <if test="partsMakePeople != null">parts_make_people,</if>
-            <if test="partsMakeQuipment != null">parts_make_quipment,</if>
+            <if test="partsRepairGroup != null">parts_repair_group,</if>
+            <if test="partsRepairPeople != null">parts_repair_people,</if>
+            <if test="partsRepairQuipment != null">parts_repair_quipment,</if>
             <if test="partsMeasuringQuipment != null">parts_measuring_quipment,</if>
             <if test="rawMaterialPlace != null">raw_material_place,</if>
             <if test="sparePartsPlace != null">spare_parts_place,</if>
             <if test="partsMakeWorkmanship != null">parts_make_workmanship,</if>
-        </trim>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="planeType != null">#{planeType},</if>
             <if test="partsName != null">#{partsName},</if>
@@ -103,18 +73,18 @@
             <if test="partsCode != null">#{partsCode},</if>
             <if test="partsFactoryTime != null">#{partsFactoryTime},</if>
             <if test="partsManufacture != null">#{partsManufacture},</if>
-            <if test="partsMakeGroup != null">#{partsMakeGroup},</if>
-            <if test="partsMakePeople != null">#{partsMakePeople},</if>
-            <if test="partsMakeQuipment != null">#{partsMakeQuipment},</if>
+            <if test="partsRepairGroup != null">#{partsRepairGroup},</if>
+            <if test="partsRepairPeople != null">#{partsRepairPeople},</if>
+            <if test="partsRepairQuipment != null">#{partsRepairQuipment},</if>
             <if test="partsMeasuringQuipment != null">#{partsMeasuringQuipment},</if>
             <if test="rawMaterialPlace != null">#{rawMaterialPlace},</if>
             <if test="sparePartsPlace != null">#{sparePartsPlace},</if>
             <if test="partsMakeWorkmanship != null">#{partsMakeWorkmanship},</if>
-        </trim>
+         </trim>
     </insert>
 
-    <update id="updatePartsMakeNum9" parameterType="PartsMakeNum9">
-        update parts_make_num_9
+    <update id="updatePartsRepairNum13" parameterType="PartsRepairNum13">
+        update parts_repair_num_13
         <trim prefix="SET" suffixOverrides=",">
             <if test="planeType != null">plane_type = #{planeType},</if>
             <if test="partsName != null">parts_name = #{partsName},</if>
@@ -122,9 +92,9 @@
             <if test="partsCode != null">parts_code = #{partsCode},</if>
             <if test="partsFactoryTime != null">parts_factory_time = #{partsFactoryTime},</if>
             <if test="partsManufacture != null">parts_manufacture = #{partsManufacture},</if>
-            <if test="partsMakeGroup != null">parts_make_group = #{partsMakeGroup},</if>
-            <if test="partsMakePeople != null">parts_make_people = #{partsMakePeople},</if>
-            <if test="partsMakeQuipment != null">parts_make_quipment = #{partsMakeQuipment},</if>
+            <if test="partsRepairGroup != null">parts_repair_group = #{partsRepairGroup},</if>
+            <if test="partsRepairPeople != null">parts_repair_people = #{partsRepairPeople},</if>
+            <if test="partsRepairQuipment != null">parts_repair_quipment = #{partsRepairQuipment},</if>
             <if test="partsMeasuringQuipment != null">parts_measuring_quipment = #{partsMeasuringQuipment},</if>
             <if test="rawMaterialPlace != null">raw_material_place = #{rawMaterialPlace},</if>
             <if test="sparePartsPlace != null">spare_parts_place = #{sparePartsPlace},</if>
@@ -133,12 +103,12 @@
         where id = #{id}
     </update>
 
-    <delete id="deletePartsMakeNum9ById" parameterType="Long">
-        delete from parts_make_num_9 where id = #{id}
+    <delete id="deletePartsRepairNum13ById" parameterType="Long">
+        delete from parts_repair_num_13 where id = #{id}
     </delete>
 
-    <delete id="deletePartsMakeNum9ByIds" parameterType="String">
-        delete from parts_make_num_9 where id in
+    <delete id="deletePartsRepairNum13ByIds" parameterType="String">
+        delete from parts_repair_num_13 where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

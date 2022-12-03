@@ -3,9 +3,7 @@ package com.ruoyi.project.system.controller;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.project.system.domain.ProductQuantity7;
-import com.ruoyi.project.system.domain.QualityProblem;
-import com.ruoyi.project.system.domain.QualityProblem1;
+import com.ruoyi.project.system.domain.*;
 import com.ruoyi.project.system.service.IQualityProblem1Service;
 import com.ruoyi.project.system.service.IQualityProblemService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.system.domain.PartsMakeNum9;
 import com.ruoyi.project.system.service.IPartsMakeNum9Service;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
@@ -255,6 +252,27 @@ public class PartsMakeNum9Controller extends BaseController
         List<PartsMakeNum9> list = partsMakeNum9Service.selectPartsMakeNum9List(partsMakeNum9);
         return getDataTable(list);
     }
+
+
+    /**
+     * 故障件生产数量对应质量问题数
+     */
+    @GetMapping("/numQuality")
+    public List<CountQuality> numQuality()
+    {
+        List<CountQuality> list = partsMakeNum9Service.selectNumFaultQuality();
+        return list;
+    }
+
+
+    @GetMapping("/numFault")
+    public List<CountQuality> numFault()
+    {
+        List<CountQuality> list = partsMakeNum9Service.selectNumFault();
+        return list;
+    }
+
+
 
     /**
      * 导出9：装备使用数据列表

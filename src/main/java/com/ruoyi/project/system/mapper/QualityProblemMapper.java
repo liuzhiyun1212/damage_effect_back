@@ -158,6 +158,12 @@ public interface QualityProblemMapper
      */
     public List<ProductModifyData> selectByProduceDeviceChanged();
 
+    /**
+     * 4.2.2.7.故障件测量设备变更情况
+     * @return
+     */
+    public List<ProductModifyData> selectByMeasuringDeviceChanged();
+
     /**4.2.2.16
      * @Description 不同使用环境中装备数量
      * @Author lixin
@@ -235,8 +241,26 @@ public interface QualityProblemMapper
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
+
     public List<Sum> nameAndModelByYear();
     public List<Sum> nameAndModelByQuarter();
-
+    /**4.2.2.10  装备生产工艺变更情况————查询生产工艺的质量问题总数
+     * @Description
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectQualityByMakeWorkmanship();
+    /**4.2.2.10  装备生产工艺变更情况————查询生产工艺的产品总数
+     * @Description
+     * @Author lixn
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<Sum> selectProductByMakeWorkmanship();
 
 }
