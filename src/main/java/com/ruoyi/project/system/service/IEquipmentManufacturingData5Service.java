@@ -20,6 +20,14 @@ public interface IEquipmentManufacturingData5Service
      */
     public EquipmentManufacturingData5 selectEquipmentManufacturingData5ById(Long id);
 
+
+
+    //查询有质量问题的装备制造数据
+    public List<EquipmentManufacturingData5> selectEquipmentManufacturingData5withproblem();
+
+
+
+
     /**
      * 查询【请填写功能名称】列表
      *
