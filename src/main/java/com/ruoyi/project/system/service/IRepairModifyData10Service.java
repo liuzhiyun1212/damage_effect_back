@@ -7,23 +7,25 @@ import com.ruoyi.project.system.domain.RepairModifyData10;
 
 /**
  * 【10：维修变更数据】Service接口
- * 
+ *
  * @author ruoyi
  * @date 2022-11-25
  */
-public interface IRepairModifyData10Service 
+public interface IRepairModifyData10Service
 {
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param id 【10：维修变更数据】主键
      * @return 【10：维修变更数据】
      */
     public RepairModifyData10 selectRepairModifyData10ById(Integer id);
 
+    public List<RepairModifyData10> selectRepairPeople();
+
     /**
      * 查询【10：维修变更数据】列表
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 【请填写功能名称】集合
      */
@@ -31,7 +33,7 @@ public interface IRepairModifyData10Service
 
     /**
      * 新增【10：维修变更数据】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -39,7 +41,7 @@ public interface IRepairModifyData10Service
 
     /**
      * 修改【10：维修变更数据】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -47,7 +49,7 @@ public interface IRepairModifyData10Service
 
     /**
      * 批量删除【10：维修变更数据】
-     * 
+     *
      * @param ids 需要删除的【请填写功能名称】主键集合
      * @return 结果
      */
@@ -55,7 +57,7 @@ public interface IRepairModifyData10Service
 
     /**
      * 删除【请填写功能名称】信息
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 结果
      */

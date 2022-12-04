@@ -12,19 +12,19 @@ import java.util.List;
 
 /**
  * 【1-：维修变更数据】Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-25
  */
 @Service
-public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service 
+public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 {
     @Autowired
     private RepairModifyData10Mapper repairModifyData10Mapper;
 
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
@@ -34,9 +34,14 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
         return repairModifyData10Mapper.selectRepairModifyData10ById(id);
     }
 
+    @Override
+    public List<RepairModifyData10> selectRepairPeople() {
+        return repairModifyData10Mapper.selectRepairPeople();
+    }
+
     /**
      * 查询【请填写功能名称】列表
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 【请填写功能名称】
      */
@@ -48,7 +53,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -60,7 +65,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -72,7 +77,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param ids 需要删除的【请填写功能名称】主键
      * @return 结果
      */
@@ -84,7 +89,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 删除【请填写功能名称】信息
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 结果
      */
