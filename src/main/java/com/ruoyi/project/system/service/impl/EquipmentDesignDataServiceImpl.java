@@ -1,17 +1,14 @@
 package com.ruoyi.project.system.service.impl;
 
-import java.util.List;
-
-import com.ruoyi.project.system.domain.install_way;
-import com.ruoyi.project.system.domain.partsSite;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.system.domain.ProductDesign;
+import com.ruoyi.project.system.domain.EquipmentDesignData;
+import com.ruoyi.project.system.mapper.EquipmentDesignDataMapper;
+import com.ruoyi.project.system.service.IEquipmentDesignDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.system.mapper.EquipmentDesignDataMapper;
-import com.ruoyi.project.system.domain.EquipmentDesignData;
-import com.ruoyi.project.system.service.IEquipmentDesignDataService;
+
+import java.util.List;
 
 /**
  * 装备设计/改型数据Service业务层处理
@@ -126,7 +123,7 @@ public class EquipmentDesignDataServiceImpl implements IEquipmentDesignDataServi
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getPlaneType() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getPlaneType() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
 
             }
