@@ -132,7 +132,23 @@ public class QualityProblemController extends BaseController
         ExcelUtil<QualityProblem> util = new ExcelUtil<QualityProblem>(QualityProblem.class);
         util.importTemplateExcel(response, "质量问题数据");
     }
-
+    /**
+     * 数据分析
+     *统计总数
+     * @param
+     * @return 统计结果
+     */
+    @GetMapping("/analysisCount")
+    public List<Integer> analysisCount(){
+        Sum sum = new Sum();
+        List<Sum> l1 = season(sum);
+        List<Integer> res=  new ArrayList<>();
+        int length = l1.size();
+//        4.2.1.1
+        res.add(length);
+        System.out.println(length);
+        return res;
+    }
     /**
      * 季度质量问题发生时间
      *
@@ -499,12 +515,63 @@ public class QualityProblemController extends BaseController
     }
 
 
-    public List<QualityProblem1Controller.ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
+//    public List<QualityProblem1Controller.ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
+//    {
+//        Set<String> modelName = new HashSet<>();
+//        List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+//        List<QualityProblem1Controller.ModelCount> listMC = new ArrayList<>();
+//
+//        int count;
+//        for(QualityProblem1 q:list){
+//            modelName.add(q.getFaultModel());
+//        }
+//
+//        for (String s:modelName) {
+//            count = 0;
+//            QualityProblem1Controller.ModelCount modelCount = new QualityProblem1Controller.ModelCount();
+//            for (QualityProblem1 q : list) {
+//                if (Objects.equals(s, q.getFaultModel())) {
+//                    modelCount.setFaultModel(s);
+//                    count++;
+//                    modelCount.setModelCount(count);
+//                }
+//            }
+//            listMC.add(modelCount);
+//        }
+//        return listMC;
+//    }
+static class ModelCount {
+    public String getFaultModel() {
+        return faultModel;
+    }
+
+    public void setFaultModel(String faultModel) {
+        this.faultModel = faultModel;
+    }
+
+    public int getModelCount() {
+        return modelCount;
+    }
+
+    public void setModelCount(int modelCount) {
+        this.modelCount = modelCount;
+    }
+
+    private String faultModel;
+    private int modelCount;
+}
+
+
+//高发故障模式
+@GetMapping("/faultStatistics")
+    public List<ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
     {
         Set<String> modelName = new HashSet<>();
         List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
-        List<QualityProblem1Controller.ModelCount> listMC = new ArrayList<>();
-
+        List<ModelCount> listMC = new ArrayList<>();
+        List<ModelCount> listMod = new ArrayList<>();
+        double averge = 0;
+        int sum=0;
         int count;
         for(QualityProblem1 q:list){
             modelName.add(q.getFaultModel());
@@ -512,7 +579,7 @@ public class QualityProblemController extends BaseController
 
         for (String s:modelName) {
             count = 0;
-            QualityProblem1Controller.ModelCount modelCount = new QualityProblem1Controller.ModelCount();
+            ModelCount modelCount = new ModelCount();
             for (QualityProblem1 q : list) {
                 if (Objects.equals(s, q.getFaultModel())) {
                     modelCount.setFaultModel(s);
@@ -522,9 +589,17 @@ public class QualityProblemController extends BaseController
             }
             listMC.add(modelCount);
         }
-        return listMC;
+        for(ModelCount m : listMC){
+            sum+=m.getModelCount();
+        }
+        averge = sum/listMC.size()*0.1;
+        for(ModelCount m : listMC){
+            if(m.getModelCount()>averge){
+                listMod.add(m);
+            }
+        }
+        return listMod;
     }
-
     /**4.2.2.16
      * @Description  (根据dev_use_time)不同状态故障模式
      * @Author lixn
@@ -537,11 +612,11 @@ public class QualityProblemController extends BaseController
     public List<String> selectState1(){
         List<DevState> devState = qualityProblemService.selectState1();
         QualityProblem1 qualityProblem1 = new QualityProblem1();
-        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        List<ModelCount> list2 = faultStatistics(qualityProblem1);
         List<String> list3=new ArrayList<>();
         int mark=0;
         for(DevState d:devState){
-            for(QualityProblem1Controller.ModelCount m:list2){
+            for(ModelCount m:list2){
                 if(d.getPartsModel().equals(m.getFaultModel())){
                     list3.add(d.getState());
                 }
@@ -605,14 +680,14 @@ public class QualityProblemController extends BaseController
         QualityProblem q = new QualityProblem();
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
         QualityProblem1 qualityProblem1 = new QualityProblem1();
-        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        List<ModelCount> list2 = faultStatistics(qualityProblem1);
         String s="";
         List<Sum> res = new ArrayList<>();
         for(QualityProblem i:list){
             if(i.getDevRepaired() == null){
                 continue;
             }
-            for(QualityProblem1Controller.ModelCount m: list2){
+            for(ModelCount m: list2){
                 if(m.getFaultModel().equals(i.getFaultModel()) && i.getDevRepaired().equals("是")){
                     s="大修过";
                 }
@@ -664,14 +739,14 @@ public class QualityProblemController extends BaseController
         QualityProblem q = new QualityProblem();
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
         QualityProblem1 qualityProblem1 = new QualityProblem1();
-        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        List<ModelCount> list2 = faultStatistics(qualityProblem1);
         String s="";
         List<Sum> res = new ArrayList<>();
         for(QualityProblem i:list){
             if(i.getDevRepaired() == null){
                 continue;
             }
-            for(QualityProblem1Controller.ModelCount m: list2){
+            for(ModelCount m: list2){
                 if(m.getFaultModel().equals(i.getFaultModel()) && i.getDevRepaired().equals("是")){
                     s="大修过";
                 }
@@ -701,7 +776,7 @@ public class QualityProblemController extends BaseController
         List<GradeCount> list = new ArrayList<>();
         List<GradeCount> list1 = qualityProblemService.selectByGradeFaultModel();
         QualityProblem1 qualityProblem1 = new QualityProblem1();
-        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        List<ModelCount> list2 = faultStatistics(qualityProblem1);
         for(int i=0;i<list1.size();i++){
             for(int j=0;j<list2.size();j++){
                 if(list1.get(i).getFaultModel().equals(list2.get(j).getFaultModel())){
@@ -936,11 +1011,11 @@ public class QualityProblemController extends BaseController
         QualityProblem q = new QualityProblem();
         List<QualityProblem> list = qualityProblemService.selectQualityProblemList(q);
         QualityProblem1 qualityProblem1 = new QualityProblem1();
-        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        List<ModelCount> list2 = faultStatistics(qualityProblem1);
 
         List<Environment> res = new ArrayList<>();
         for(QualityProblem i:list){
-            for(QualityProblem1Controller.ModelCount m: list2){
+            for(ModelCount m: list2){
                 if(m.getFaultModel().equals(i.getFaultModel())){
                     Environment environment = new Environment();
                     environment.setFaultModel(i.getFaultModel());
@@ -1491,7 +1566,7 @@ public class QualityProblemController extends BaseController
         }
         List<FaultModelMake> list3 = new ArrayList<>();
         QualityProblem1 qualityProblem1 = new QualityProblem1();
-        List<QualityProblem1Controller.ModelCount> list4 = faultStatistics(qualityProblem1);
+        List<ModelCount> list4 = faultStatistics(qualityProblem1);
         for(int i=0;i<list.size();i++){
             for(int j=0;j<list4.size();j++){
                 if(list.get(i).getFaultModel().equals(list4.get(j).getFaultModel())){
