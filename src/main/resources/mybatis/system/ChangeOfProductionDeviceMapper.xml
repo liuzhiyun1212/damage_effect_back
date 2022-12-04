@@ -9,6 +9,7 @@
         <result property="partsCode" column="parts_code"/>
         <result property="partsMakePeople" column="parts_make_people"/>
         <result property="partsMakeQuipment" column="parts_make_quipment"/>
+        <result property="partsMeasuringQuipment" column="parts_measuring_quipment"/>
     </resultMap>
 
     <select id="selectProducedList" resultMap="ChangeOfProductionDeviceResult">
@@ -20,6 +21,17 @@
         SELECT DISTINCT a.parts_code, b.parts_make_people, b.parts_make_quipment
         from quality_problem_1 a
         INNER JOIN parts_make_num_9 b on a.parts_code = b.parts_code
+    </select>
+
+    <select id="selectMeasuringDeviceList" resultMap="ChangeOfProductionDeviceResult">
+        select id, plane_type, parts_code, parts_make_people, parts_measuring_quipment
+        from parts_make_num_9
+    </select>
+
+    <select id="selectFaultMeasuringDeviceList" resultMap="ChangeOfProductionDeviceResult">
+        SELECT DISTINCT a.parts_code, b.parts_make_people, b.parts_measuring_quipment
+        from quality_problem_1 a
+                 INNER JOIN parts_make_num_9 b on a.parts_code = b.parts_code
     </select>
 
 </mapper>

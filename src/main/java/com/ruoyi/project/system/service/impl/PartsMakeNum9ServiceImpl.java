@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.system.domain.CountQuality;
 import com.ruoyi.project.system.domain.ProductQuantity7;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,19 +14,19 @@ import com.ruoyi.project.system.service.IPartsMakeNum9Service;
 
 /**
  * 9：装备使用数据Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-18
  */
 @Service
-public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service 
+public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service
 {
     @Autowired
     private PartsMakeNum9Mapper partsMakeNum9Mapper;
 
     /**
      * 查询9：装备使用数据
-     * 
+     *
      * @param id 9：装备使用数据主键
      * @return 9：装备使用数据
      */
@@ -35,9 +36,18 @@ public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service
         return partsMakeNum9Mapper.selectPartsMakeNum9ById(id);
     }
 
+    @Override
+    public List<CountQuality> selectNumFaultQuality() {
+        return partsMakeNum9Mapper.selectNumFaultQuality();
+    }
+
+    public List<CountQuality> selectNumFault() {
+        return partsMakeNum9Mapper.selectNumFault();
+    }
+
     /**
      * 查询9：装备使用数据列表
-     * 
+     *
      * @param partsMakeNum9 9：装备使用数据
      * @return 9：装备使用数据
      */
@@ -49,7 +59,7 @@ public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service
 
     /**
      * 新增9：装备使用数据
-     * 
+     *
      * @param partsMakeNum9 9：装备使用数据
      * @return 结果
      */
@@ -61,7 +71,7 @@ public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service
 
     /**
      * 修改9：装备使用数据
-     * 
+     *
      * @param partsMakeNum9 9：装备使用数据
      * @return 结果
      */
@@ -73,7 +83,7 @@ public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service
 
     /**
      * 批量删除9：装备使用数据
-     * 
+     *
      * @param ids 需要删除的9：装备使用数据主键
      * @return 结果
      */
@@ -85,7 +95,7 @@ public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service
 
     /**
      * 删除9：装备使用数据信息
-     * 
+     *
      * @param id 9：装备使用数据主键
      * @return 结果
      */

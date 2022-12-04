@@ -29,6 +29,8 @@ public interface IReasonRuleService {
 
     public List<devupone> selectProMeasuringDevOne();
 
+    public List<devupone> selectProMakeWorkmanshipOne();
+
     public List<devuptwo> selectMakeLine();
 
     public List<String> selectSeries();
@@ -50,6 +52,8 @@ public interface IReasonRuleService {
     public List<String> selectPartsMakeQuipment();
 
     public List<String> selectPartsMeasuringQuipment();
+
+    public List<String> selectPartsMakeWorkmanship();
 
     public List<String> selectPP();
 

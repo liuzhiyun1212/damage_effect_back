@@ -2,10 +2,6 @@ package com.ruoyi.project.system.service.impl;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.system.domain.FaultyPartsCount;
-import com.ruoyi.project.system.domain.PartsTypeCount;
-import com.ruoyi.project.system.domain.QualityProblem;
-import com.ruoyi.project.system.domain.Sum;
 import com.ruoyi.project.system.domain.*;
 import com.ruoyi.project.system.mapper.QualityProblemMapper;
 import com.ruoyi.project.system.service.IQualityProblemService;
@@ -173,7 +169,7 @@ public class QualityProblemServiceImpl implements IQualityProblemService
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getTitle() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getTitle() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }
@@ -260,6 +256,11 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     }
 
     @Override
+    public List<ProductModifyData> selectByMeasuringDeviceChanged() {
+        return qualityProblemMapper.selectByMeasuringDeviceChanged();
+    }
+
+    @Override
     public List<Sum> selectDevByEnvironment() {
         return qualityProblemMapper.selectDevByEnvironment();
     }
@@ -324,4 +325,30 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.nameAndModelByQuarter();
     }
 
+    @Override
+    public List<Sum> selectQualityByMakeWorkmanship() {
+        return qualityProblemMapper.selectQualityByMakeWorkmanship();
+    }
+
+    @Override
+    public List<Sum> selectProductByMakeWorkmanship() {
+        return qualityProblemMapper.selectProductByMakeWorkmanship();
+    }
+
+//    4.2.2.11维修班组以下四个
+    @Override
+    public List<RepairModifyData10> selectByGroupChanged() {
+        return qualityProblemMapper.selectByGroupChanged();
+    }
+    public List<ModelGroup> selectByGroupFaultModel() {
+        return qualityProblemMapper.selectByGroupFaultModel();
+    }
+    @Override
+    public List<Sum> qualitySumByGroup() {
+        return qualityProblemMapper.qualitySumByGroup();
+    }
+    @Override
+    public List<Sum> partsSumByGroup() {
+        return qualityProblemMapper.partsSumByGroup();
+    }
 }

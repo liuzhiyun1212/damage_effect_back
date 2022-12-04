@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 10:维修变更数据Controller
- * 
+ *
  * @author ruoyi
  *  2022-11-25
  */
@@ -48,6 +48,17 @@ public class RepairModifyData10Controller extends BaseController
         List<RepairModifyData10> list = repairModifyData10Service.selectRepairModifyData10List(repairModifyData10);
         return getDataTable(list);
     }
+
+    @GetMapping("/repairPeople")
+    public List<RepairModifyData10> list()
+    {
+        List<RepairModifyData10> list = repairModifyData10Service.selectRepairPeople();
+        return list;
+    }
+
+
+
+
 
     /**
      * 导出【10：维修变更数据】列表
