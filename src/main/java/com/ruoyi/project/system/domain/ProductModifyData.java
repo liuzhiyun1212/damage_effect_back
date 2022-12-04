@@ -30,7 +30,7 @@ public class ProductModifyData extends BaseEntity
 
     /** 装备改型时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "装备改型时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date modifyTime;
 
     /** 变更类型 */

@@ -1,16 +1,17 @@
 package com.ruoyi.project.system.service.impl;
 
-import java.util.List;
-
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.system.domain.ProductModify;
+import com.ruoyi.project.system.domain.ProductModifyData;
+import com.ruoyi.project.system.mapper.ProductModifyDataMapper;
+import com.ruoyi.project.system.service.IProductModifyDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.system.mapper.ProductModifyDataMapper;
-import com.ruoyi.project.system.domain.ProductModifyData;
-import com.ruoyi.project.system.service.IProductModifyDataService;
+
+import java.util.List;
 
 /**
  * 产品制造变更数据Service业务层处理
@@ -126,7 +127,7 @@ public class ProductModifyDataServiceImpl implements IProductModifyDataService
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getProductName() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getProductName() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }
@@ -141,5 +142,18 @@ public class ProductModifyDataServiceImpl implements IProductModifyDataService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    /**
+     * @Description 装备零部件供应商变更时间线
+     * @Author guohuijia
+     * @Date  2022/12/3
+     * @Param []
+     * @Return java.util.List<com.ruoyi.project.system.domain.ProductModify>
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @Override
+    public List<ProductModify> selectPartsManufactureChange() {
+        return productModifyDataMapper.selectPartsManufactureChange();
     }
 }

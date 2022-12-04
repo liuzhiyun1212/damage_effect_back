@@ -5,23 +5,29 @@ import com.ruoyi.project.system.domain.RepairModifyData10;
 
 /**
  * 【请填写功能名称】Mapper接口
- * 
+ *
  * @author ruoyi
  * @date 2022-11-25
  */
-public interface RepairModifyData10Mapper 
+public interface RepairModifyData10Mapper
 {
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
     public RepairModifyData10 selectRepairModifyData10ById(Integer id);
 
+
+    /**
+     * 故障件维修人员变更时间线
+     */
+    public List<RepairModifyData10> selectRepairPeople();
+
     /**
      * 查询【请填写功能名称】列表
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 【请填写功能名称】集合
      */
@@ -29,7 +35,7 @@ public interface RepairModifyData10Mapper
 
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -37,7 +43,7 @@ public interface RepairModifyData10Mapper
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -45,7 +51,7 @@ public interface RepairModifyData10Mapper
 
     /**
      * 删除【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 结果
      */
@@ -53,7 +59,7 @@ public interface RepairModifyData10Mapper
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */

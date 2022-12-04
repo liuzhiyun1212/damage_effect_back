@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.RepairModifyData10Mapper">
-    
+
     <resultMap type="RepairModifyData10" id="RepairModifyData10Result">
         <result property="id"    column="id"    />
         <result property="partsName"    column="parts_name"    />
@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectRepairModifyData10List" parameterType="RepairModifyData10" resultMap="RepairModifyData10Result">
         <include refid="selectRepairModifyData10Vo"/>
-        <where>  
+        <where>
             <if test="partsName != null  and partsName != ''"> and parts_name like concat('%', #{partsName}, '%')</if>
             <if test="partsModel != null  and partsModel != ''"> and parts_model = #{partsModel}</if>
             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
@@ -27,12 +27,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="modifyMethod != null  and modifyMethod != ''"> and modify_method = #{modifyMethod}</if>
         </where>
     </select>
-    
+
     <select id="selectRepairModifyData10ById" parameterType="Integer" resultMap="RepairModifyData10Result">
         <include refid="selectRepairModifyData10Vo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectRepairPeople" resultMap="RepairModifyData10Result">
+        SELECT a.parts_name,
+            a.parts_model,
+            a.modify_time
+        FROM repair_modify_data_10 a ,quality_problem_1 b
+        WHERE a.parts_name=b.parts_name AND  a.modify_type="维修人员变更" AND a.parts_model=b.parts_model
+        GROUP BY a.modify_time
+        ORDER BY a.modify_time
+    </select>
+
+
+
+
+
     <insert id="insertRepairModifyData10" parameterType="RepairModifyData10" useGeneratedKeys="true" keyProperty="id">
         insert into repair_modify_data_10
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -68,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteRepairModifyData10ByIds" parameterType="String">
-        delete from repair_modify_data_10 where id in 
+        delete from repair_modify_data_10 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

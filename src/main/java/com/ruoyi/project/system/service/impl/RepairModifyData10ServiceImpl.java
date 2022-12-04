@@ -1,31 +1,30 @@
 package com.ruoyi.project.system.service.impl;
 
-import java.util.List;
-
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.system.domain.EquipmentDeploymentData11;
+import com.ruoyi.project.system.domain.RepairModifyData10;
+import com.ruoyi.project.system.mapper.RepairModifyData10Mapper;
+import com.ruoyi.project.system.service.IRepairModifyData10Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.system.mapper.RepairModifyData10Mapper;
-import com.ruoyi.project.system.domain.RepairModifyData10;
-import com.ruoyi.project.system.service.IRepairModifyData10Service;
+
+import java.util.List;
 
 /**
  * 【1-：维修变更数据】Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-25
  */
 @Service
-public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service 
+public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 {
     @Autowired
     private RepairModifyData10Mapper repairModifyData10Mapper;
 
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
@@ -35,9 +34,14 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
         return repairModifyData10Mapper.selectRepairModifyData10ById(id);
     }
 
+    @Override
+    public List<RepairModifyData10> selectRepairPeople() {
+        return repairModifyData10Mapper.selectRepairPeople();
+    }
+
     /**
      * 查询【请填写功能名称】列表
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 【请填写功能名称】
      */
@@ -49,7 +53,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -61,7 +65,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param repairModifyData10 【请填写功能名称】
      * @return 结果
      */
@@ -73,7 +77,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param ids 需要删除的【请填写功能名称】主键
      * @return 结果
      */
@@ -85,7 +89,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
 
     /**
      * 删除【请填写功能名称】信息
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 结果
      */
@@ -124,7 +128,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getPartsName() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getPartsName() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
 
             }

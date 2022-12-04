@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ProductModifyData" id="ProductModifyDataResult">
         <result property="productName"    column="product_name"    />
         <result property="modifyTime"    column="modify_time"    />
+        <result property="productModel"    column="product_model"    />
     </resultMap>
 
     <resultMap type="QualityProblem" id="partsNameResult">
@@ -87,7 +88,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sparePartsPlace"    column="spare_parts_place"    />
         <result property="partsMakeWorkmanship"    column="parts_make_workmanship"    />
     </resultMap>
-
+<!--    4.2.2.11的result-->
+    <resultMap id="RepairModifyDataResult" type="RepairModifyData10">
+        <result property="partsName"    column="parts_name"    />
+        <result property="modifyTime"    column="modify_time"    />
+    </resultMap>
+    <resultMap id="ModelGroupResult" type="ModelGroup">
+        <result property="partsName"    column="parts_name"    />
+        <result property="faultModel"    column="fault_model"    />
+        <result property="partsRepairGroup"    column="parts_repair_group"    />
+    </resultMap>
 <!--    生产表-->
     <sql id="selectQualityProblemVo">
         select id, title, plane_type, dev_code, dev_unit, dev_manufacture, dev_factory_time, dev_use_time, dev_happen_time, parts_type, parts_name, parts_model, parts_code, parts_unit, parts_manufacture, parts_factory_time, parts_use_time, fault_phenomenon, fault_model, environment, dev_repaired, repaired_time, repaired_factory, repaired_staff from quality_problem_1
@@ -153,15 +163,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <!--    不同使用环境中装备数量-->
     <select id="selectDevByEnvironment" resultMap="SumResult">
-        select environment createTime, count(DISTINCT dev_code) sum
+                select environment createTime, count(DISTINCT dev_code) sum
         from quality_problem_1 as q
         GROUP BY environment
+				ORDER BY environment
     </select>
 <!--    不同使用环境中对应质量问题数-->
     <select id="selectQualityByEnvironment" resultMap="SumResult">
-        SELECT environment createTime,count(id) sum
+				SELECT environment createTime,count(id) sum
         from quality_problem_1
         GROUP BY environment
+				ORDER BY environment
     </select>
     <!--    故障件生产班组变更-->
     <select id="selectByGradeChanged" resultMap="ProductModifyDataResult">
@@ -176,10 +188,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT product_name,modify_time
         FROM quality_problem_1 as q, product_modify_data_6 as p
         where q.parts_model = p.product_model and p.modify_type='生产设备变更'
-        GROUP BY modify_time
+        GROUP BY CONCAT(modify_time,product_name)
         ORDER BY modify_time asc
     </select>
-<!--班组、故障件、故障模式-->
+    <!--    故障件测量设备变更-->
+    <select id="selectByMeasuringDeviceChanged" resultMap="ProductModifyDataResult">
+        SELECT product_name, modify_time,product_model
+        FROM quality_problem_1 as q, product_modify_data_6 as p
+        where q.parts_model = p.product_model and p.modify_type='测量设备变更'
+        GROUP BY CONCAT(modify_time,product_name)
+        ORDER BY modify_time asc
+    </select>
+<!--生产班组、故障件、故障模式-->
     <select id="selectByGradeFaultModel" resultMap="GradeCountResult">
         SELECT p.parts_name,fault_model,parts_make_group
         from quality_problem_1 as q,parts_make_num_9 as p
@@ -187,7 +207,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <!--班组统计质量问题总数-->
     <select id="qualitySumByGrade" parameterType="Sum" resultMap="SumResult">
-         SELECT parts_make_group createTime, count(q.parts_code) sum
+         SELECT parts_make_group createTime, count(q.id) sum
         from quality_problem_1 as q, parts_make_num_9 as p
         WHERE q.parts_code = p.parts_code
 				GROUP BY parts_make_group
@@ -410,5 +430,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             quality_problem_1
         GROUP BY
             parts_type
+    </select>
+<!--    4.2.2.10  装备生产工艺变更情况————查询生产工艺的质量问题总数-->
+    <select id="selectQualityByMakeWorkmanship" resultMap="SumResult">
+        SELECT parts_make_workmanship createTime, count(q.id) sum
+        from quality_problem_1 as q, parts_make_num_9 as p
+        WHERE q.parts_code = p.parts_code
+				GROUP BY parts_make_workmanship
+				ORDER BY parts_make_workmanship
+    </select>
+    <!--    4.2.2.10  装备生产工艺变更情况————查询生产工艺的产品总数-->
+    <select id="selectProductByMakeWorkmanship" resultMap="SumResult">
+SELECT parts_make_workmanship createTime,count(DISTINCT parts_code) sum
+        from parts_make_num_9
+        GROUP BY parts_make_workmanship
+				ORDER BY parts_make_workmanship
+    </select>
+
+<!--    4.2.2.11.故障件维修班组变更情况以下四个-->
+    <!--    故障件维修班组变更-->
+    <select id="selectByGroupChanged" resultMap="RepairModifyDataResult">
+        SELECT p.parts_name,modify_time
+        FROM quality_problem_1 as q, repair_modify_data_10 as p
+        where q.parts_model = p.parts_model and p.modify_type='维修班组变更'
+        GROUP BY modify_time
+        ORDER BY modify_time asc
+    </select>
+    <!--维修班组、故障件、故障模式-->
+    <select id="selectByGroupFaultModel" resultMap="ModelGroupResult">
+        SELECT p.parts_name,fault_model,parts_repair_group
+        from quality_problem_1 as q,parts_repair_num_13 as p
+        WHERE q.parts_code = p.parts_code
+    </select>
+    <!--维修班组统计质量问题总数-->
+    <select id="qualitySumByGroup" parameterType="Sum" resultMap="SumResult">
+        SELECT parts_repair_group createTime, count(q.id) sum
+        from quality_problem_1 as q, parts_repair_num_13 as p
+        WHERE q.parts_code = p.parts_code
+        GROUP BY parts_repair_group
+    </select>
+    <!--维修班组统计产品总数-->
+    <select id="partsSumByGroup" parameterType="Sum" resultMap="SumResult">
+        SELECT parts_repair_group createTime,count(parts_code) sum
+        from parts_repair_num_13
+        GROUP BY parts_repair_group
     </select>
 </mapper>
