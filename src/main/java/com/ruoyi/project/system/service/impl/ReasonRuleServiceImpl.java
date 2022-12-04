@@ -71,6 +71,11 @@ public class ReasonRuleServiceImpl implements IReasonRuleService {
     }
 
     @Override
+    public List<devupone> selectProMakeWorkmanshipOne(){
+        return reasonRuleMapper.selectProMakeWorkmanshipOne();
+    }
+
+    @Override
     public List<devuptwo> selectMakeLine(){
         return reasonRuleMapper.selectMakeLine();
     }
@@ -123,6 +128,11 @@ public class ReasonRuleServiceImpl implements IReasonRuleService {
     @Override
     public List<String> selectPartsMeasuringQuipment(){
         return reasonRuleMapper.selectPartsMeasuringQuipment();
+    }
+
+    @Override
+    public List<String> selectPartsMakeWorkmanship(){
+        return reasonRuleMapper.selectPartsMakeWorkmanship();
     }
 
     @Override
