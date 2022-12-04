@@ -4,6 +4,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 //import org.junit.Test;
+import com.ruoyi.project.system.domain.ModelGroup;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,13 +79,6 @@ public class QualityProblem1Controller extends BaseController
                     ", modelCount=" + modelCount +
                     '}';
         }
-//        @Override
-//        public String toString() {
-//            return "ModelCount{" +
-//                    "faultModel='" + faultModel + '\'' +
-//                    ", modelCount=" + modelCount +
-//                    '}';
-//        }
     }
 
 
@@ -175,4 +169,66 @@ public class QualityProblem1Controller extends BaseController
     {
         return toAjax(qualityProblem1Service.deleteQualityProblem1ByIds(ids));
     }
+
+
+    /**
+     * 故障模式和个数
+     */
+    static class ModelCount1 {
+        public String getFaultModel() {
+            return faultModel;
+        }
+
+        public void setFaultModel(String faultModel) {
+            this.faultModel = faultModel;
+        }
+
+        public int getModelCount() {
+            return modelCount;
+        }
+
+        public void setModelCount(int modelCount) {
+            this.modelCount = modelCount;
+        }
+
+        private String faultModel;
+        private int modelCount;
+
+        @Override
+        public String toString() {
+            return "ModelCount{" +
+                    "faultModel='" + faultModel + '\'' +
+                    ", modelCount=" + modelCount +
+                    '}';
+        }
+    }
+
+    @GetMapping("/faultStatistics1")
+    public List<ModelCount1> faultStatistics1(QualityProblem1 qualityProblem1)
+    {
+        Set<String> modelName = new HashSet<>();
+        List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+        List<ModelCount1> listMC = new ArrayList<>();
+
+        int count;
+        for(QualityProblem1 q:list){
+            modelName.add(q.getFaultModel());
+        }
+
+        for (String s:modelName) {
+            count = 0;
+            ModelCount1 modelCount = new ModelCount1();
+            for (QualityProblem1 q : list) {
+                if (Objects.equals(s, q.getFaultModel())) {
+                    modelCount.setFaultModel(s);
+                    count++;
+                    modelCount.setModelCount(count);
+                }
+            }
+            listMC.add(modelCount);
+        }
+
+        return listMC;
+    }
+
 }

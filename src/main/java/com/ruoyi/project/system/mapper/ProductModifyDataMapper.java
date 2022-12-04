@@ -1,8 +1,9 @@
 package com.ruoyi.project.system.mapper;
 
-import java.util.List;
+import com.ruoyi.project.system.domain.ProductModify;
 import com.ruoyi.project.system.domain.ProductModifyData;
-import io.lettuce.core.dynamic.annotation.Param;
+
+import java.util.List;
 
 /**
  * 产品制造变更数据Mapper接口
@@ -59,4 +60,9 @@ public interface ProductModifyDataMapper
      * @return 结果
      */
     public int deleteProductModifyDataByIds(Long[] ids);
+
+    /**
+     * 装备零部件供应商变更时间线
+     */
+    public List<ProductModify> selectPartsManufactureChange();
 }

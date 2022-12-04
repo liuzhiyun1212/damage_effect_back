@@ -827,17 +827,18 @@ static class ModelCount {
     public List<Sum> qualitySumByGrade() {
         List<Sum> l1 = qualityProblemService.qualitySumByGrade();
         List<String> grade = new ArrayList<>();
-               grade = selectByGradeFaultModel();
+        grade = selectByGradeFaultModel();
         List<Sum> res = new ArrayList<>();
         for(Sum i:l1){
             for(String j:grade){
                 if(i.getQuarter().equals(j)){
                     res.add(i);
+                    System.out.println(i);
                 }
             }
         }
 //        System.out.println("测试aaaaaaaaa" + l1);
-  //      System.out.println("测试aaaaaaaaa" + res);
+//        System.out.println("测试aaaaaaaaa" + res);
         return res;
     }
     /**4.2.2.3
@@ -1655,6 +1656,72 @@ static class ModelCount {
         return res;
     }
 
+    /**
+     * 4.2.2.11
+     */
+    static class ModelCount1 {
+        public String getFaultModel() {
+            return faultModel;
+        }
+
+        public void setFaultModel(String faultModel) {
+            this.faultModel = faultModel;
+        }
+
+        public int getModelCount() {
+            return modelCount;
+        }
+
+        public void setModelCount(int modelCount) {
+            this.modelCount = modelCount;
+        }
+
+        private String faultModel;
+        private int modelCount;
+    }
+
+
+    //高发故障模式
+    @GetMapping("/faultStatistics1")
+    public List<ModelCount1> faultStatistics1(QualityProblem1 qualityProblem1)
+    {
+        Set<String> modelName = new HashSet<>();
+        List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
+        List<ModelCount1> listMC = new ArrayList<>();
+        List<ModelCount1> listMod = new ArrayList<>();
+        double averge = 0;
+        int sum=0;
+        int count;
+        for(QualityProblem1 q:list){
+            modelName.add(q.getFaultModel());
+        }
+
+        for (String s:modelName) {
+            count = 0;
+            ModelCount1 modelCount = new ModelCount1();
+            for (QualityProblem1 q : list) {
+                if (Objects.equals(s, q.getFaultModel())) {
+                    modelCount.setFaultModel(s);
+                    count++;
+                    modelCount.setModelCount(count);
+                }
+            }
+            listMC.add(modelCount);
+        }
+        for(ModelCount1 m : listMC){
+            sum+=m.getModelCount();
+        }
+        averge = sum/listMC.size()*0.1;
+        for(ModelCount1 m : listMC){
+            if(m.getModelCount()>averge){
+                listMod.add(m);
+            }
+        }
+        return listMod;
+    }
+
+
+
     /**4.2.2.11
      * @Description 高发故障模式涉及到的故障件的维修班组
      * @Date  2022/11/14
@@ -1667,7 +1734,7 @@ static class ModelCount {
         List<ModelGroup> list = new ArrayList<>();
         List<ModelGroup> list1 = qualityProblemService.selectByGroupFaultModel();
         QualityProblem1 qualityProblem1 = new QualityProblem1();
-        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        List<ModelCount1> list2 = faultStatistics1(qualityProblem1);
         for(int i=0;i<list1.size();i++){
             for(int j=0;j<list2.size();j++){
                 if(list1.get(i).getFaultModel().equals(list2.get(j).getFaultModel())){
@@ -1690,46 +1757,55 @@ static class ModelCount {
         }
         return result;
     }
-    /**4.2.2.11
+    /**
+     * 4.2.2.11
+     *
      * @Description 维修班组统计质量问题总数
-     * @Date  2022/11/14
+     * @Date 2022/11/14
      * @Param
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @GetMapping("/qualitySumByGroup")
-    public List<Integer> qualitySumByGroup() {
+    public List<Sum> qualitySumByGroup() {
         List<Sum> l1 = qualityProblemService.qualitySumByGroup();
-        List<String> grade = selectByGroupFaultModel();
-        List<Integer> res = new ArrayList<>();
+        System.out.println("whhh"+l1);
+        List<String> grade = new ArrayList<>();
+        grade = selectByGroupFaultModel();
+        List<Sum> res = new ArrayList<>();
         for(Sum i:l1){
             for(String j:grade){
                 if(i.getQuarter().equals(j)){
-                    res.add(i.getSum());
+                    res.add(i);
                 }
             }
         }
+        System.out.println("whhh55555"+res);
         return res;
     }
-    /**4.2.2.11
+    /**
+     * 4.2.2.11
+     *
      * @Description 维修班组统计产品总数
-     * @Date  2022/11/14
+     * @Date 2022/11/14
      * @Param
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @GetMapping("/partsSumByGroup")
-    public List<Integer> partsSumByGroup() {
+    public List<Sum> partsSumByGroup() {
         List<Sum> l1 = qualityProblemService.partsSumByGroup();
         List<String> grade = selectByGroupFaultModel();
-        List<Integer> res = new ArrayList<>();
+        List<Sum> res = new ArrayList<>();
         for(Sum i:l1){
             for(String j:grade){
                 if(i.getQuarter().equals(j)){
-                    res.add(i.getSum());
+                    res.add(i);
                 }
             }
         }
+        System.out.println("whhh00000"+res);
+        System.out.println("whhh11111"+res);
         return res;
     }
     /**4.2.2.11

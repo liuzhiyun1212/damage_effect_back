@@ -127,7 +127,7 @@ public class EquipmentManufacturingData5ServiceImpl implements IEquipmentManufac
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getPlaneType() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getPlaneType() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }

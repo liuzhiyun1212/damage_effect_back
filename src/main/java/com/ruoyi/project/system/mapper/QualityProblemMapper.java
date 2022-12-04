@@ -264,7 +264,7 @@ public interface QualityProblemMapper
      */
     public List<Sum> selectProductByMakeWorkmanship();
 
-    /**4.2.2.3
+    /**4.2.2.11
      * @Description 故障件生产班组变更
      * @Author lixin
      * @Date  2022/11/14
@@ -281,14 +281,18 @@ public interface QualityProblemMapper
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<ModelGroup> selectByGroupFaultModel();
-    /**4.2.2.11
+
+    /**
+     * 4.2.2.11
+     *
      * @Description 维修班组统计质量问题总数
-     * @Date  2022/11/14
+     * @Date 2022/11/14
      * @Param
      * @Return
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> qualitySumByGroup();
+
     /**4.2.2.11
      * @Description 维修班组统计产品总数
      * @Date  2022/11/14

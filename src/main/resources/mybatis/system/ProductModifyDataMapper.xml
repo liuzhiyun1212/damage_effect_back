@@ -13,6 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="modifyMethod"    column="modify_method"    />
     </resultMap>
 
+    <resultMap type="ProductModify" id="PartsManufactureChangeResult">
+        <result property="productModel"    column="product_model"    />
+        <result property="productName"    column="product_name"    />
+        <result property="modifyTime"    column="modify_time"    />
+    </resultMap>
+
     <sql id="selectProductModifyDataVo">
         select id, product_name, product_model, modify_time, modify_type, modify_method from product_modify_data_6
     </sql>
@@ -83,4 +89,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectPartsManufactureChange"  resultMap="PartsManufactureChangeResult">
+        SELECT
+          product_name,product_model,modify_time
+        FROM product_modify_data_6
+        WHERE
+          modify_type = "零部件来源变更"
+        GROUP BY modify_time,product_name,product_model
+        ORDER BY modify_time
+    </select>
 </mapper>
