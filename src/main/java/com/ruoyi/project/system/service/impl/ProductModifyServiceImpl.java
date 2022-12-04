@@ -1,16 +1,16 @@
 package com.ruoyi.project.system.service.impl;
 
-import java.util.List;
-
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.system.domain.ProductModify;
+import com.ruoyi.project.system.mapper.ProductModifyMapper;
+import com.ruoyi.project.system.service.IProductModifyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.system.mapper.ProductModifyMapper;
-import com.ruoyi.project.system.domain.ProductModify;
-import com.ruoyi.project.system.service.IProductModifyService;
+
+import java.util.List;
 
 /**
  * 产品改型数据Service业务层处理
@@ -130,7 +130,7 @@ public class ProductModifyServiceImpl implements IProductModifyService
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getPlaneType() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getPlaneType() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }

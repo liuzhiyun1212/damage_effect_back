@@ -1,15 +1,14 @@
 package com.ruoyi.project.system.service.impl;
 
-import java.util.List;
-
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.system.domain.EquipmentDeploymentData11;
+import com.ruoyi.project.system.domain.RepairModifyData10;
+import com.ruoyi.project.system.mapper.RepairModifyData10Mapper;
+import com.ruoyi.project.system.service.IRepairModifyData10Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.system.mapper.RepairModifyData10Mapper;
-import com.ruoyi.project.system.domain.RepairModifyData10;
-import com.ruoyi.project.system.service.IRepairModifyData10Service;
+
+import java.util.List;
 
 /**
  * 【1-：维修变更数据】Service业务层处理
@@ -124,7 +123,7 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getPartsName() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getPartsName() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
 
             }

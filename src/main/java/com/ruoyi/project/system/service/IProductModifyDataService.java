@@ -1,7 +1,9 @@
 package com.ruoyi.project.system.service;
 
-import java.util.List;
+import com.ruoyi.project.system.domain.ProductModify;
 import com.ruoyi.project.system.domain.ProductModifyData;
+
+import java.util.List;
 
 /**
  * 产品制造变更数据Service接口
@@ -68,4 +70,14 @@ public interface IProductModifyDataService
      * @return 结果
      */
     public String importData(List<ProductModifyData> importDataList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * @Description 装备零部件供应商变更时间线
+     * @Author guohuijia
+     * @Date  2022/12/3
+     * @Param []
+     * @Return java.util.List<com.ruoyi.project.system.domain.ProductModify>
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<ProductModify>  selectPartsManufactureChange();
 }

@@ -1,15 +1,14 @@
 package com.ruoyi.project.system.service.impl;
 
-import java.util.List;
-
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.system.domain.ProductQuantity7;
+import com.ruoyi.project.system.domain.PartsMakeNum9;
+import com.ruoyi.project.system.mapper.PartsMakeNum9Mapper;
+import com.ruoyi.project.system.service.IPartsMakeNum9Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.system.mapper.PartsMakeNum9Mapper;
-import com.ruoyi.project.system.domain.PartsMakeNum9;
-import com.ruoyi.project.system.service.IPartsMakeNum9Service;
+
+import java.util.List;
 
 /**
  * 9：装备使用数据Service业务层处理
@@ -124,7 +123,7 @@ public class PartsMakeNum9ServiceImpl implements IPartsMakeNum9Service
             }catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + importData.getPlaneType() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、数据 " + importData.getPlaneType() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
 
             }
