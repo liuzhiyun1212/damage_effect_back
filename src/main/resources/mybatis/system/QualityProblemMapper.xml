@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ProductModifyData" id="ProductModifyDataResult">
         <result property="productName"    column="product_name"    />
         <result property="modifyTime"    column="modify_time"    />
+        <result property="productModel"    column="product_model"    />
     </resultMap>
 
     <resultMap type="QualityProblem" id="partsNameResult">
@@ -187,15 +188,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT product_name,modify_time
         FROM quality_problem_1 as q, product_modify_data_6 as p
         where q.parts_model = p.product_model and p.modify_type='生产设备变更'
-        GROUP BY modify_time
+        GROUP BY CONCAT(modify_time,product_name)
         ORDER BY modify_time asc
     </select>
     <!--    故障件测量设备变更-->
     <select id="selectByMeasuringDeviceChanged" resultMap="ProductModifyDataResult">
-        SELECT product_name,modify_time
+        SELECT product_name, modify_time,product_model
         FROM quality_problem_1 as q, product_modify_data_6 as p
         where q.parts_model = p.product_model and p.modify_type='测量设备变更'
-        GROUP BY modify_time
+        GROUP BY CONCAT(modify_time,product_name)
         ORDER BY modify_time asc
     </select>
 <!--生产班组、故障件、故障模式-->

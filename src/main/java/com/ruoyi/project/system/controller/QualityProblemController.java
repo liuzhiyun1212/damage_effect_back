@@ -1151,7 +1151,6 @@ static class ModelCount {
     @GetMapping("/timeProduceDeviceChanged")
     public List<time1> timeProduceDeviceChanged() {
         List<String> st = new ArrayList<>();
-        List<String> st1 = new ArrayList<>();
         List<time1> res = new ArrayList<>();
         List<ProductModifyData> list = qualityProblemService.selectByProduceDeviceChanged();
         int mark = 0;
@@ -1164,6 +1163,7 @@ static class ModelCount {
             if (mark == 0) {
                 st.add(p.getProductName());
             }
+            mark=0;
         }
         for (String s : st) {
             time1 t1 = new time1();
@@ -1207,6 +1207,7 @@ static class ModelCount {
     public List<time1> timeMeasuringDeviceChanged() {
         List<String> st = new ArrayList<>();
         List<time1> res = new ArrayList<>();
+        // 根据日期和设备名查询
         List<ProductModifyData> list = qualityProblemService.selectByMeasuringDeviceChanged();
         int mark = 0;
         for (ProductModifyData p : list) {
@@ -1218,6 +1219,7 @@ static class ModelCount {
             if (mark == 0) {
                 st.add(p.getProductName());
             }
+            mark = 0;
         }
         for (String s : st) {
             time1 t1 = new time1();
