@@ -256,6 +256,11 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     }
 
     @Override
+    public List<ProductModifyData> selectByMeasuringDeviceChanged() {
+        return qualityProblemMapper.selectByMeasuringDeviceChanged();
+    }
+
+    @Override
     public List<Sum> selectDevByEnvironment() {
         return qualityProblemMapper.selectDevByEnvironment();
     }
@@ -320,4 +325,30 @@ public class QualityProblemServiceImpl implements IQualityProblemService
         return qualityProblemMapper.nameAndModelByQuarter();
     }
 
+    @Override
+    public List<Sum> selectQualityByMakeWorkmanship() {
+        return qualityProblemMapper.selectQualityByMakeWorkmanship();
+    }
+
+    @Override
+    public List<Sum> selectProductByMakeWorkmanship() {
+        return qualityProblemMapper.selectProductByMakeWorkmanship();
+    }
+
+//    4.2.2.11维修班组以下四个
+    @Override
+    public List<RepairModifyData10> selectByGroupChanged() {
+        return qualityProblemMapper.selectByGroupChanged();
+    }
+    public List<ModelGroup> selectByGroupFaultModel() {
+        return qualityProblemMapper.selectByGroupFaultModel();
+    }
+    @Override
+    public List<Sum> qualitySumByGroup() {
+        return qualityProblemMapper.qualitySumByGrade();
+    }
+    @Override
+    public List<Sum> partsSumByGroup() {
+        return qualityProblemMapper.productSumByGrade();
+    }
 }

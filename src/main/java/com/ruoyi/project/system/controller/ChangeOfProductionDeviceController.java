@@ -20,7 +20,12 @@ public class ChangeOfProductionDeviceController {
     IChangeOfProductionDeviceService deviceService;
 
     @GetMapping("/changeOfProductionDevice/getChartData")
-    public R<JSONObject> getCheckList() {
-        return R.ok(deviceService.getChartData());
+    public R<JSONObject> getProductionDeviceChartList() {
+        return R.ok(deviceService.getProductionDeviceChartList());
+    }
+
+    @GetMapping("/changeOfMeasuringDevice/getMeasuringDeviceChart")
+    public R<JSONObject> getMeasuringDeviceChartList() {
+        return R.ok(deviceService.getMeasuringDeviceChartList());
     }
 }

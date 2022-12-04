@@ -21,6 +21,11 @@ public class ChangeOfProductionDevice {
     //生产故障设备的加工设备列表
     private List partsFaultQuipmentList;
 
+    //测量设备
+    private String partsMeasuringQuipment;
+    //测量设备列表
+    private List partsMeasuringQuipmentList;
+
     public String getId() {
         return id;
     }
@@ -91,5 +96,21 @@ public class ChangeOfProductionDevice {
 
     public void setPartsFaultQuipmentList(List partsFaultQuipmentList) {
         this.partsFaultQuipmentList = partsFaultQuipmentList;
+    }
+
+    public String getPartsMeasuringQuipment() {
+        return partsMeasuringQuipment;
+    }
+
+    public void setPartsMeasuringQuipment(String partsMeasuringQuipment) {
+        this.partsMeasuringQuipment = partsMeasuringQuipment;
+    }
+
+    public List getPartsMeasuringQuipmentList() {
+        return partsMeasuringQuipmentList;
+    }
+
+    public void setPartsMeasuringQuipmentList(List partsMeasuringQuipmentList) {
+        this.partsMeasuringQuipmentList = partsMeasuringQuipmentList;
     }
 }

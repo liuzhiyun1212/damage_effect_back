@@ -542,7 +542,6 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
     @Override
     public Map getChartData() throws Exception {
         List<AircraftTypeAndTime> list = aircraftTypeAndTypeMapper.selectQuarter();
-        //todo 为什么实体类中的devHappenTime的@JsonFormat不起作用
         //格式化数据
         for (AircraftTypeAndTime item : list) {
             item.setDevHappenTime(DateUtil.date(item.getDevHappenTime()));
@@ -581,6 +580,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
             resMap.put("name", item.getPlaneType());
             resMap.put("type", "line");
             resMap.put("data", numList2);
+            resMap.put("smooth", true);
             //添加到list中的是不同机型的map
             distinctNameMap.put(item.getPlaneType(), resMap);
         }
@@ -785,6 +785,7 @@ public class AircraftTypeAndTypeServiceImpl implements IAircraftTypeAndTypeServi
             resMap.put("name", item.getPlaneType());
             resMap.put("type", "line");
             resMap.put("data", useDataList);
+            resMap.put("smooth", true);
 //            resMap.put("stack", "Total");
 //            resMap.put("areaStyle", new JSONObject());
 //            resMap.put("emphasis", new JSONObject().append("focus", "series"));

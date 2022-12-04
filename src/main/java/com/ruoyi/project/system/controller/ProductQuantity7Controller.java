@@ -104,31 +104,4 @@ public class ProductQuantity7Controller extends BaseController
     {
         return toAjax(productQuantity7Service.deleteProductQuantity7ByIds(ids));
     }
-    /**
-     * 导入产品改型列表
-     */
-    @Log(title = "产品生产数量", businessType = BusinessType.IMPORT)
-    @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
-    {
-        ExcelUtil<ProductQuantity7> util = new ExcelUtil<ProductQuantity7>(ProductQuantity7.class);
-        List<ProductQuantity7> importDataList = util.importExcel(file.getInputStream());
-        String operName = getUsername();
-        String message = productQuantity7Service.importData(importDataList, updateSupport, operName);
-        return AjaxResult.success(message);
-    }
-    /**
-     * @Description 下载导入产品改型模板
-     * @Author guohuijia
-     * @Date  2022/11/13
-     * @Param [response]
-     * @Return void
-     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
-     */
-    @PostMapping("/importTemplate")
-    public void importTemplate(HttpServletResponse response)
-    {
-        ExcelUtil<ProductQuantity7> util = new ExcelUtil<ProductQuantity7>(ProductQuantity7.class);
-        util.importTemplateExcel(response, "产品改型数据");
-    }
 }

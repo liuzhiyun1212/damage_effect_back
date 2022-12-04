@@ -11,6 +11,7 @@ import java.util.Map;
  * @Date: Created in 2022/11/21
  */
 public interface IChangeOfProductionDeviceService {
-    public JSONObject getChartData();
+    public JSONObject getProductionDeviceChartList();
 
+    public JSONObject getMeasuringDeviceChartList();
 }
