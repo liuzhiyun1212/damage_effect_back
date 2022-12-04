@@ -275,4 +275,10 @@ public interface IQualityProblemService
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     public List<Sum> selectProductByMakeWorkmanship();
+
+
+    public List<RepairModifyData10> selectByGroupChanged();
+    public List<ModelGroup> selectByGroupFaultModel();
+    public List<Sum> qualitySumByGroup();
+    public List<Sum> partsSumByGroup();
 }

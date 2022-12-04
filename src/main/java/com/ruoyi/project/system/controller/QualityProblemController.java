@@ -484,18 +484,32 @@ public class QualityProblemController extends BaseController
             String percentage1 = String.format("%.2f",percentage)+"%";
             partsTypeCount1.setPartsProportion(percentage1);
 //            if (count > averageDouble){
-            PartsTypeCount partsTypeCount2 = list.get(0);
-            String count1 = partsTypeCount2.getPartsProportion();
+//            PartsTypeCount partsTypeCount2 = list.get(0);
+//            String count1 = partsTypeCount2.getPartsProportion();
                 list2.add(partsTypeCount1);
 //            }
         }
-
         return list2;
     }
     @GetMapping("/selectAllType")
     public List<PartsTypeCount> selectAllType() {
+        int allCount = qualityProblemService.selectAllCount();
+        int partsTypeCount = qualityProblemService.selectPartsTypeCount();
+        float allFloat = (float)allCount;
+        double averageDouble = (allFloat/partsTypeCount)*0.5;
         List<PartsTypeCount> list = qualityProblemService.selectCountByType();
-        return list;
+        List<PartsTypeCount> list2 = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            PartsTypeCount partsTypeCount1 = list.get(i);
+            int count = partsTypeCount1.getPartsCount();
+            double percentage=((double) count/ averageDouble)*100;
+            String percentage1 = String.format("%.2f",percentage)+"%";
+            partsTypeCount1.setPartsProportion(percentage1);
+            if (count > averageDouble){
+                list2.add(partsTypeCount1);
+            }
+        }
+        return list2;
     }
 
 
@@ -1561,6 +1575,142 @@ public class QualityProblemController extends BaseController
             }
         }
         System.out.println("测试vvvvvvvvvvvv" + res);
+        return res;
+    }
+
+    /**4.2.2.11
+     * @Description 高发故障模式涉及到的故障件的维修班组
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectByGroupFaultModel")
+    public List<String> selectByGroupFaultModel(){
+        List<ModelGroup> list = new ArrayList<>();
+        List<ModelGroup> list1 = qualityProblemService.selectByGroupFaultModel();
+        QualityProblem1 qualityProblem1 = new QualityProblem1();
+        List<QualityProblem1Controller.ModelCount> list2 = faultStatistics(qualityProblem1);
+        for(int i=0;i<list1.size();i++){
+            for(int j=0;j<list2.size();j++){
+                if(list1.get(i).getFaultModel().equals(list2.get(j).getFaultModel())){
+                    list.add(list1.get(i));
+                }
+            }
+        }
+        List<String> result = new ArrayList<>();
+        int mark=0;
+        for (ModelGroup str : list) {
+            mark=0;
+            for (String g : result) {
+                if (str.getPartsRepairGroup().equals(g)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                result.add(str.getPartsRepairGroup());
+            }
+        }
+        return result;
+    }
+    /**4.2.2.11
+     * @Description 维修班组统计质量问题总数
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/qualitySumByGroup")
+    public List<Integer> qualitySumByGroup() {
+        List<Sum> l1 = qualityProblemService.qualitySumByGroup();
+        List<String> grade = selectByGroupFaultModel();
+        List<Integer> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:grade){
+                if(i.getQuarter().equals(j)){
+                    res.add(i.getSum());
+                }
+            }
+        }
+        return res;
+    }
+    /**4.2.2.11
+     * @Description 维修班组统计产品总数
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/partsSumByGroup")
+    public List<Integer> partsSumByGroup() {
+        List<Sum> l1 = qualityProblemService.partsSumByGroup();
+        List<String> grade = selectByGroupFaultModel();
+        List<Integer> res = new ArrayList<>();
+        for(Sum i:l1){
+            for(String j:grade){
+                if(i.getQuarter().equals(j)){
+                    res.add(i.getSum());
+                }
+            }
+        }
+        return res;
+    }
+    /**4.2.2.11
+     * @Description 故障件维修班组变更
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/selectByGroupChanged")
+    public List<timeCount> selectByGroupChanged(){
+        List <RepairModifyData10> list = qualityProblemService.selectByGroupChanged();
+        List<timeCount> res = new ArrayList<>();
+        for(RepairModifyData10 p:list){
+            timeCount t1=new timeCount();
+            t1.setName(p.getPartsName());
+            t1.setTime(p.getModifyTime());
+            res.add(t1);
+        }
+        return res;
+    }
+    /**4.2.2.11
+     * @Description 时间线图用故障件维修班组变更
+     * @Date  2022/11/14
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/timeGradeChanged1")
+    public List<time1> timeGradeChanged1(){
+        List<String> st = new ArrayList<>();
+        List<String> st1 = new ArrayList<>();
+        List<time1> res = new ArrayList<>();
+        List <RepairModifyData10> list = qualityProblemService.selectByGroupChanged();
+        int mark=0;
+        for(RepairModifyData10 p:list){
+            mark=0;
+            for(String s:st){
+                if(p.getPartsName().equals(s)){
+                    mark=-1;
+                }
+            }
+            if(mark==0){
+                st.add(p.getPartsName());
+            }
+        }
+        for(String s:st){
+            time1 t1= new time1();
+            List<Date> t = new ArrayList<>();
+            for(RepairModifyData10 p:list){
+                if(s.equals(p.getPartsName())){
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                }
+            }
+            res.add(t1);
+        }
         return res;
     }
 }
