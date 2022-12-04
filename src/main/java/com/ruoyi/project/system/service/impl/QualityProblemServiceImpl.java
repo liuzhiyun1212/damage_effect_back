@@ -349,10 +349,10 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     }
     @Override
     public List<Sum> qualitySumByGroup() {
-        return qualityProblemMapper.qualitySumByGrade();
+        return qualityProblemMapper.qualitySumByGroup();
     }
     @Override
     public List<Sum> partsSumByGroup() {
-        return qualityProblemMapper.productSumByGrade();
+        return qualityProblemMapper.partsSumByGroup();
     }
 }

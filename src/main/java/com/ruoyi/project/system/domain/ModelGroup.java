@@ -45,4 +45,5 @@ public class ModelGroup {
     public void setPartsRepairGroup(String partsRepairGroup) {
         this.partsRepairGroup = partsRepairGroup;
     }
+
 }
