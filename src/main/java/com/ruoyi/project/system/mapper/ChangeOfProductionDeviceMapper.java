@@ -21,4 +21,10 @@ public interface ChangeOfProductionDeviceMapper {
 
     //查询测量了发生了故障的装备的测量设备
     public List<ChangeOfProductionDevice> selectFaultMeasuringDeviceList();
+
+    //查询测量设备
+    public List<ChangeOfProductionDevice> selectRepairDeviceList();
+
+    //查询测量了发生了故障的装备的测量设备
+    public List<ChangeOfProductionDevice> selectFaultRepairDeviceList();
 }

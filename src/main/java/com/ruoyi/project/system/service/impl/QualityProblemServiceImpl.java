@@ -261,6 +261,11 @@ public class QualityProblemServiceImpl implements IQualityProblemService
     }
 
     @Override
+    public List<ProductModifyData> selectByRepairDeviceChanged() {
+        return qualityProblemMapper.selectByRepairDeviceChanged();
+    }
+
+    @Override
     public List<Sum> selectDevByEnvironment() {
         return qualityProblemMapper.selectDevByEnvironment();
     }

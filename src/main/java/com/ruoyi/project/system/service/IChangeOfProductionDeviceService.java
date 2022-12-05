@@ -14,4 +14,6 @@ public interface IChangeOfProductionDeviceService {
     public JSONObject getProductionDeviceChartList();
 
     public JSONObject getMeasuringDeviceChartList();
+
+    public JSONObject getRepairDeviceChartList() throws Exception;
 }

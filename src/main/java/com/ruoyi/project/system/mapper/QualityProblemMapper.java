@@ -165,6 +165,12 @@ public interface QualityProblemMapper
      */
     public List<ProductModifyData> selectByMeasuringDeviceChanged();
 
+    /**
+     * 4.2.2.13.故障件维修设备变更情况
+     * @return
+     */
+    public List<ProductModifyData> selectByRepairDeviceChanged();
+
     /**4.2.2.16
      * @Description 不同使用环境中装备数量
      * @Author lixin
