@@ -1645,7 +1645,7 @@ static class ModelCount {
                 }
             }
         }
-        System.out.println("测试vvvvvvvvvvvv" + res);
+       // System.out.println("测试vvvvvvvvvvvv" + res);
         return res;
     }
     /**4.2.2.10  装备生产工艺变更情况————查询生产工艺的产品总数
