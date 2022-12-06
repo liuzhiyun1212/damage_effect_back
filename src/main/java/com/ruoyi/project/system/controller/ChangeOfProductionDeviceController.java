@@ -28,4 +28,9 @@ public class ChangeOfProductionDeviceController {
     public R<JSONObject> getMeasuringDeviceChartList() {
         return R.ok(deviceService.getMeasuringDeviceChartList());
     }
+
+    @GetMapping("/changeOfRepairDevice/getRepairDeviceChart")
+    public R<JSONObject> getRepairDeviceChartList() throws Exception {
+        return R.ok(deviceService.getRepairDeviceChartList());
+    }
 }

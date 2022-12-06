@@ -1254,6 +1254,69 @@ static class ModelCount {
         return res;
     }
 
+    /**
+     * @Description 4.2.2.13 故障件维修设备变更情况
+     * @Author lvXingFeng
+     */
+    @GetMapping("/selectByRepairDeviceChanged")
+    public List<ChangeOfEquipmentVo> selectByRepairDeviceChanged() {
+        List<ProductModifyData> list = qualityProblemService.selectByRepairDeviceChanged();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
+        for (ProductModifyData p : list) {
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
+            t1.setName(p.getProductName());
+            t1.setTime(p.getModifyTime());
+            t1.setProductModel(p.getProductModel());
+            res.add(t1);
+        }
+        return res;
+    }
+
+    /**
+     * 4.2.2.13.故障件维修设备变更情况
+     *
+     * @Author lvXingFeng
+     */
+    @GetMapping("/timeRepairDeviceChanged")
+    public List<ChangeOfEquipmentVo> timeRepairDeviceChanged() {
+        List<String> st = new ArrayList<>();
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
+        // 根据日期和设备名查询
+        List<ProductModifyData> list = qualityProblemService.selectByRepairDeviceChanged();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
+        int mark = 0;
+        for (ProductModifyData p : list) {
+            for (String s : st) {
+                if (p.getProductName().equals(s)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                st.add(p.getProductName());
+            }
+            mark = 0;
+        }
+        for (String s : st) {
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
+            List<Date> t = new ArrayList<>();
+            for (ProductModifyData p : list) {
+                if (s.equals(p.getProductName())) {
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                    t1.setProductModel(p.getProductModel());
+                }
+            }
+            res.add(t1);
+        }
+        return res;
+    }
+
     /**4.2.1.6
      * @Description  质量问题故障模式随时间变化情况
      * @Author lixn

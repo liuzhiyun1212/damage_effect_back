@@ -199,6 +199,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         GROUP BY CONCAT(modify_time, product_model)
         ORDER BY modify_time asc
     </select>
+    <!--    故障件维修设备变更-->
+    <select id="selectByRepairDeviceChanged" resultMap="ProductModifyDataResult">
+        SELECT q.parts_name as product_name, p.modify_time, p.parts_model as product_model
+        FROM quality_problem_1 as q, repair_modify_data_10 as p
+        where q.parts_model = p.parts_model and p.modify_type='维修设备变更'
+        GROUP BY CONCAT(p.modify_time, p.parts_model)
+        ORDER BY modify_time asc
+    </select>
 <!--生产班组、故障件、故障模式-->
     <select id="selectByGradeFaultModel" resultMap="GradeCountResult">
         SELECT p.parts_name,fault_model,parts_make_group
