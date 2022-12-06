@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.EquipmentManufacturingData5Mapper">
-    
+
     <resultMap type="EquipmentManufacturingData5" id="EquipmentManufacturingData5Result">
         <result property="id"    column="id"    />
         <result property="planeType"    column="plane_type"    />
@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectEquipmentManufacturingData5List" parameterType="EquipmentManufacturingData5" resultMap="EquipmentManufacturingData5Result">
         <include refid="selectEquipmentManufacturingData5Vo"/>
-        <where>  
+        <where>
             <if test="planeType != null  and planeType != ''"> and plane_type = #{planeType}</if>
             <if test="devCode != null  and devCode != ''"> and dev_code = #{devCode}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
@@ -31,12 +31,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="capabilityStatus != null  and capabilityStatus != ''"> and capability_status = #{capabilityStatus}</if>
         </where>
     </select>
-    
+
+
+    <select id="selectEquipmentManufacturingData5withproblem"  resultMap="EquipmentManufacturingData5Result">
+        select e.*
+        from equipment_manufacturing_data5 as e ,quality_problem_1 as q
+        where e.plane_type=q.plane_type and e.dev_code=q.dev_code  and e.type="能力提升"
+    </select>
+
+
     <select id="selectEquipmentManufacturingData5ById" parameterType="Long" resultMap="EquipmentManufacturingData5Result">
         <include refid="selectEquipmentManufacturingData5Vo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertEquipmentManufacturingData5" parameterType="EquipmentManufacturingData5" useGeneratedKeys="true" keyProperty="id">
         insert into equipment_manufacturing_data5
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -78,7 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteEquipmentManufacturingData5ByIds" parameterType="String">
-        delete from equipment_manufacturing_data5 where id in 
+        delete from equipment_manufacturing_data5 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

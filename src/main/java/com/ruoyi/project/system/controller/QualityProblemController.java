@@ -11,6 +11,7 @@ import com.ruoyi.project.system.domain.PartsTypeCount;
 import com.ruoyi.project.system.domain.QualityProblem;
 import com.ruoyi.project.system.domain.Sum;
 import com.ruoyi.project.system.domain.*;
+import com.ruoyi.project.system.domain.vo.ChangeOfEquipmentVo;
 import com.ruoyi.project.system.service.IPartsMakeNum9Service;
 import com.ruoyi.project.system.service.IQualityProblem1Service;
 import com.ruoyi.project.system.service.IQualityProblemService;
@@ -1131,13 +1132,17 @@ static class ModelCount {
      * @Author lvXingFeng
      */
     @GetMapping("/selectByProduceDeviceChanged")
-    public List<timeCount> selectByProduceDeviceChanged() {
+    public List<ChangeOfEquipmentVo> selectByProduceDeviceChanged() {
         List<ProductModifyData> list = qualityProblemService.selectByProduceDeviceChanged();
-        List<timeCount> res = new ArrayList<>();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
         for (ProductModifyData p : list) {
-            timeCount t1 = new timeCount();
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
             t1.setName(p.getProductName());
             t1.setTime(p.getModifyTime());
+            t1.setProductModel(p.getProductModel());
             res.add(t1);
         }
         return res;
@@ -1150,10 +1155,13 @@ static class ModelCount {
      * @Author lvXingFeng
      */
     @GetMapping("/timeProduceDeviceChanged")
-    public List<time1> timeProduceDeviceChanged() {
+    public List<ChangeOfEquipmentVo> timeProduceDeviceChanged() {
         List<String> st = new ArrayList<>();
-        List<time1> res = new ArrayList<>();
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
         List<ProductModifyData> list = qualityProblemService.selectByProduceDeviceChanged();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
         int mark = 0;
         for (ProductModifyData p : list) {
             for (String s : st) {
@@ -1167,13 +1175,14 @@ static class ModelCount {
             mark=0;
         }
         for (String s : st) {
-            time1 t1 = new time1();
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
             List<Date> t = new ArrayList<>();
             for (ProductModifyData p : list) {
                 if (s.equals(p.getProductName())) {
                     t.add(p.getModifyTime());
                     t1.setList(t);
                     t1.setName(s);
+                    t1.setProductModel(p.getProductModel());
                 }
             }
             res.add(t1);
@@ -1186,13 +1195,17 @@ static class ModelCount {
      * @Author lvXingFeng
      */
     @GetMapping("/selectByMeasuringDeviceChanged")
-    public List<timeCount> selectByMeasuringDeviceChanged() {
+    public List<ChangeOfEquipmentVo> selectByMeasuringDeviceChanged() {
         List<ProductModifyData> list = qualityProblemService.selectByMeasuringDeviceChanged();
-        List<timeCount> res = new ArrayList<>();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
         for (ProductModifyData p : list) {
-            timeCount t1 = new timeCount();
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
             t1.setName(p.getProductName());
             t1.setTime(p.getModifyTime());
+            t1.setProductModel(p.getProductModel());
             res.add(t1);
         }
         return res;
@@ -1205,11 +1218,14 @@ static class ModelCount {
      * @Author lvXingFeng
      */
     @GetMapping("/timeMeasuringDeviceChanged")
-    public List<time1> timeMeasuringDeviceChanged() {
+    public List<ChangeOfEquipmentVo> timeMeasuringDeviceChanged() {
         List<String> st = new ArrayList<>();
-        List<time1> res = new ArrayList<>();
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
         // 根据日期和设备名查询
         List<ProductModifyData> list = qualityProblemService.selectByMeasuringDeviceChanged();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
         int mark = 0;
         for (ProductModifyData p : list) {
             for (String s : st) {
@@ -1223,13 +1239,77 @@ static class ModelCount {
             mark = 0;
         }
         for (String s : st) {
-            time1 t1 = new time1();
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
             List<Date> t = new ArrayList<>();
             for (ProductModifyData p : list) {
                 if (s.equals(p.getProductName())) {
                     t.add(p.getModifyTime());
                     t1.setList(t);
                     t1.setName(s);
+                    t1.setProductModel(p.getProductModel());
+                }
+            }
+            res.add(t1);
+        }
+        return res;
+    }
+
+    /**
+     * @Description 4.2.2.13 故障件维修设备变更情况
+     * @Author lvXingFeng
+     */
+    @GetMapping("/selectByRepairDeviceChanged")
+    public List<ChangeOfEquipmentVo> selectByRepairDeviceChanged() {
+        List<ProductModifyData> list = qualityProblemService.selectByRepairDeviceChanged();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
+        for (ProductModifyData p : list) {
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
+            t1.setName(p.getProductName());
+            t1.setTime(p.getModifyTime());
+            t1.setProductModel(p.getProductModel());
+            res.add(t1);
+        }
+        return res;
+    }
+
+    /**
+     * 4.2.2.13.故障件维修设备变更情况
+     *
+     * @Author lvXingFeng
+     */
+    @GetMapping("/timeRepairDeviceChanged")
+    public List<ChangeOfEquipmentVo> timeRepairDeviceChanged() {
+        List<String> st = new ArrayList<>();
+        List<ChangeOfEquipmentVo> res = new ArrayList<>();
+        // 根据日期和设备名查询
+        List<ProductModifyData> list = qualityProblemService.selectByRepairDeviceChanged();
+        for (ProductModifyData item:list) {
+            item.setProductName(item.getProductModel()+item.getProductName());
+        }
+        int mark = 0;
+        for (ProductModifyData p : list) {
+            for (String s : st) {
+                if (p.getProductName().equals(s)) {
+                    mark = -1;
+                }
+            }
+            if (mark == 0) {
+                st.add(p.getProductName());
+            }
+            mark = 0;
+        }
+        for (String s : st) {
+            ChangeOfEquipmentVo t1 = new ChangeOfEquipmentVo();
+            List<Date> t = new ArrayList<>();
+            for (ProductModifyData p : list) {
+                if (s.equals(p.getProductName())) {
+                    t.add(p.getModifyTime());
+                    t1.setList(t);
+                    t1.setName(s);
+                    t1.setProductModel(p.getProductModel());
                 }
             }
             res.add(t1);
@@ -1628,7 +1708,7 @@ static class ModelCount {
                 }
             }
         }
-        System.out.println("测试vvvvvvvvvvvv" + res);
+       // System.out.println("测试vvvvvvvvvvvv" + res);
         return res;
     }
     /**4.2.2.10  装备生产工艺变更情况————查询生产工艺的产品总数

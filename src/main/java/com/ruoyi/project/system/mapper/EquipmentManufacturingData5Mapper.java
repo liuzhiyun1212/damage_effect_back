@@ -5,15 +5,15 @@ import com.ruoyi.project.system.domain.EquipmentManufacturingData5;
 
 /**
  * 【请填写功能名称】Mapper接口
- * 
+ *
  * @author ruoyi
  * @date 2022-11-16
  */
-public interface EquipmentManufacturingData5Mapper 
+public interface EquipmentManufacturingData5Mapper
 {
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
@@ -21,15 +21,18 @@ public interface EquipmentManufacturingData5Mapper
 
     /**
      * 查询【请填写功能名称】列表
-     * 
+     *
      * @param equipmentManufacturingData5 【请填写功能名称】
      * @return 【请填写功能名称】集合
      */
     public List<EquipmentManufacturingData5> selectEquipmentManufacturingData5List(EquipmentManufacturingData5 equipmentManufacturingData5);
 
+
+    public List<EquipmentManufacturingData5> selectEquipmentManufacturingData5withproblem();
+
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param equipmentManufacturingData5 【请填写功能名称】
      * @return 结果
      */
@@ -37,7 +40,7 @@ public interface EquipmentManufacturingData5Mapper
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param equipmentManufacturingData5 【请填写功能名称】
      * @return 结果
      */
@@ -45,7 +48,7 @@ public interface EquipmentManufacturingData5Mapper
 
     /**
      * 删除【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 结果
      */
@@ -53,7 +56,7 @@ public interface EquipmentManufacturingData5Mapper
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
