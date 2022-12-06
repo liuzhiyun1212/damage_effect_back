@@ -16,6 +16,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectRepairModifyData10Vo">
         select id, parts_name, parts_model, modify_time, modify_type, modify_method from repair_modify_data_10
     </sql>
+    <resultMap type="ProductModify" id="RepairWayChangeResult">
+        <result property="productModel"    column="parts_model"    />
+        <result property="productName"    column="parts_name"    />
+        <result property="modifyTime"    column="modify_time"    />
+    </resultMap>
+
+    <resultMap type="FaultyPartsCount" id="FaultyPartsCountResult">
+        <result property="partsModelName" column="parts_model_name"/>
+        <result property="partsCount" column="parts_count"/>
+        <result property="partsProportion" column="modify_method"/>
+    </resultMap>
 
     <select id="selectRepairModifyData10List" parameterType="RepairModifyData10" resultMap="RepairModifyData10Result">
         <include refid="selectRepairModifyData10Vo"/>
@@ -87,4 +98,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <select id="selectRepairWayChange"  resultMap="RepairWayChangeResult">
+        SELECT
+            parts_name,parts_model,modify_time
+        FROM
+            repair_modify_data_10
+        WHERE
+            modify_type = "维修工艺变更"
+        GROUP BY parts_name,parts_model,modify_time
+        ORDER BY modify_time
+    </select>
+    <select id="selectFaultyCountByRepairWay"  resultMap="FaultyPartsCountResult">
+        SELECT
+            CONCAT( parts_model, ' ', parts_name ) AS parts_model_name,COUNT(*) AS parts_count,modify_method
+        FROM
+            repair_modify_data_10
+        WHERE
+            modify_type="维修工艺变更"
+        GROUP BY parts_model_name,modify_method
+        ORDER BY parts_model_name,modify_method
+    </select>
+
 </mapper>

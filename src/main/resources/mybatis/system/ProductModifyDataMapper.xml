@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectPartsManufactureChange"  resultMap="PartsManufactureChangeResult">
         SELECT
-          product_name,product_model,modify_time
+          CONCAT( product_model, ' ', product_name ) AS product_name,modify_method AS product_model,modify_time
         FROM product_modify_data_6
         WHERE
           modify_type = "零部件来源变更"

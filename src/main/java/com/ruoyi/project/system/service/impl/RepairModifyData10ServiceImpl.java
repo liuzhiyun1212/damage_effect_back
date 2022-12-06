@@ -2,6 +2,8 @@ package com.ruoyi.project.system.service.impl;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.ProductModify;
 import com.ruoyi.project.system.domain.RepairModifyData10;
 import com.ruoyi.project.system.mapper.RepairModifyData10Mapper;
 import com.ruoyi.project.system.service.IRepairModifyData10Service;
@@ -143,5 +145,24 @@ public class RepairModifyData10ServiceImpl implements IRepairModifyData10Service
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+    /**
+     * @Description 故障件维修工艺变更时间线
+     * @Author guohuijia
+     * @Date  2022/12/4
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @Override
+    public List<ProductModify> selectRepairWayChange() {
+        return repairModifyData10Mapper.selectRepairWayChange();
+    }
+
+    @Override
+    public List<FaultyPartsCount> selectFaultyCountByRepairWay(){
+        // 获取变更类型为维修工艺变更的数量
+        List<FaultyPartsCount> list = repairModifyData10Mapper.selectFaultyCountByRepairWay();
+        return list;
     }
 }

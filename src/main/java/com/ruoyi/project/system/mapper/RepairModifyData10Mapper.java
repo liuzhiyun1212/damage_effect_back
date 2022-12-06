@@ -1,7 +1,10 @@
 package com.ruoyi.project.system.mapper;
 
-import java.util.List;
+import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.ProductModify;
 import com.ruoyi.project.system.domain.RepairModifyData10;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -64,4 +67,18 @@ public interface RepairModifyData10Mapper
      * @return 结果
      */
     public int deleteRepairModifyData10ByIds(Integer[] ids);
+
+    /**
+     * 故障件维修工艺变更时间线
+     */
+    public List<ProductModify> selectRepairWayChange();
+    /**
+     * @Description 获取高发故障模式涉及到的维修工艺
+     * @Author guohuijia
+     * @Date  2022/12/5
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<FaultyPartsCount>  selectFaultyCountByRepairWay();
 }

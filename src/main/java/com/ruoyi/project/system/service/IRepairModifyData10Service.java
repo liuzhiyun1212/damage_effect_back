@@ -1,9 +1,10 @@
 package com.ruoyi.project.system.service;
 
-import java.util.List;
-
-import com.ruoyi.project.system.domain.EquipmentDeploymentData11;
+import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.ProductModify;
 import com.ruoyi.project.system.domain.RepairModifyData10;
+
+import java.util.List;
 
 /**
  * 【10：维修变更数据】Service接口
@@ -71,4 +72,23 @@ public interface IRepairModifyData10Service
      * @return 结果
      */
     public String importData(List<RepairModifyData10> importDataList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * @Description 故障件维修工艺变更时间线
+     * @Author guohuijia
+     * @Date  2022/12/3
+     * @Param []
+     * @Return java.util.List<com.ruoyi.project.system.domain.ProductModify>
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<ProductModify>  selectRepairWayChange();
+    /**
+     * @Description 获取高发故障模式涉及到的维修工艺
+     * @Author guohuijia
+     * @Date  2022/12/5
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    public List<FaultyPartsCount>  selectFaultyCountByRepairWay();
 }

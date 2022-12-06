@@ -1,28 +1,22 @@
 package com.ruoyi.project.system.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.project.system.domain.EquipmentDeploymentData11;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.system.domain.RepairModifyData10;
-import com.ruoyi.project.system.service.IRepairModifyData10Service;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.system.domain.FaultyPartsCount;
+import com.ruoyi.project.system.domain.ProductModify;
+import com.ruoyi.project.system.domain.RepairModifyData10;
+import com.ruoyi.project.system.service.IRepairModifyData10Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 10:维修变更数据Controller
@@ -36,6 +30,7 @@ public class RepairModifyData10Controller extends BaseController
 {
     @Autowired
     private IRepairModifyData10Service repairModifyData10Service;
+
 
     /**
      * 查询【请填写功能名称】列表
@@ -142,4 +137,49 @@ public class RepairModifyData10Controller extends BaseController
         ExcelUtil<RepairModifyData10> util = new ExcelUtil<RepairModifyData10>(RepairModifyData10.class);
         util.importTemplateExcel(response, "维修变更数据");
     }
+
+    /**
+     * @Description 装备零部件供应商变更时间线
+     * @Author guohuijia
+     * @Date  2022/12/3
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @PreAuthorize("@ss.hasPermi('system:10:list')")
+    @GetMapping("/listRepairWayChange")
+    public List<ProductModify> listRepairWayChange()
+    {
+        List<ProductModify> list = repairModifyData10Service.selectRepairWayChange();
+        return list;
+    }
+
+
+    /**
+     * @Description 获取高发故障模式涉及到的维修工艺生成故障件数目
+     * @Author guohuijia
+     * @Date  2022/12/4
+     * @Param
+     * @Return
+     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
+     */
+    @GetMapping("/listFaultyCountByRepairWay")
+    public List<FaultyPartsCount> selectFaultyCountByRepairWay(){
+        List<FaultyPartsCount> list = repairModifyData10Service.selectFaultyCountByRepairWay();
+//        QualityProblemController qualityProblemController = new QualityProblemController();
+//        List<FaultyPartsCount> faultyPartsCountList = qualityProblemController.selectFaultyCount();
+//        List<String> faultyNameList = new ArrayList<>();
+//        for (FaultyPartsCount i : faultyPartsCountList){
+//            if(!faultyNameList.contains(i.getPartsModelName())){
+//                faultyNameList.add(i.getPartsModelName());
+//            }
+//        }
+//        for(FaultyPartsCount i : list){
+//            if (!faultyNameList.contains(i.getPartsModelName())){
+//                list.remove(i);
+//            }
+//        }
+        return list;
+    }
+
 }
