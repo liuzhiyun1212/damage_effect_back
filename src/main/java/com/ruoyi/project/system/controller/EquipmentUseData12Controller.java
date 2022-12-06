@@ -50,6 +50,16 @@ public class EquipmentUseData12Controller extends BaseController
     }
 
     /**
+     * 查询所有数据 wdh
+     */
+    @GetMapping("/listAll")
+    public TableDataInfo listAll(EquipmentUseData12 equipmentUseData12)
+    {
+        List<EquipmentUseData12> list = equipmentUseData12Service.selectEquipmentUseData12List(equipmentUseData12);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出【装备使用数据】列表
      */
     @PreAuthorize("@ss.hasPermi('system:12:export')")

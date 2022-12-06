@@ -1,28 +1,34 @@
 package com.ruoyi.project.system.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.framework.aspectj.lang.annotation.Log;
-import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.framework.web.controller.BaseController;
-import com.ruoyi.framework.web.domain.AjaxResult;
-import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.project.system.domain.ProductModify;
-import com.ruoyi.project.system.domain.ProductModifyData;
-import com.ruoyi.project.system.domain.QualityProblem1;
-import com.ruoyi.project.system.service.IProductModifyDataService;
-import com.ruoyi.project.system.service.IQualityProblem1Service;
-import com.ruoyi.project.system.service.IQualityProblemService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.project.system.domain.QualityProblem1;
+import com.ruoyi.project.system.service.IQualityProblem1Service;
+import com.ruoyi.project.system.service.IQualityProblemService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.framework.aspectj.lang.annotation.Log;
+import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
+import com.ruoyi.project.system.domain.ProductModifyData;
+import com.ruoyi.project.system.service.IProductModifyDataService;
+import com.ruoyi.framework.web.controller.BaseController;
+import com.ruoyi.framework.web.domain.AjaxResult;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 产品制造变更数据Controller
@@ -32,24 +38,32 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/system/modifyData")
-public class ProductModifyDataController extends BaseController
-{
+public class ProductModifyDataController extends BaseController {
     @Autowired
     private IProductModifyDataService productModifyDataService;
     @Autowired
     private IQualityProblem1Service qualityProblem1Service;
     @Autowired
     private IQualityProblemService qualityProblemService;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone ="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     /**
      * 查询产品制造变更数据列表
      */
     @PreAuthorize("@ss.hasPermi('system:modifyData:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ProductModifyData productModifyData)
-    {
+    public TableDataInfo list(ProductModifyData productModifyData) {
         startPage();
+        List<ProductModifyData> list = productModifyDataService.selectProductModifyDataList(productModifyData);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询所有 wdh
+     */
+    @GetMapping("/listAll")
+    public TableDataInfo listAll(ProductModifyData productModifyData) {
         List<ProductModifyData> list = productModifyDataService.selectProductModifyDataList(productModifyData);
         return getDataTable(list);
     }
@@ -60,8 +74,7 @@ public class ProductModifyDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:modifyData:export')")
     @Log(title = "产品制造变更数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ProductModifyData productModifyData)
-    {
+    public void export(HttpServletResponse response, ProductModifyData productModifyData) {
         List<ProductModifyData> list = productModifyDataService.selectProductModifyDataList(productModifyData);
         ExcelUtil<ProductModifyData> util = new ExcelUtil<ProductModifyData>(ProductModifyData.class);
         util.exportExcel(response, list, "产品制造变更数据数据");
@@ -72,8 +85,7 @@ public class ProductModifyDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:modifyData:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(productModifyDataService.selectProductModifyDataById(id));
     }
 
@@ -83,8 +95,7 @@ public class ProductModifyDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:modifyData:add')")
     @Log(title = "产品制造变更数据", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ProductModifyData productModifyData)
-    {
+    public AjaxResult add(@RequestBody ProductModifyData productModifyData) {
         return toAjax(productModifyDataService.insertProductModifyData(productModifyData));
     }
 
@@ -94,8 +105,7 @@ public class ProductModifyDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:modifyData:edit')")
     @Log(title = "产品制造变更数据", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ProductModifyData productModifyData)
-    {
+    public AjaxResult edit(@RequestBody ProductModifyData productModifyData) {
         return toAjax(productModifyDataService.updateProductModifyData(productModifyData));
     }
 
@@ -104,12 +114,10 @@ public class ProductModifyDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:modifyData:remove')")
     @Log(title = "产品制造变更数据", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(productModifyDataService.deleteProductModifyDataByIds(ids));
     }
-
 
 
     static class ModelCount {
@@ -134,21 +142,19 @@ public class ProductModifyDataController extends BaseController
     }
 
 
-
-    public List<PartsMakeNum9Controller.ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
-    {
+    public List<PartsMakeNum9Controller.ModelCount> faultStatistics(QualityProblem1 qualityProblem1) {
         Set<String> modelName = new HashSet<>();
         List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
         List<PartsMakeNum9Controller.ModelCount> listMC = new ArrayList<>();
         List<PartsMakeNum9Controller.ModelCount> listMod = new ArrayList<>();
         double averge = 0;
-        int sum=0;
+        int sum = 0;
         int count;
-        for(QualityProblem1 q:list){
+        for (QualityProblem1 q : list) {
             modelName.add(q.getFaultModel());
         }
 
-        for (String s:modelName) {
+        for (String s : modelName) {
             count = 0;
             PartsMakeNum9Controller.ModelCount modelCount = new PartsMakeNum9Controller.ModelCount();
             for (QualityProblem1 q : list) {
@@ -160,12 +166,12 @@ public class ProductModifyDataController extends BaseController
             }
             listMC.add(modelCount);
         }
-        for(PartsMakeNum9Controller.ModelCount m : listMC){
-            sum+=m.getModelCount();
+        for (PartsMakeNum9Controller.ModelCount m : listMC) {
+            sum += m.getModelCount();
         }
-        averge = sum/listMC.size()*0.1;
-        for(PartsMakeNum9Controller.ModelCount m : listMC){
-            if(m.getModelCount()>averge){
+        averge = sum / listMC.size() * 0.1;
+        for (PartsMakeNum9Controller.ModelCount m : listMC) {
+            if (m.getModelCount() > averge) {
                 listMod.add(m);
             }
         }
@@ -189,29 +195,29 @@ public class ProductModifyDataController extends BaseController
     }
 
     @GetMapping("/getPeoplechange")
-    public List<peopleChange> getPeoplechange(QualityProblem1 qualityProblem1 , ProductModifyData productModifyData){
+    public List<peopleChange> getPeoplechange(QualityProblem1 qualityProblem1, ProductModifyData productModifyData) {
         List<QualityProblem1> listqua = get_high_qua(qualityProblem1);
         List<ProductModifyData> listpro = productModifyDataService.selectProductModifyDataList(productModifyData);
         List<ProductModifyData> listhigh = new ArrayList<>();   //高发故障模式对应的产品
         List<peopleChange> peoplechange = new ArrayList<>();
         SimpleDateFormat sdfTarget = new SimpleDateFormat("yyyy-MM-dd");
-        for(QualityProblem1 l : listqua){
-            for(ProductModifyData p : listpro){
-                if(l.getPartsName().equals(p.getProductName())&&l.getPartsModel().equals(p.getProductModel())){
+        for (QualityProblem1 l : listqua) {
+            for (ProductModifyData p : listpro) {
+                if (l.getPartsName().equals(p.getProductName()) && l.getPartsModel().equals(p.getProductModel())) {
                     listhigh.add(p);
                 }
             }
         }
-        for(ProductModifyData p : listhigh){
+        for (ProductModifyData p : listhigh) {
             int mark = 0;
-            for(peopleChange peo : peoplechange){
-                if(peo.getPartsname().equals(p.getProductName())&&peo.getPartsmodel().equals(p.getProductModel())){
-                    for(int i =0 ;i<peo.getlistdate().size();i++){
-                        if(peo.getlistdate().get(i).equals(sdfTarget.format(p.getModifyTime()))){
-                            mark=-1;
+            for (peopleChange peo : peoplechange) {
+                if (peo.getPartsname().equals(p.getProductName()) && peo.getPartsmodel().equals(p.getProductModel())) {
+                    for (int i = 0; i < peo.getlistdate().size(); i++) {
+                        if (peo.getlistdate().get(i).equals(sdfTarget.format(p.getModifyTime()))) {
+                            mark = -1;
                         }
                     }
-                    if(mark!=-1){
+                    if (mark != -1) {
 
                         try {
                             Date date = sdfTarget.parse(sdfTarget.format(p.getModifyTime()));
@@ -222,10 +228,10 @@ public class ProductModifyDataController extends BaseController
                         Collections.sort(peo.getlistdate());
 
                     }
-                    mark=1;
+                    mark = 1;
                 }
             }
-            if(mark==0){
+            if (mark == 0) {
                 peopleChange obj_peo = new peopleChange();
                 obj_peo.setPartsmodel(p.getProductModel());
                 obj_peo.setPartsname(p.getProductName());
@@ -244,13 +250,13 @@ public class ProductModifyDataController extends BaseController
     }
 
 
-    static class peopleChange{
+    static class peopleChange {
         private String partsname;
         private String partsmodel;
         private List<String> listdate = new ArrayList<>();
 
 
-        public void add(String date){
+        public void add(String date) {
             listdate.add(date);
         }
 
@@ -287,42 +293,25 @@ public class ProductModifyDataController extends BaseController
      */
     @Log(title = "产品制造变更", businessType = BusinessType.IMPORT)
     @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
-    {
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<ProductModifyData> util = new ExcelUtil<ProductModifyData>(ProductModifyData.class);
         List<ProductModifyData> importDataList = util.importExcel(file.getInputStream());
         String operName = getUsername();
         String message = productModifyDataService.importData(importDataList, updateSupport, operName);
         return AjaxResult.success(message);
     }
+
     /**
      * @Description 下载导入产品设计模板
      * @Author guohuijia
-     * @Date  2022/11/13
+     * @Date 2022/11/13
      * @Param [response]
      * @Return void
      * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
      */
     @PostMapping("/importTemplate")
-    public void importTemplate(HttpServletResponse response)
-    {
+    public void importTemplate(HttpServletResponse response) {
         ExcelUtil<ProductModifyData> util = new ExcelUtil<ProductModifyData>(ProductModifyData.class);
         util.importTemplateExcel(response, "产品制造变更数据");
-    }
-
-    /**
-     * @Description 装备零部件供应商变更时间线
-     * @Author guohuijia
-     * @Date  2022/12/3
-     * @Param
-     * @Return
-     * @Update:[日期YYYY-MM-DD] [更改人姓名][变更描述]
-     */
-    @PreAuthorize("@ss.hasPermi('system:modifyData:list')")
-    @GetMapping("/listPartsManufactureChange")
-    public List<ProductModify> listPartsManufactureChange()
-    {
-        List<ProductModify> list = productModifyDataService.selectPartsManufactureChange();
-        return list;
     }
 }
