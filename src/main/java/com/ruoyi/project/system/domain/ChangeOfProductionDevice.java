@@ -26,6 +26,12 @@ public class ChangeOfProductionDevice {
     //测量设备列表
     private List partsMeasuringQuipmentList;
 
+    //维修设备
+    private String partsRepairQuipment;
+    //维修设备列表
+    private List partsRepairQuipmentList;
+
+
     public String getId() {
         return id;
     }
@@ -112,5 +118,21 @@ public class ChangeOfProductionDevice {
 
     public void setPartsMeasuringQuipmentList(List partsMeasuringQuipmentList) {
         this.partsMeasuringQuipmentList = partsMeasuringQuipmentList;
+    }
+
+    public String getPartsRepairQuipment() {
+        return partsRepairQuipment;
+    }
+
+    public void setPartsRepairQuipment(String partsRepairQuipment) {
+        this.partsRepairQuipment = partsRepairQuipment;
+    }
+
+    public List getPartsRepairQuipmentList() {
+        return partsRepairQuipmentList;
+    }
+
+    public void setPartsRepairQuipmentList(List partsRepairQuipmentList) {
+        this.partsRepairQuipmentList = partsRepairQuipmentList;
     }
 }

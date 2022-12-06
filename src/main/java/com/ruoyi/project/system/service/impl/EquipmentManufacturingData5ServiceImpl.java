@@ -37,6 +37,15 @@ public class EquipmentManufacturingData5ServiceImpl implements IEquipmentManufac
         return equipmentManufacturingData5Mapper.selectEquipmentManufacturingData5ById(id);
     }
 
+    @Override
+    public List<EquipmentManufacturingData5> selectEquipmentManufacturingData5withproblem()
+    {
+        return equipmentManufacturingData5Mapper.selectEquipmentManufacturingData5withproblem();
+    }
+
+
+
+
     /**
      * 查询【请填写功能名称】列表
      *

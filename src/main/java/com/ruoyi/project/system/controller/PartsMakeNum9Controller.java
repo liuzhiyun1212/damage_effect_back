@@ -103,7 +103,7 @@ public class PartsMakeNum9Controller extends BaseController
     }
 
     //获取所有故障模式为高发故障模式的质量问题
-    public List<QualityProblem1> get_high_qua(QualityProblem1 qualityProblem1){
+    public  List<QualityProblem1> get_high_qua(QualityProblem1 qualityProblem1){
         List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
         List<ModelCount> listMod= faultStatistics(qualityProblem1);
         List<QualityProblem1> listqua = new ArrayList<>();
@@ -183,7 +183,7 @@ public class PartsMakeNum9Controller extends BaseController
         /*for(person_quailty_num p : person_quailty_num){
             System.out.println(p.getCode());
             System.out.println(p.getPerson());
-            System.out.println(p.getProduct());
+            System.out.println(p.getRepaire());
             System.out.println(p.getQuality());
             System.out.println("---------");
         }

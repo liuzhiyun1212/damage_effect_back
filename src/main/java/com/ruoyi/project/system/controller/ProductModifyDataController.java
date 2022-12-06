@@ -1,11 +1,19 @@
 package com.ruoyi.project.system.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
+import com.ruoyi.project.system.domain.ProductModifyData;
+import com.ruoyi.project.system.service.IProductModifyDataService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.system.domain.ProductModify;
 import com.ruoyi.project.system.domain.ProductModifyData;
@@ -50,6 +58,15 @@ public class ProductModifyDataController extends BaseController
     public TableDataInfo list(ProductModifyData productModifyData)
     {
         startPage();
+        List<ProductModifyData> list = productModifyDataService.selectProductModifyDataList(productModifyData);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询所有 wdh
+     */
+    @GetMapping("/listAll")
+    public TableDataInfo listAll(ProductModifyData productModifyData) {
         List<ProductModifyData> list = productModifyDataService.selectProductModifyDataList(productModifyData);
         return getDataTable(list);
     }
@@ -197,7 +214,7 @@ public class ProductModifyDataController extends BaseController
         SimpleDateFormat sdfTarget = new SimpleDateFormat("yyyy-MM-dd");
         for(QualityProblem1 l : listqua){
             for(ProductModifyData p : listpro){
-                if(l.getPartsName().equals(p.getProductName())&&l.getPartsModel().equals(p.getProductModel())){
+                if(l.getPartsName().equals(p.getProductName())&&l.getPartsModel().equals(p.getProductModel())&&p.getModifyType().equals("生产人员变更")){
                     listhigh.add(p);
                 }
             }
@@ -242,6 +259,68 @@ public class ProductModifyDataController extends BaseController
         }
         return peoplechange;
     }
+
+    @GetMapping("/getMaketechnique")
+    public List<peopleChange> getMaketechnique(QualityProblem1 qualityProblem1 , ProductModifyData productModifyData){
+        List<QualityProblem1> listqua = get_high_qua(qualityProblem1);
+        List<ProductModifyData> listpro = productModifyDataService.selectProductModifyDataList(productModifyData);
+        List<ProductModifyData> listhigh = new ArrayList<>();   //高发故障模式对应的产品
+        List<peopleChange> peoplechange = new ArrayList<>();
+        SimpleDateFormat sdfTarget = new SimpleDateFormat("yyyy-MM-dd");
+        for(QualityProblem1 l : listqua){
+            for(ProductModifyData p : listpro){
+                if(l.getPartsName().equals(p.getProductName())&&l.getPartsModel().equals(p.getProductModel())&&p.getModifyType().equals("生产工艺变更")){
+                    listhigh.add(p);
+                }
+            }
+        }
+        for(ProductModifyData p : listhigh){
+            int mark = 0;
+            for(peopleChange peo : peoplechange){
+                if(peo.getPartsname().equals(p.getProductName())&&peo.getPartsmodel().equals(p.getProductModel())){
+                    for(int i =0 ;i<peo.getlistdate().size();i++){
+                        if(peo.getlistdate().get(i).equals(sdfTarget.format(p.getModifyTime()))){
+                            mark=-1;
+                        }
+                    }
+                    if(mark!=-1){
+
+                        try {
+                            Date date = sdfTarget.parse(sdfTarget.format(p.getModifyTime()));
+                            peo.add(sdfTarget.format(p.getModifyTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        Collections.sort(peo.getlistdate());
+
+                    }
+                    mark=1;
+                }
+            }
+            if(mark==0){
+                peopleChange obj_peo = new peopleChange();
+                obj_peo.setPartsmodel(p.getProductModel());
+                obj_peo.setPartsname(p.getProductName());
+                /*obj_peo.add(p.getModifyTime());*/
+                try {
+                    Date date = sdfTarget.parse(sdfTarget.format(p.getModifyTime()));
+                    obj_peo.add(sdfTarget.format(p.getModifyTime()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Collections.sort(obj_peo.getlistdate());
+                peoplechange.add(obj_peo);
+            }
+        }
+        return peoplechange;
+    }
+
+
+
+
+
+
+
 
 
     static class peopleChange{
