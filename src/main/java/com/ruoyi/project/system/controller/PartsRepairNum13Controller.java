@@ -98,12 +98,12 @@ public class PartsRepairNum13Controller extends BaseController
 
 
 
-    public List<PartsMakeNum9Controller.ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
+    public List<ModelCount> faultStatistics(QualityProblem1 qualityProblem1)
     {
         Set<String> modelName = new HashSet<>();
         List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
-        List<PartsMakeNum9Controller.ModelCount> listMC = new ArrayList<>();
-        List<PartsMakeNum9Controller.ModelCount> listMod = new ArrayList<>();
+        List<ModelCount> listMC = new ArrayList<>();
+        List<ModelCount> listMod = new ArrayList<>();
         double averge = 0;
         int sum=0;
         int count;
@@ -113,7 +113,7 @@ public class PartsRepairNum13Controller extends BaseController
 
         for (String s:modelName) {
             count = 0;
-            PartsMakeNum9Controller.ModelCount modelCount = new PartsMakeNum9Controller.ModelCount();
+            ModelCount modelCount = new ModelCount();
             for (QualityProblem1 q : list) {
                 if (Objects.equals(s, q.getFaultModel())) {
                     modelCount.setFaultModel(s);
@@ -123,11 +123,11 @@ public class PartsRepairNum13Controller extends BaseController
             }
             listMC.add(modelCount);
         }
-        for(PartsMakeNum9Controller.ModelCount m : listMC){
+        for(ModelCount m : listMC){
             sum+=m.getModelCount();
         }
         averge = sum/listMC.size()*0.1;
-        for(PartsMakeNum9Controller.ModelCount m : listMC){
+        for(ModelCount m : listMC){
             if(m.getModelCount()>averge){
                 listMod.add(m);
             }
@@ -138,10 +138,10 @@ public class PartsRepairNum13Controller extends BaseController
     //获取所有故障模式为高发故障模式的质量问题
     public  List<QualityProblem1> get_high_qua(QualityProblem1 qualityProblem1){
         List<QualityProblem1> list = qualityProblem1Service.selectQualityProblem1List(qualityProblem1);
-        List<PartsMakeNum9Controller.ModelCount> listMod= faultStatistics(qualityProblem1);
+        List<ModelCount> listMod= faultStatistics(qualityProblem1);
         List<QualityProblem1> listqua = new ArrayList<>();
         for(QualityProblem1 q : list){
-            for(PartsMakeNum9Controller.ModelCount m : listMod){
+            for(ModelCount m : listMod){
                 if(q.getFaultModel().equals(m.getFaultModel())){
                     listqua.add(q);
                 }

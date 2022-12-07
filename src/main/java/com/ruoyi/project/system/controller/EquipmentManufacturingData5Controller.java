@@ -162,6 +162,123 @@ public class EquipmentManufacturingData5Controller extends BaseController
         return list_ability;
     }
 
+
+    public List<String> dealTimeline(List<Equipmentability> list_ability){
+        List<String>  timelist = new ArrayList<>();
+        List<String>  time = new ArrayList<>();
+        Date[] array = new Date[10];
+        SimpleDateFormat sdfTarget = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        int Delta=0;
+        for(Equipmentability e : list_ability){
+            timelist.addAll(e.getList());    //汇总
+        }
+        removeDuplicate(timelist);  //去重
+        Collections.sort(timelist);//排序
+
+        if(timelist.size()>=10){
+            return timelist;
+        }else{
+
+
+            if(timelist.size()==1){
+                for(int i=0;i<10;i++){
+                    if(i<4){
+                        try {
+                            c.setTime(sdfTarget.parse(timelist.get(0)));
+                            int day=c.get(Calendar.DATE);
+                            c.set(Calendar.DATE,day-5*(4-i));
+                            String dayBefore=sdfTarget.format(c.getTime());
+                            array[i]=sdfTarget.parse(dayBefore);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }else if(i==5){
+                        try {
+                            array[i]=sdfTarget.parse(timelist.get(0));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        try {
+                            c.setTime(sdfTarget.parse(timelist.get(0)));
+                            int day=c.get(Calendar.DATE);
+                            c.set(Calendar.DATE,day+5*(i-5));
+                            String dayBefore=sdfTarget.format(c.getTime());
+                            array[i]=sdfTarget.parse(dayBefore);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                for(int i=0;i<array.length;i++){
+                    timelist.add(sdfTarget.format(array[i]));
+                }
+            }
+
+
+
+           else if(timelist.size()==2){
+                Delta=0;
+                try {
+                    c.setTime(sdfTarget.parse(timelist.get(0)));
+                    int day=c.get(Calendar.DATE);
+                    c.setTime(sdfTarget.parse(timelist.get(1)));
+                    Delta=c.get(Calendar.DATE)-day;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                for(int i=0;i<10;i++){
+                    if(i<3){
+                        try {
+                            c.setTime(sdfTarget.parse(timelist.get(0)));
+                            int day=c.get(Calendar.DATE);
+                            c.set(Calendar.DATE,day-Delta*(3-i));
+                            String dayBefore=sdfTarget.format(c.getTime());
+                            array[i]=sdfTarget.parse(dayBefore);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(i==3){
+                        try {
+                            array[i]=sdfTarget.parse(timelist.get(0));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(i>3&&i<6){
+
+                    }
+                }
+            }
+
+
+
+
+            return time;
+        }
+    }
+
+
+//去重
+    private static void removeDuplicate(List<String> list) {
+        List<String> result = new ArrayList<String>(list.size());
+        for (String str : list) {
+            if (!result.contains(str)) {
+                result.add(str);
+            }
+        }
+        list.clear();
+        list.addAll(result);
+    }
+
+
+
+
+
+
     //4.2.2.2对比图数据处理
     @GetMapping("/getEquipmentabilitycompare")
     public List<EquipmentAbilitycount> countAbility(QualityProblem qualityProblem){
