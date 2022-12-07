@@ -1,27 +1,32 @@
 package com.ruoyi.project.system.mapper;
 
 import java.util.List;
+
+import com.ruoyi.project.system.domain.MethodQuality;
 import com.ruoyi.project.system.domain.ProductDesign3;
 
 /**
  * 成品件设计数据Mapper接口
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
-public interface ProductDesign3Mapper 
+public interface ProductDesign3Mapper
 {
     /**
      * 查询成品件设计数据
-     * 
+     *
      * @param id 成品件设计数据主键
      * @return 成品件设计数据
      */
     public ProductDesign3 selectProductDesign3ById(Long id);
 
+
+    public List<MethodQuality> selectMethodQuality();
+
     /**
      * 查询成品件设计数据列表
-     * 
+     *
      * @param productDesign3 成品件设计数据
      * @return 成品件设计数据集合
      */
@@ -29,7 +34,7 @@ public interface ProductDesign3Mapper
 
     /**
      * 新增成品件设计数据
-     * 
+     *
      * @param productDesign3 成品件设计数据
      * @return 结果
      */
@@ -37,7 +42,7 @@ public interface ProductDesign3Mapper
 
     /**
      * 修改成品件设计数据
-     * 
+     *
      * @param productDesign3 成品件设计数据
      * @return 结果
      */
@@ -45,7 +50,7 @@ public interface ProductDesign3Mapper
 
     /**
      * 删除成品件设计数据
-     * 
+     *
      * @param id 成品件设计数据主键
      * @return 结果
      */
@@ -53,7 +58,7 @@ public interface ProductDesign3Mapper
 
     /**
      * 批量删除成品件设计数据
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */

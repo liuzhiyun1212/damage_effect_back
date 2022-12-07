@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 //import org.junit.Test;
+import com.ruoyi.project.system.domain.MethodQuality;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +52,18 @@ public class ProductDesign3Controller extends BaseController
         List<ProductDesign3> list = productDesign3Service.selectProductDesign3List(productDesign3);
         return getDataTable(list);
     }
+
+
+
+    @GetMapping("/methodQuality")
+    public List<MethodQuality> selectPartsMethodQuality()
+    {
+        List<MethodQuality> list = productDesign3Service.selectMethodQuality();
+        return list;
+    }
+
+
+
 
 
     static class XYObject{
