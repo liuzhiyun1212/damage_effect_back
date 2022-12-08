@@ -354,49 +354,4 @@
             createTime
     </select>
 
-    <select id="selectPartsMakeGroup" resultType="String">
-        SELECT
-            parts_make_group
-        FROM
-            parts_make_num_9
-        GROUP BY
-            parts_make_group
-    </select>
-
-    <select id="selectPartsMakePeople" resultType="String">
-        SELECT
-            parts_make_people
-        FROM
-            parts_make_num_9
-        GROUP BY
-            parts_make_people
-    </select>
-
-    <select id="selectPartsMakeQuipment" resultType="String">
-        SELECT
-            parts_make_quipment
-        FROM
-            parts_make_num_9
-        GROUP BY
-            parts_make_quipment
-    </select>
-
-    <select id="selectPartsMeasuringQuipment" resultType="String">
-        SELECT
-            parts_measuring_quipment
-        FROM
-            parts_make_num_9
-        GROUP BY
-            parts_measuring_quipment
-    </select>
-
-    <select id="selectPartsMakeWorkmanship" resultType="String">
-        SELECT
-            parts_make_workmanship
-        FROM
-            parts_make_num_9
-        GROUP BY
-            parts_make_workmanship
-    </select>
-
 </mapper>

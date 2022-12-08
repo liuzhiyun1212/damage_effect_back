@@ -24,16 +24,10 @@ public class ReasonRuleController extends BaseController
     private IEquipmentDesignDataService equipmentDesignDataService;
 
     @Autowired
-    private IProductDesignService productDesignService;
-
-    @Autowired
     private IProductModifyService productModifyService;
 
     @Autowired
     private IProductModifyDataService productModifyDataService;
-
-    @Autowired
-    private IPartsMakeNum9Service partsMakeNum9Service;
 
     @Autowired
     private IRuleConstructionService ruleConstructionService;
@@ -752,7 +746,6 @@ public class ReasonRuleController extends BaseController
         float ruledata = Float.parseFloat(listr.get(0).getRuleData());
         List<String> mplane = reasonRuleService.selectPP();
         List<String> model = reasonRuleService.selectFaultModel();
-        List<String> series = reasonRuleService.selectPartsMakeGroup();
         List<devupone> list3 = reasonRuleService.selectProTeamOne();
         List<String> model1 = new ArrayList<String>();//故障模式
         List<String> plane1 = new ArrayList<String>();//机型
@@ -784,8 +777,6 @@ public class ReasonRuleController extends BaseController
             String ss = plane1.get(i).split("/")[1];
             for(devupone d:list3){
                 if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
-                    int a1 = series.indexOf(d.getPartsMakeGroup());
-                    d.setDevHappenTime(String.valueOf(a1));
                     listfin.add(d);
                 }
             }
@@ -944,7 +935,6 @@ public class ReasonRuleController extends BaseController
         float ruledata = Float.parseFloat(listr.get(0).getRuleData());
         List<String> mplane = reasonRuleService.selectPP();
         List<String> model = reasonRuleService.selectFaultModel();
-        List<String> series = reasonRuleService.selectPartsMakePeople();
         List<devupone> list3 = reasonRuleService.selectProPersonOne();
         List<String> model1 = new ArrayList<String>();//故障模式
         List<String> plane1 = new ArrayList<String>();//机型
@@ -976,8 +966,6 @@ public class ReasonRuleController extends BaseController
             String ss = plane1.get(i).split("/")[1];
             for(devupone d:list3){
                 if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
-                    int a1 = series.indexOf(d.getPartsMakePeople());
-                    d.setDevHappenTime(String.valueOf(a1));
                     listfin.add(d);
                 }
             }
@@ -1140,7 +1128,6 @@ public class ReasonRuleController extends BaseController
         float ruledata = Float.parseFloat(listr.get(0).getRuleData());
         List<String> mplane = reasonRuleService.selectPP();
         List<String> model = reasonRuleService.selectFaultModel();
-        List<String> series = reasonRuleService.selectPartsMakeQuipment();
         List<devupone> list3 = reasonRuleService.selectProMakeDevOne();
         List<String> model1 = new ArrayList<String>();//故障模式
         List<String> plane1 = new ArrayList<String>();//机型
@@ -1172,8 +1159,6 @@ public class ReasonRuleController extends BaseController
             String ss = plane1.get(i).split("/")[1];
             for(devupone d:list3){
                 if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
-                    int a1 = series.indexOf(d.getPartsMakeQuipment());
-                    d.setDevHappenTime(String.valueOf(a1));
                     listfin.add(d);
                 }
             }
@@ -1473,7 +1458,6 @@ public class ReasonRuleController extends BaseController
         float ruledata = Float.parseFloat(listr.get(0).getRuleData());
         List<String> mplane = reasonRuleService.selectPP();
         List<String> model = reasonRuleService.selectFaultModel();
-        List<String> series = reasonRuleService.selectPartsMeasuringQuipment();
         List<devupone> list3 = reasonRuleService.selectProMeasuringDevOne();
         List<String> model1 = new ArrayList<String>();//故障模式
         List<String> plane1 = new ArrayList<String>();//机型
@@ -1505,8 +1489,6 @@ public class ReasonRuleController extends BaseController
             String ss = plane1.get(i).split("/")[1];
             for(devupone d:list3){
                 if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
-                    int a1 = series.indexOf(d.getPartsMeasuringQuipment());
-                    d.setDevHappenTime(String.valueOf(a1));
                     listfin.add(d);
                 }
             }
@@ -1806,7 +1788,6 @@ public class ReasonRuleController extends BaseController
         float ruledata = Float.parseFloat(listr.get(0).getRuleData());
         List<String> mplane = reasonRuleService.selectPP();
         List<String> model = reasonRuleService.selectFaultModel();
-        List<String> series = reasonRuleService.selectPartsMakeWorkmanship();
         List<devupone> list3 = reasonRuleService.selectProMakeWorkmanshipOne();
         List<String> model1 = new ArrayList<String>();//故障模式
         List<String> plane1 = new ArrayList<String>();//机型
@@ -1838,8 +1819,6 @@ public class ReasonRuleController extends BaseController
             String ss = plane1.get(i).split("/")[1];
             for(devupone d:list3){
                 if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
-                    int a1 = series.indexOf(d.getPartsMakeWorkmanship());
-                    d.setDevHappenTime(String.valueOf(a1));
                     listfin.add(d);
                 }
             }
