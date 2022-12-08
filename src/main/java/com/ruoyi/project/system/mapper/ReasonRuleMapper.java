@@ -45,15 +45,5 @@ public interface ReasonRuleMapper {
 
     public List<String> selectPartsName();
 
-    public List<String> selectPartsMakeGroup();
-
-    public List<String> selectPartsMakePeople();
-
-    public List<String> selectPartsMakeQuipment();
-
-    public List<String> selectPartsMeasuringQuipment();
-
-    public List<String> selectPartsMakeWorkmanship();
-
     public List<String> selectPP();
 }

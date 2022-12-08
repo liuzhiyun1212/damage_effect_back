@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.project.system.domain.MethodQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.ProductDesign3Mapper;
@@ -9,19 +11,19 @@ import com.ruoyi.project.system.service.IProductDesign3Service;
 
 /**
  * 成品件设计数据Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-10
  */
 @Service
-public class ProductDesign3ServiceImpl implements IProductDesign3Service 
+class ProductDesign3ServiceImpl implements IProductDesign3Service
 {
     @Autowired
     private ProductDesign3Mapper productDesign3Mapper;
 
     /**
      * 查询成品件设计数据
-     * 
+     *
      * @param id 成品件设计数据主键
      * @return 成品件设计数据
      */
@@ -31,9 +33,14 @@ public class ProductDesign3ServiceImpl implements IProductDesign3Service
         return productDesign3Mapper.selectProductDesign3ById(id);
     }
 
+    @Override
+    public List<MethodQuality> selectMethodQuality() {
+        return productDesign3Mapper.selectMethodQuality();
+    }
+
     /**
      * 查询成品件设计数据列表
-     * 
+     *
      * @param productDesign3 成品件设计数据
      * @return 成品件设计数据
      */
@@ -45,7 +52,7 @@ public class ProductDesign3ServiceImpl implements IProductDesign3Service
 
     /**
      * 新增成品件设计数据
-     * 
+     *
      * @param productDesign3 成品件设计数据
      * @return 结果
      */
@@ -57,7 +64,7 @@ public class ProductDesign3ServiceImpl implements IProductDesign3Service
 
     /**
      * 修改成品件设计数据
-     * 
+     *
      * @param productDesign3 成品件设计数据
      * @return 结果
      */
@@ -69,7 +76,7 @@ public class ProductDesign3ServiceImpl implements IProductDesign3Service
 
     /**
      * 批量删除成品件设计数据
-     * 
+     *
      * @param ids 需要删除的成品件设计数据主键
      * @return 结果
      */
@@ -81,7 +88,7 @@ public class ProductDesign3ServiceImpl implements IProductDesign3Service
 
     /**
      * 删除成品件设计数据信息
-     * 
+     *
      * @param id 成品件设计数据主键
      * @return 结果
      */

@@ -111,31 +111,6 @@ public class ReasonRuleServiceImpl implements IReasonRuleService {
     }
 
     @Override
-    public List<String> selectPartsMakeGroup(){
-        return reasonRuleMapper.selectPartsMakeGroup();
-    }
-
-    @Override
-    public List<String> selectPartsMakePeople(){
-        return reasonRuleMapper.selectPartsMakePeople();
-    }
-
-    @Override
-    public List<String> selectPartsMakeQuipment(){
-        return reasonRuleMapper.selectPartsMakeQuipment();
-    }
-
-    @Override
-    public List<String> selectPartsMeasuringQuipment(){
-        return reasonRuleMapper.selectPartsMeasuringQuipment();
-    }
-
-    @Override
-    public List<String> selectPartsMakeWorkmanship(){
-        return reasonRuleMapper.selectPartsMakeWorkmanship();
-    }
-
-    @Override
     public List<String> selectPP(){
         return reasonRuleMapper.selectPP();
     }

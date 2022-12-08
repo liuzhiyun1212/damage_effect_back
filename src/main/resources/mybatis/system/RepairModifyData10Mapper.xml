@@ -45,13 +45,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectRepairPeople" resultMap="RepairModifyData10Result">
-        SELECT a.parts_name,
+        SELECT
+            a.parts_name,
             a.parts_model,
             a.modify_time
-        FROM repair_modify_data_10 a ,quality_problem_1 b
-        WHERE a.parts_name=b.parts_name AND  a.modify_type="维修人员变更" AND a.parts_model=b.parts_model
-        GROUP BY a.modify_time
-        ORDER BY a.modify_time
+        FROM
+            repair_modify_data_10 a,
+            quality_problem_1 b
+        WHERE
+            a.parts_name = b.parts_name
+            AND a.modify_type = "维修人员变更"
+            AND a.parts_model = b.parts_model
+            AND b.fault_model IN (
+            SELECT
+                fault_model
+            FROM
+                quality_problem_1
+            GROUP BY
+                fault_model
+            HAVING
+            COUNT( fault_model )> 0.1 * ( SELECT COUNT( fault_model ) FROM quality_problem_1 ))
+        GROUP BY
+            a.modify_time
+        ORDER BY
+            a.modify_time
     </select>
 
 

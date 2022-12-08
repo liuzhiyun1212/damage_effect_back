@@ -21,6 +21,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="modifyMeasures"    column="modify_measures"    />
     </resultMap>
 
+
+    <resultMap id="MethodQualityResult" type="MethodQuality">
+        <result property="finishedName"    column="finished_name"    />
+        <result property="finishedModel"    column="finished_model"    />
+        <result property="installMethod"    column="install_method"    />
+        <result property="methodNum"    column="count(*)"    />
+    </resultMap>
+
     <sql id="selectProductDesign3Vo">
         select id, plane_type, finished_type, finished_name, finished_model, finished_manufacturer, frame, upper_middle_lower, left_middle_right, install_method, raw_material, spare_parts, modify_time, modify_measures from product_design_3
     </sql>
@@ -48,6 +56,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectProductDesign3Vo"/>
         where id = #{id}
     </select>
+
+
+    <select id="selectMethodQuality"  resultMap="MethodQualityResult">
+        SELECT a.finished_name,a.finished_model,a.install_method,count(*)
+        FROM (SELECT DISTINCT a.finished_name,a.finished_model,a.install_method
+        FROM product_design_3 a)AS a,quality_problem_1 b
+        WHERE a.finished_name = b.parts_name AND a.finished_model = b.parts_model
+        GROUP BY a.finished_name,a.install_method
+        ORDER BY a.finished_name
+    </select>
+
+
+
+
+
+
 
     <insert id="insertProductDesign3" parameterType="ProductDesign3" useGeneratedKeys="true" keyProperty="id">
         insert into product_design_3
