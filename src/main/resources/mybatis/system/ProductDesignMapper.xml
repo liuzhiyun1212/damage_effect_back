@@ -57,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="frame"    column="frame"    />
         <result property="upperMiddleLower"    column="upper_middle_lower"    />
         <result property="leftMiddleRight"    column="left_middle_right"    />
+        <result property="installMethod"    column="install_method"    />
         <result property="num"    column="num"    />
         <result property="planeType"    column="plane_type"    />
     </resultMap>

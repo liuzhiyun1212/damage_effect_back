@@ -211,8 +211,8 @@ public class EquipmentManufacturingData5Controller extends BaseController
                         }
                     }
                 }
-                for(int i=0;i<array.length;i++){
-                    timelist.add(sdfTarget.format(array[i]));
+                for (Date date : array) {
+                    timelist.add(sdfTarget.format(date));
                 }
             }
 
@@ -249,8 +249,37 @@ public class EquipmentManufacturingData5Controller extends BaseController
                         }
                     }
                     if(i>3&&i<6){
-
+                        try {
+                            c.setTime(sdfTarget.parse(timelist.get(0)));
+                            int day=c.get(Calendar.DATE);
+                            c.set(Calendar.DATE,day+Delta*(i-3));
+                            String dayBefore=sdfTarget.format(c.getTime());
+                            array[i]=sdfTarget.parse(dayBefore);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
+                    if(i==6){
+                        try {
+                            array[i]=sdfTarget.parse(timelist.get(1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(i>6){
+                        try {
+                            c.setTime(sdfTarget.parse(timelist.get(1)));
+                            int day=c.get(Calendar.DATE);
+                            c.set(Calendar.DATE,day+Delta*(i-6));
+                            String dayBefore=sdfTarget.format(c.getTime());
+                            array[i]=sdfTarget.parse(dayBefore);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                for (Date date : array) {
+                    timelist.add(sdfTarget.format(date));
                 }
             }
 
