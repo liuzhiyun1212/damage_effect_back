@@ -36,6 +36,9 @@ public class ReasonRuleController extends BaseController
     private IEquipmentManufacturingData5Service equipmentManufacturingData5Service;
 
     @Autowired
+    private IRepairModifyData10Service repairModifyData10Service;
+
+    @Autowired
     private IReasonRuleService reasonRuleService;
 
     /**
@@ -2036,6 +2039,195 @@ public class ReasonRuleController extends BaseController
             equipmentManufacturingData5.setModifyType("生产工艺变更");
             equipmentManufacturingData5.setModifyMethod("检测方法变更");
             List<ProductModifyData> listed = productModifyDataService.selectProductModifyDataList(equipmentManufacturingData5);
+            if(listed.size()!=0){
+                for(int ii=0;ii<listed.size();ii++){
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(listed.get(ii).getModifyTime());
+                    int a = calendar.get(Calendar.MONTH)+1;
+                    if(a>0&&a<4){
+                        a=1;
+                    } else if(a>3&&a<7){
+                        a=2;
+                    } else if(a>6&&a<10){
+                        a=3;
+                    } else if(a>9&&a<13){
+                        a=4;
+                    }
+                    String ss = calendar.get(Calendar.YEAR)+"-"+a;
+                    if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
+                        plane2.add(plane1.get(i));
+                        series2.add(series1.get(i));
+                        name2.add(ss);
+                    }
+                }
+            }
+        }
+        List<devuptwo> listfin = new ArrayList<devuptwo>();
+        for(int i=0;i<plane2.size();i++){
+            String s1 =  plane2.get(i);
+            String ss =  series2.get(i);
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)){
+                    listfin.add(d);
+                }
+            }
+        }
+        for(int i =0;i<plane2.size();i++){
+            boolean iffind = false;
+            String s1 =  plane2.get(i);
+            String ss =  series2.get(i);
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getDevHappenTime().equals(name2.get(i))){
+                    iffind = true;
+                    devuptwo devup3 = new devuptwo();
+                    devup3.setDevHappenTime(name2.get(i));
+                    devup3.setPartsName(plane2.get(i));
+                    devup3.setPartsModel(series2.get(i));
+                    devup3.setdevHappennum(-1);
+                    listfin.add(devup3);
+                }
+            }
+            if(iffind==false){
+                devuptwo devup2 = new devuptwo();
+                devup2.setDevHappenTime(name2.get(i));
+                devup2.setPartsName(plane2.get(i));
+                devup2.setPartsModel(series2.get(i));
+                devup2.setdevHappennum(0);
+                listfin.add(devup2);
+
+                devuptwo devup3 = new devuptwo();
+                devup3.setDevHappenTime(name2.get(i));
+                devup3.setPartsName(plane2.get(i));
+                devup3.setPartsModel(series2.get(i));
+                devup3.setdevHappennum(-1);
+                listfin.add(devup3);
+            }
+        }
+        return getDataTable(listfin);
+    }
+
+    /**
+     * 不同维修班组生产的相同故障件型号中，某种故障模式质量问题数量存在较大差异
+     */
+    @GetMapping("/prorepairteam1")
+    public TableDataInfo prorepairteam1()
+    {
+        RuleConstruction ruleConstruction = new RuleConstruction();
+        ruleConstruction.setRule("不同维修班组生产的相同故障件型号中，某种故障模式质量问题数量存在较大差异");
+        List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
+        float ruledata = Float.parseFloat(listr.get(0).getRuleData());
+        List<String> mplane = reasonRuleService.selectPP();
+        List<String> model = reasonRuleService.selectFaultModel();
+        List<devupone> list3 = reasonRuleService.selectProRepairTeamOne();
+        List<String> model1 = new ArrayList<String>();//故障模式
+        List<String> plane1 = new ArrayList<String>();//机型
+        for(String as1: mplane){
+            String s1 = as1.split("/")[0];
+            String ss = as1.split("/")[1];
+            for(String s2: model){
+                List<devupone> list4 = new ArrayList<devupone>();
+                for(devupone d:list3){
+                    if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(s2)&&d.getdevHappennum()>0){
+                        list4.add(d);
+                    }
+                }
+                for(int i=0;i<list4.size();i++){
+                    if(i>0&&list4.get(i).getdevHappennum()>list4.get(i-1).getdevHappennum()*ruledata){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                    if(i>0&&list4.get(i).getdevHappennum()*ruledata<list4.get(i-1).getdevHappennum()){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                }
+            }
+        }
+        List<devupone> listfin = new ArrayList<devupone>();
+        for(int i=0;i<plane1.size();i++){
+            String s1 = plane1.get(i).split("/")[0];
+            String ss = plane1.get(i).split("/")[1];
+            for(devupone d:list3){
+                if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
+                    listfin.add(d);
+                }
+            }
+        }
+        return getDataTable(listfin);
+    }
+
+    /**
+     * 某故障件型号维修班组发生调整时间与质量问题数量变化时间一致或不超过一定范围
+     */
+    @GetMapping("/prorepairteam2")
+    public TableDataInfo prorepairteam2()
+    {
+        List<devuptwo> list2 = reasonRuleService.selectMakeLine();
+        List<String> plane = reasonRuleService.selectPP();//机型
+        List<String> name1 = new ArrayList<String>();//时间
+        List<String> plane1 = new ArrayList<String>();//机型
+        List<String> series1 = new ArrayList<String>();//机型
+        for(String as1: plane){
+            String s1 = as1.split("/")[0];
+            String ss = as1.split("/")[1];
+            List<devuptwo> list3 = new ArrayList<devuptwo>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getdevHappennum()>0){
+                    list3.add(d);
+                }
+            }
+            for(int i=0;i<list3.size();i++){
+                if(i>0&&list3.get(i).getdevHappennum()>list3.get(i-1).getdevHappennum()*1.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPartsName());
+                    series1.add(list3.get(i).getPartsModel());
+                }
+                if(i>0&&list3.get(i).getdevHappennum()<list3.get(i-1).getdevHappennum()*0.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPartsName());
+                    series1.add(list3.get(i).getPartsModel());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()*1.2&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()*1.2){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPartsName());
+                    series1.add(list3.get(i).getPartsModel());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()*0.8&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()*0.8){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPartsName());
+                    series1.add(list3.get(i).getPartsModel());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()>list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPartsName());
+                    series1.add(list3.get(i).getPartsModel());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()<list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPartsName());
+                    series1.add(list3.get(i).getPartsModel());
+                }
+            }
+        }
+        List<String> plane2 = new ArrayList<String>();
+        List<String> series2 = new ArrayList<String>();
+        List<String> name2 = new ArrayList<String>();
+        for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPartsName().equals(plane1.get(i))&&d.getPartsModel().equals(series1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
+            RepairModifyData10 equipmentManufacturingData5 = new RepairModifyData10();
+            equipmentManufacturingData5.setPartsName(plane1.get(i));
+            equipmentManufacturingData5.setPartsModel(series1.get(i));
+            equipmentManufacturingData5.setModifyType("维修班组变更");
+            List<RepairModifyData10> listed = repairModifyData10Service.selectRepairModifyData10List(equipmentManufacturingData5);
             if(listed.size()!=0){
                 for(int ii=0;ii<listed.size();ii++){
                     Calendar calendar = Calendar.getInstance();

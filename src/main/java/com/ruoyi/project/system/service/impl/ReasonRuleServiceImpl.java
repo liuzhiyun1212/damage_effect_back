@@ -76,6 +76,11 @@ public class ReasonRuleServiceImpl implements IReasonRuleService {
     }
 
     @Override
+    public List<devupone> selectProRepairTeamOne(){
+        return reasonRuleMapper.selectProRepairTeamOne();
+    }
+
+    @Override
     public List<devuptwo> selectMakeLine(){
         return reasonRuleMapper.selectMakeLine();
     }
