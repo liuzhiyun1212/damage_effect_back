@@ -303,6 +303,24 @@
             parts_name,parts_model, fault_model,parts_repair_group
     </select>
 
+    <select id="selectProRepairWorkmanshipOne" resultMap="ruleProMakeWorkmanshipOneResult">
+        SELECT
+            quality_problem_1.parts_name,
+            quality_problem_1.parts_model,
+            parts_make_workmanship,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1,parts_repair_num_13
+        WHERE
+            quality_problem_1.plane_type = parts_repair_num_13.plane_type and
+            quality_problem_1.parts_name = parts_repair_num_13.parts_name and
+            quality_problem_1.parts_model = parts_repair_num_13.parts_model and
+            quality_problem_1.parts_code = parts_repair_num_13.parts_code
+        GROUP BY
+            parts_name,parts_model, fault_model,parts_make_workmanship
+    </select>
+
     <select id="selectMakeLine" resultMap="ruleProChangeFourResult">
         SELECT
             parts_name,
