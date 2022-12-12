@@ -37,6 +37,14 @@ public interface ReasonRuleMapper {
 
     public List<devuptwo> selectMakeLine();
 
+    public List<devuptwo> selectdevusechangeQuarter();
+
+    public List<devuptwo> selectdevusechangeYear();
+
+    public List<devuptwo> selectQuarterLine();
+
+    public List<devuptwo> selectYearLine();
+
     public List<String> selectSeries();
 
     public List<String> selectPlane();

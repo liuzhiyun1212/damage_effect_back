@@ -334,6 +334,54 @@
         order by createTime
     </select>
 
+    <select id="selectdevusechangeQuarter" resultMap="ruleDevCapUpTwoResult">
+        SELECT
+            plane_type,
+            SUM(CONVERT(flight_hours,DECIMAL)) sum,
+            CONCAT(year(date),'-',QUARTER(date)) createTime
+        FROM
+            equipment_use_data_12
+        GROUP BY
+            plane_type,createTime
+        order by createTime
+    </select>
+
+    <select id="selectdevusechangeYear" resultMap="ruleDevCapUpTwoResult">
+        SELECT
+            plane_type,
+            SUM(CONVERT(flight_hours,DECIMAL)) sum,
+            year(date) createTime
+        FROM
+            equipment_use_data_12
+        GROUP BY
+            plane_type,createTime
+        order by createTime
+    </select>
+
+    <select id="selectQuarterLine" resultMap="ruleDevCapUpTwoResult">
+        SELECT
+            plane_type,
+            CONCAT(year(dev_happen_time),'-',QUARTER(dev_happen_time)) createTime,
+            count(*) sum
+        FROM
+            quality_problem_1
+        GROUP BY
+            plane_type,createTime
+        order by createTime
+    </select>
+
+    <select id="selectYearLine" resultMap="ruleDevCapUpTwoResult">
+        SELECT
+            plane_type,
+            year(dev_happen_time) createTime,
+            count(*) sum
+        FROM
+            quality_problem_1
+        GROUP BY
+            plane_type,createTime
+        order by createTime
+    </select>
+
     <select id="selectSeries" resultType="String">
         SELECT
             model_series

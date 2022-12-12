@@ -91,6 +91,26 @@ public class ReasonRuleServiceImpl implements IReasonRuleService {
     }
 
     @Override
+    public List<devuptwo> selectdevusechangeQuarter(){
+        return reasonRuleMapper.selectdevusechangeQuarter();
+    }
+
+    @Override
+    public List<devuptwo> selectdevusechangeYear(){
+        return reasonRuleMapper.selectdevusechangeYear();
+    }
+
+    @Override
+    public List<devuptwo> selectQuarterLine(){
+        return reasonRuleMapper.selectQuarterLine();
+    }
+
+    @Override
+    public List<devuptwo> selectYearLine(){
+        return reasonRuleMapper.selectYearLine();
+    }
+
+    @Override
     public List<String> selectSeries(){
         return reasonRuleMapper.selectSeries();
     }

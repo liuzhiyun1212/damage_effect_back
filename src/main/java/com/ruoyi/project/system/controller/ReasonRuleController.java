@@ -2487,6 +2487,228 @@ public class ReasonRuleController extends BaseController
         return getDataTable(listfin);
     }
 
+    /**
+     * 年度-季度平均飞行小时变更时间与质量问题数量变化时间一致或不超过一定范围
+     */
+    @GetMapping("/devusechangequarter")
+    public TableDataInfo devusechangequarter()
+    {
+        List<devuptwo> list2 = reasonRuleService.selectQuarterLine();
+        List<String> plane = reasonRuleService.selectPlane();//机型
+        List<devuptwo> listed = reasonRuleService.selectdevusechangeQuarter();
+        List<String> name1 = new ArrayList<String>();//时间
+        List<String> plane1 = new ArrayList<String>();//机型
+        for(String s1: plane){
+            List<devuptwo> list3 = new ArrayList<devuptwo>();
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(s1)&&d.getdevHappennum()>0){
+                    list3.add(d);
+                }
+            }
+            for(int i=0;i<list3.size();i++){
+                if(i>0&&list3.get(i).getdevHappennum()>list3.get(i-1).getdevHappennum()*1.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i>0&&list3.get(i).getdevHappennum()<list3.get(i-1).getdevHappennum()*0.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()*1.2&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()*1.2){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()*0.8&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()*0.8){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()>list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()<list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+            }
+        }
+        List<String> plane2 = new ArrayList<String>();//机型
+        List<String> name2 = new ArrayList<String>();//时间
+        for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(plane1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
+            List<devuptwo> list4 = new ArrayList<devuptwo>();
+            for(devuptwo d:listed){
+                if(d.getPlaneType().equals(plane1.get(i))){
+                    list4.add(d);
+                }
+            }
+            for(int ii=0;ii<list4.size();ii++){
+                if(ii>0&&list4.get(ii-1).getdevHappennum()!=list4.get(ii).getdevHappennum()){
+                    String ss = list4.get(ii).getDevHappenTime();
+                    if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
+                        plane2.add(plane1.get(i));
+                        name2.add(ss);
+                    }
+                }
+            }
+        }
+        List<devuptwo> listfin = new ArrayList<devuptwo>();
+        for(String s1: plane2){
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(s1)){
+                    listfin.add(d);
+                }
+            }
+        }
+        for(int i =0;i<plane2.size();i++){
+            boolean iffind = false;
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(plane2.get(i))&&d.getDevHappenTime().equals(name2.get(i))){
+                    iffind = true;
+                    devuptwo devup3 = new devuptwo();
+                    devup3.setDevHappenTime(name2.get(i));
+                    devup3.setPlaneType(plane2.get(i));
+                    devup3.setdevHappennum(-1);
+                    listfin.add(devup3);
+                }
+            }
+            if(iffind==false){
+                devuptwo devup2 = new devuptwo();
+                devup2.setDevHappenTime(name2.get(i));
+                devup2.setPlaneType(plane2.get(i));
+                devup2.setdevHappennum(0);
+                listfin.add(devup2);
+
+                devuptwo devup3 = new devuptwo();
+                devup3.setDevHappenTime(name2.get(i));
+                devup3.setPlaneType(plane2.get(i));
+                devup3.setdevHappennum(-1);
+                listfin.add(devup3);
+            }
+        }
+        return getDataTable(listfin);
+    }
+
+    /**
+     * 年度平均飞行小时变更时间与质量问题数量变化时间一致或不超过一定范围
+     */
+    @GetMapping("/devusechangeyear")
+    public TableDataInfo devusechangeyear()
+    {
+        List<devuptwo> list2 = reasonRuleService.selectYearLine();
+        List<devuptwo> listed = reasonRuleService.selectdevusechangeYear();
+        List<String> plane = reasonRuleService.selectPlane();//机型
+        List<String> name1 = new ArrayList<String>();//时间
+        List<String> plane1 = new ArrayList<String>();//机型
+        for(String s1: plane){
+            List<devuptwo> list3 = new ArrayList<devuptwo>();
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(s1)&&d.getdevHappennum()>0){
+                    list3.add(d);
+                }
+            }
+            for(int i=0;i<list3.size();i++){
+                if(i>0&&list3.get(i).getdevHappennum()>list3.get(i-1).getdevHappennum()*1.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i>0&&list3.get(i).getdevHappennum()<list3.get(i-1).getdevHappennum()*0.5){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()*1.2&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()*1.2){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+2<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()*0.8&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()*0.8){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()>list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()>list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()>list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+                if(i+3<list3.size()&&list3.get(i+1).getdevHappennum()<list3.get(i).getdevHappennum()&&list3.get(i+2).getdevHappennum()<list3.get(i+1).getdevHappennum()&&list3.get(i+3).getdevHappennum()<list3.get(i+2).getdevHappennum()){
+                    name1.add(list3.get(i).getDevHappenTime());
+                    plane1.add(list3.get(i).getPlaneType());
+                }
+            }
+        }
+        List<String> plane2 = new ArrayList<String>();//机型
+        List<String> name2 = new ArrayList<String>();//时间
+        for(int i=0;i<plane1.size();i++){
+            List<String> time = new ArrayList<String>();
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(plane1.get(i))&&!time.contains(d.getDevHappenTime())){
+                    time.add(d.getDevHappenTime());
+                }
+            }
+            int t = time.size();
+            List<devuptwo> list4 = new ArrayList<devuptwo>();
+            for(devuptwo d:listed){
+                if(d.getPlaneType().equals(plane1.get(i))){
+                    list4.add(d);
+                }
+            }
+            for(int ii=0;ii<list4.size();ii++){
+                if(ii>0&&list4.get(ii-1).getdevHappennum()!=list4.get(ii).getdevHappennum()){
+                    String ss = list4.get(ii).getDevHappenTime();
+                    if(halfyear(name1.get(i),ss)){
+                        if(time.indexOf(ss)==t-1){
+                            continue;
+                        }
+                        plane2.add(plane1.get(i));
+                        name2.add(ss);
+                    }
+                }
+            }
+        }
+        List<devuptwo> listfin = new ArrayList<devuptwo>();
+        for(String s1: plane2){
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(s1)){
+                    listfin.add(d);
+                }
+            }
+        }
+        for(int i =0;i<plane2.size();i++){
+            boolean iffind = false;
+            for(devuptwo d:list2){
+                if(d.getPlaneType().equals(plane2.get(i))&&d.getDevHappenTime().equals(name2.get(i))){
+                    iffind = true;
+                    devuptwo devup3 = new devuptwo();
+                    devup3.setDevHappenTime(name2.get(i));
+                    devup3.setPlaneType(plane2.get(i));
+                    devup3.setdevHappennum(-1);
+                    listfin.add(devup3);
+                }
+            }
+            if(iffind==false){
+                devuptwo devup2 = new devuptwo();
+                devup2.setDevHappenTime(name2.get(i));
+                devup2.setPlaneType(plane2.get(i));
+                devup2.setdevHappennum(0);
+                listfin.add(devup2);
+
+                devuptwo devup3 = new devuptwo();
+                devup3.setDevHappenTime(name2.get(i));
+                devup3.setPlaneType(plane2.get(i));
+                devup3.setdevHappennum(-1);
+                listfin.add(devup3);
+            }
+        }
+        return getDataTable(listfin);
+    }
+
     public boolean halfyear(String s1,String s2)
     {
         if(s1.substring(0,4).equals(s2.substring(0,4))){
