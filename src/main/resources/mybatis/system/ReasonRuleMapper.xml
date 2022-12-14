@@ -90,6 +90,22 @@
         <result property="partsName"    column="parts_name"    />
     </resultMap>
 
+    <resultMap type="devupone" id="ruleProMakePlaceOneResult">
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="rawMaterialPlace"    column="raw_material_place"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleProMakePlaceTwoResult">
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="sparePartsPlace"    column="spare_parts_place"    />
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
     <resultMap type="devupone" id="ruleProMakeWorkmanshipOneResult">
         <result property="devHappennum" column="sum"/>
         <result property="faultModel"    column="fault_model"    />
@@ -265,6 +281,42 @@
             quality_problem_1.parts_code = parts_make_num_9.parts_code
         GROUP BY
             parts_name,parts_model, fault_model,parts_measuring_quipment
+    </select>
+
+    <select id="selectProMakePlaceOne" resultMap="ruleProMakePlaceOneResult">
+        SELECT
+            quality_problem_1.parts_name,
+            quality_problem_1.parts_model,
+            raw_material_place,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1,parts_make_num_9
+        WHERE
+            quality_problem_1.plane_type = parts_make_num_9.plane_type and
+            quality_problem_1.parts_name = parts_make_num_9.parts_name and
+            quality_problem_1.parts_model = parts_make_num_9.parts_model and
+            quality_problem_1.parts_code = parts_make_num_9.parts_code
+        GROUP BY
+            parts_name,parts_model, fault_model,raw_material_place
+    </select>
+
+    <select id="selectProMakePlaceTwo" resultMap="ruleProMakePlaceTwoResult">
+        SELECT
+            quality_problem_1.parts_name,
+            quality_problem_1.parts_model,
+            spare_parts_place,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1,parts_make_num_9
+        WHERE
+            quality_problem_1.plane_type = parts_make_num_9.plane_type and
+            quality_problem_1.parts_name = parts_make_num_9.parts_name and
+            quality_problem_1.parts_model = parts_make_num_9.parts_model and
+            quality_problem_1.parts_code = parts_make_num_9.parts_code
+        GROUP BY
+            parts_name,parts_model, fault_model,spare_parts_place
     </select>
 
     <select id="selectProMakeWorkmanshipOne" resultMap="ruleProMakeWorkmanshipOneResult">
