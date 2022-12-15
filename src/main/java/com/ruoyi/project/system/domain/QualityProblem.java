@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import javax.validation.constraints.Size;
+
 /**
  * quality_problem对象 quality_problem_1
  *

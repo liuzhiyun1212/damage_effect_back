@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -122,6 +123,13 @@ public class QualityProblemController extends BaseController
     {
         ExcelUtil<QualityProblem> util = new ExcelUtil<QualityProblem>(QualityProblem.class);
         List<QualityProblem> QualityProblemList = util.importExcel(file.getInputStream());
+        InputStream is = file.getInputStream();
+        /*int size = is.available();
+
+        for (int i = 0; i < size; i++) {
+            System.out.println((char) is.read() + "  ");
+        }*/
+     //   System.out.println(file.getInputStream());
 //        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = getUsername();
         String message = qualityProblemService.importData(QualityProblemList, updateSupport, operName);
