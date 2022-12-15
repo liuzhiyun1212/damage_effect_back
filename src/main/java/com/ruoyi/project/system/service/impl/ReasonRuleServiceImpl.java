@@ -76,8 +76,48 @@ public class ReasonRuleServiceImpl implements IReasonRuleService {
     }
 
     @Override
+    public List<devupone> selectProMakePlaceOne(){
+        return reasonRuleMapper.selectProMakePlaceOne();
+    }
+
+    @Override
+    public List<devupone> selectProMakePlaceTwo(){
+        return reasonRuleMapper.selectProMakePlaceTwo();
+    }
+
+    @Override
+    public List<devupone> selectProRepairTeamOne(){
+        return reasonRuleMapper.selectProRepairTeamOne();
+    }
+
+    @Override
+    public List<devupone> selectProRepairWorkmanshipOne(){
+        return reasonRuleMapper.selectProRepairWorkmanshipOne();
+    }
+
+    @Override
     public List<devuptwo> selectMakeLine(){
         return reasonRuleMapper.selectMakeLine();
+    }
+
+    @Override
+    public List<devuptwo> selectdevusechangeQuarter(){
+        return reasonRuleMapper.selectdevusechangeQuarter();
+    }
+
+    @Override
+    public List<devuptwo> selectdevusechangeYear(){
+        return reasonRuleMapper.selectdevusechangeYear();
+    }
+
+    @Override
+    public List<devuptwo> selectQuarterLine(){
+        return reasonRuleMapper.selectQuarterLine();
+    }
+
+    @Override
+    public List<devuptwo> selectYearLine(){
+        return reasonRuleMapper.selectYearLine();
     }
 
     @Override

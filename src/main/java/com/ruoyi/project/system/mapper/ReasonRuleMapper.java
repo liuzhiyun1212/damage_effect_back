@@ -29,9 +29,25 @@ public interface ReasonRuleMapper {
 
     public List<devupone> selectProMeasuringDevOne();
 
+    public List<devupone> selectProMakePlaceOne();
+
+    public List<devupone> selectProMakePlaceTwo();
+
     public List<devupone> selectProMakeWorkmanshipOne();
 
+    public List<devupone> selectProRepairTeamOne();
+
+    public List<devupone> selectProRepairWorkmanshipOne();
+
     public List<devuptwo> selectMakeLine();
+
+    public List<devuptwo> selectdevusechangeQuarter();
+
+    public List<devuptwo> selectdevusechangeYear();
+
+    public List<devuptwo> selectQuarterLine();
+
+    public List<devuptwo> selectYearLine();
 
     public List<String> selectSeries();
 
