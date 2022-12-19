@@ -39,6 +39,8 @@ public interface IReasonRuleService {
 
     public List<devupone> selectProRepairWorkmanshipOne();
 
+    public List<devupone> selectProRepairPeopleOne();
+
     public List<devuptwo> selectMakeLine();
 
     public List<devuptwo> selectdevusechangeQuarter();
