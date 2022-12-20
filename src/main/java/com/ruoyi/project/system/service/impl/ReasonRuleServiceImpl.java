@@ -101,6 +101,21 @@ public class ReasonRuleServiceImpl implements IReasonRuleService {
     }
 
     @Override
+    public List<devupone> selectDevStatusOne(){
+        return reasonRuleMapper.selectDevStatusOne();
+    }
+
+    @Override
+    public List<devupone> selectDevStatusTwo(){
+        return reasonRuleMapper.selectDevStatusTwo();
+    }
+
+    @Override
+    public List<devupone> selectDevEnvironmentOne(){
+        return reasonRuleMapper.selectDevEnvironmentOne();
+    }
+
+    @Override
     public List<devuptwo> selectMakeLine(){
         return reasonRuleMapper.selectMakeLine();
     }

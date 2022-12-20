@@ -3566,6 +3566,148 @@ public class ReasonRuleController extends BaseController
         return getDataTable(listfin);
     }
 
+    /**
+     * 不同状态的装备，某种故障模式质量问题数量存在较大差异
+     */
+    @GetMapping("/devstatus1")
+    public TableDataInfo devstatus1()
+    {
+        RuleConstruction ruleConstruction = new RuleConstruction();
+        ruleConstruction.setRule("不同状态的装备，某种故障模式质量问题数量存在较大差异");
+        List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
+        float ruledata = Float.parseFloat(listr.get(0).getRuleData());
+        List<String> series = reasonRuleService.selectPlane();
+        List<String> model = reasonRuleService.selectFaultModel();//故障模式
+        List<devupone> list3 = reasonRuleService.selectDevStatusOne();
+        List<String> model1 = new ArrayList<String>();//故障模式
+        List<String> series1 = new ArrayList<String>();//机型
+        for(String s1: series){
+            for(String s2: model){
+                List<devupone> list4 = new ArrayList<devupone>();
+                for(devupone d:list3){
+                    if(d.getPlaneType().equals(s1)&&d.getFaultModel().equals(s2)&&d.getdevHappennum()>0){
+                        list4.add(d);
+                    }
+                }
+                for(int i=0;i<list4.size();i++){
+                    if(i>0&&list4.get(i).getdevHappennum()>list4.get(i-1).getdevHappennum()*ruledata){
+                        model1.add(list4.get(i).getFaultModel());
+                        series1.add(list4.get(i).getPlaneType());
+                    }
+                    if(i>0&&list4.get(i).getdevHappennum()*ruledata<list4.get(i-1).getdevHappennum()){
+                        model1.add(list4.get(i).getFaultModel());
+                        series1.add(list4.get(i).getPlaneType());
+                    }
+                }
+            }
+        }
+        List<devupone> listfin = new ArrayList<devupone>();
+        for(int i=0;i<series1.size();i++){
+            for(devupone d:list3){
+                if(d.getPlaneType().equals(series1.get(i))&&d.getFaultModel().equals(model1.get(i))){
+                    listfin.add(d);
+                }
+            }
+        }
+        return getDataTable(listfin);
+    }
+
+    /**
+     * 不同状态的故障件，某种故障模式质量问题数量存在较大差异
+     */
+    @GetMapping("/devstatus2")
+    public TableDataInfo devstatus2()
+    {
+        RuleConstruction ruleConstruction = new RuleConstruction();
+        ruleConstruction.setRule("不同状态的故障件，某种故障模式质量问题数量存在较大差异");
+        List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
+        float ruledata = Float.parseFloat(listr.get(0).getRuleData());
+        List<String> mplane = reasonRuleService.selectPP();
+        List<String> model = reasonRuleService.selectFaultModel();
+        List<devupone> list3 = reasonRuleService.selectDevStatusTwo();
+        List<String> model1 = new ArrayList<String>();//故障模式
+        List<String> plane1 = new ArrayList<String>();//机型
+        for(String as1: mplane){
+            String s1 = as1.split("/")[0];
+            String ss = as1.split("/")[1];
+            for(String s2: model){
+                List<devupone> list4 = new ArrayList<devupone>();
+                for(devupone d:list3){
+                    if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(s2)&&d.getdevHappennum()>0){
+                        list4.add(d);
+                    }
+                }
+                for(int i=0;i<list4.size();i++){
+                    if(i>0&&list4.get(i).getdevHappennum()>list4.get(i-1).getdevHappennum()*ruledata){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                    if(i>0&&list4.get(i).getdevHappennum()*ruledata<list4.get(i-1).getdevHappennum()){
+                        model1.add(list4.get(i).getFaultModel());
+                        plane1.add(list4.get(i).getPartsName()+"/"+list4.get(i).getPartsModel());
+                    }
+                }
+            }
+        }
+        List<devupone> listfin = new ArrayList<devupone>();
+        for(int i=0;i<plane1.size();i++){
+            String s1 = plane1.get(i).split("/")[0];
+            String ss = plane1.get(i).split("/")[1];
+            for(devupone d:list3){
+                if(d.getPartsName().equals(s1)&&d.getPartsModel().equals(ss)&&d.getFaultModel().equals(model1.get(i))){
+                    listfin.add(d);
+                }
+            }
+        }
+        return getDataTable(listfin);
+    }
+
+    /**
+     * 不同使用环境下的装备，某种故障模式质量问题数量存在较大差异
+     */
+    @GetMapping("/useenvironment1")
+    public TableDataInfo useenvironment1()
+    {
+        RuleConstruction ruleConstruction = new RuleConstruction();
+        ruleConstruction.setRule("不同使用环境下的装备，某种故障模式质量问题数量存在较大差异");
+        List<RuleConstruction> listr = ruleConstructionService.selectRuleConstructionList(ruleConstruction);
+        float ruledata = Float.parseFloat(listr.get(0).getRuleData());
+        List<String> series = reasonRuleService.selectPlane();
+        List<String> model = reasonRuleService.selectFaultModel();//故障模式
+        List<devupone> list3 = reasonRuleService.selectDevEnvironmentOne();
+        List<String> model1 = new ArrayList<String>();//故障模式
+        List<String> series1 = new ArrayList<String>();//机型
+        for(String s1: series){
+            for(String s2: model){
+                List<devupone> list4 = new ArrayList<devupone>();
+                for(devupone d:list3){
+                    if(d.getPlaneType().equals(s1)&&d.getFaultModel().equals(s2)&&d.getdevHappennum()>0){
+                        list4.add(d);
+                    }
+                }
+                for(int i=0;i<list4.size();i++){
+                    if(i>0&&list4.get(i).getdevHappennum()>list4.get(i-1).getdevHappennum()*ruledata){
+                        model1.add(list4.get(i).getFaultModel());
+                        series1.add(list4.get(i).getPlaneType());
+                    }
+                    if(i>0&&list4.get(i).getdevHappennum()*ruledata<list4.get(i-1).getdevHappennum()){
+                        model1.add(list4.get(i).getFaultModel());
+                        series1.add(list4.get(i).getPlaneType());
+                    }
+                }
+            }
+        }
+        List<devupone> listfin = new ArrayList<devupone>();
+        for(int i=0;i<series1.size();i++){
+            for(devupone d:list3){
+                if(d.getPlaneType().equals(series1.get(i))&&d.getFaultModel().equals(model1.get(i))){
+                    listfin.add(d);
+                }
+            }
+        }
+        return getDataTable(listfin);
+    }
+
     public boolean halfyear(String s1,String s2)
     {
         if(s1.substring(0,4).equals(s2.substring(0,4))){

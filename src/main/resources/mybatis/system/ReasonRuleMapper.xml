@@ -130,6 +130,28 @@
         <result property="partsName"    column="parts_name"    />
     </resultMap>
 
+    <resultMap type="devupone" id="ruleDevStatusOneResult">
+        <result property="devHappenTime" column="createTime"/>
+        <result property="planeType"    column="plane_type"    />
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleDevStatusTwoResult">
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+        <result property="devHappenTime" column="createTime"/>
+        <result property="partsModel"    column="parts_model"    />
+        <result property="partsName"    column="parts_name"    />
+    </resultMap>
+
+    <resultMap type="devupone" id="ruleDevEnvironmentOneResult">
+        <result property="devHappenTime" column="environment"/>
+        <result property="planeType"    column="plane_type"    />
+        <result property="devHappennum" column="sum"/>
+        <result property="faultModel"    column="fault_model"    />
+    </resultMap>
+
     <select id="selectDevUpOne" resultMap="ruleDevUpOneResult">
         SELECT
             model_series,quality_problem_1.plane_type,CONCAT(year(remodel_date),'-',QUARTER(remodel_date)) createTime, fault_model,count(*) sum
@@ -397,6 +419,41 @@
             quality_problem_1.parts_code = parts_repair_num_13.parts_code
         GROUP BY
             parts_name,parts_model, fault_model,parts_repair_people;
+    </select>
+
+    <select id="selectDevStatusOne" resultMap="ruleDevStatusOneResult">
+        select  plane_type,
+                IF(dev_repaired='是',"大修过",elt(interval(dev_use_time,0,300,1200),"新出厂","稳定期","装备到寿"))as createTime,
+                fault_model,
+                count(*) sum
+        from
+            quality_problem_1
+        GROUP BY
+            plane_type,createTime,fault_model;
+    </select>
+
+    <select id="selectDevStatusTwo" resultMap="ruleDevStatusTwoResult">
+        SELECT
+            parts_name,
+            parts_model,
+            IF(dev_repaired='是',"大修过","未大修")as createTime,
+            fault_model,
+            count(*) sum
+        FROM
+            quality_problem_1
+        GROUP BY
+            parts_name,parts_model, fault_model,createTime;
+    </select>
+
+    <select id="selectDevEnvironmentOne" resultMap="ruleDevEnvironmentOneResult">
+        select  plane_type,
+                environment,
+                fault_model,
+                count(*) sum
+        from
+            quality_problem_1
+        GROUP BY
+            plane_type,environment,fault_model;
     </select>
 
     <select id="selectMakeLine" resultMap="ruleProChangeFourResult">
